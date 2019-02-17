@@ -19,7 +19,7 @@ func ReadQsf(path string) (survey *Survey, err error) {
 		log.Fatalf("Error parsing '%s': %s", path, err)
 	}
 
-	log.Printf("Title = %s, description = %s\n", s.Title, s.Description)
+	log.Printf("Title = '%s', # of questions = %d, description = '%s'\n", s.Title, len(s.Questions), s.Description)
 	survey = s
 	return
 }
