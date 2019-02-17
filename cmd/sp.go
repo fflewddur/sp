@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/fflewddur/survey_parser/libsp"
 	"github.com/spf13/cobra"
 )
 
@@ -12,7 +13,7 @@ var rootCmd = &cobra.Command{
 	Short: "sp is a survey parser for Qualtrics data",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Hello! " + args[0])
+		libsp.ReadQsf(args[0])
 	},
 	Version: "0.0.1",
 }
