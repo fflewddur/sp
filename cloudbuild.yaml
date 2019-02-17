@@ -3,5 +3,5 @@ steps:
     args: ['install', '.']
     env: ['PROJECT_ROOT=github.com/fflewddur/survey_parser']
   - name: 'gcr.io/cloud-builders/go'
-    args: ['build', 'sp']
+    args: ['build']
     env: ['PROJECT_ROOT=github.com/fflewddur/survey_parser']
