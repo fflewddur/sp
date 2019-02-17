@@ -20,6 +20,9 @@ func ReadQsf(path string) (survey *Survey, err error) {
 	}
 
 	log.Printf("Title = '%s', # of questions = %d, description = '%s'\n", s.Title, len(s.Questions), s.Description)
+	for _, q := range s.Questions {
+		log.Printf("ID: %s Wording: %s\n", q.ID, q.Wording)
+	}
 	survey = s
 	return
 }
