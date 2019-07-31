@@ -4,7 +4,7 @@
 *.dll
 *.so
 *.dylib
-/survey_parser
+/sp
 
 # Test binary, build with `go test -c`
 *.test

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/fflewddur/survey_parser/cmd"
+	"github.com/fflewddur/sp/cmd"
 )
 
 func main() {

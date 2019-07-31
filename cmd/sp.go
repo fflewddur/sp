@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/fflewddur/survey_parser/libsp"
+	"github.com/fflewddur/sp/libsp"
 	"github.com/spf13/cobra"
 )
 
