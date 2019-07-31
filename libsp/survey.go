@@ -51,13 +51,6 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Question represents a survey question
-type Question struct {
-	ID      string
-	Wording string
-	Type    string
-}
-
 type qsf struct {
 	SurveyEntry    *qsfSurveyEntry
 	SurveyElements []*qsfSurveyElement
