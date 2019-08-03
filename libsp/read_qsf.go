@@ -1,22 +1,31 @@
 package libsp
 
 import (
-	"io/ioutil"
+	"bufio"
+	"fmt"
+	"io"
 	"log"
 )
 
 // ReadQsf reads a Qualtrics survey definition file (.qsf) from disk
-func ReadQsf(path string) (survey *Survey, err error) {
-	log.Printf("Reading '%s'", path)
-
-	b, err := ioutil.ReadFile(path)
-	if err != nil {
-		log.Fatalf("Error reading '%s': %s", path, err)
+func ReadQsf(r *bufio.Reader) (survey *Survey, err error) {
+	bytes := make([]byte, 0)
+	for {
+		line, _, err := r.ReadLine()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			e := fmt.Errorf("could not read file: %s", err)
+			return nil, e
+		}
+		bytes = append(bytes, line...)
 	}
 
 	var s = new(Survey)
-	if err := s.UnmarshalJSON(b); err != nil {
-		log.Fatalf("Error parsing '%s': %s", path, err)
+	if err := s.UnmarshalJSON(bytes); err != nil {
+		e := fmt.Errorf("could not parse: %s", err)
+		return nil, e
 	}
 
 	log.Printf("Title = '%s', # of questions = %d, description = '%s'\n", s.Title, len(s.Questions), s.Description)

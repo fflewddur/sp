@@ -1,7 +1,9 @@
 package cmd
 
 import (
+	"bufio"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/fflewddur/sp/libsp"
@@ -13,7 +15,15 @@ var rootCmd = &cobra.Command{
 	Short: "sp is a survey parser for Qualtrics data",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		libsp.ReadQsf(args[0])
+		path := args[0]
+
+		log.Printf("Reading '%s'", path)
+		file, err := os.Open(path) // For read access.
+		if err != nil {
+			log.Fatalf("Error reading '%s': %s", path, err)
+		}
+		reader := bufio.NewReader(file)
+		libsp.ReadQsf(reader)
 	},
 	Version: "0.0.1",
 }
