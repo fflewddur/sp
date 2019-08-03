@@ -14,3 +14,4 @@
 
 # Local workspace
 .virtualgo
+.vscode
