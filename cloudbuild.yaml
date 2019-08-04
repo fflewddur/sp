@@ -5,4 +5,3 @@ steps:
 
 - name: 'golang'
   args: ['go', 'test', './libsp']
-  env: ['GO111MODULE=on', 'GOPROXY=https://proxy.golang.org']
