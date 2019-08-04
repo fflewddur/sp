@@ -6,14 +6,26 @@ import (
 	"testing"
 )
 
-func TestTitle(t *testing.T) {
+func TestReadQsf(t *testing.T) {
 	r := bufio.NewReader(strings.NewReader(qsfContent))
 	got, err := ReadQsf(r)
 	if err != nil {
-		t.Error("err = nil; want err != nil")
+		t.Error("err != nil; want err = nil")
 	}
-	if got == nil || got.Title != "Test survey" {
+	if got == nil {
+		t.Error("survey = nil; want survey != nil")
+	}
+	if got.Title != "Test survey" {
 		t.Errorf("Title = '%s'; want 'Test survey'", got.Title)
+	}
+	if got.Status != "Inactive" {
+		t.Errorf("Status = '%s'; want 'Inactive'", got.Status)
+	}
+	if got.Description != "Test description" {
+		t.Errorf("Description = '%s'; want 'Test description'", got.Description)
+	}
+	if len(got.Questions) != 10 {
+		t.Errorf("len(Questions) = %d; want 10", len(got.Questions))
 	}
 }
 
@@ -34,7 +46,7 @@ var qsfContent = `{
     "SurveyEntry": {
         "SurveyID": "SV_6mudEEycYo5zehT",
         "SurveyName": "Test survey",
-        "SurveyDescription": null,
+        "SurveyDescription": "Test description",
         "SurveyOwnerID": "UR_5AXpopyMdC5gltr",
         "SurveyBrandID": "google",
         "DivisionID": null,
