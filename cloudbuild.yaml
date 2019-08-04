@@ -2,3 +2,7 @@ steps:
 - name: 'golang'
   args: ['go', 'build', '.']
   env: ['GO111MODULE=on', 'GOPROXY=https://proxy.golang.org']
+
+- name: 'golang'
+  args: ['go', 'test', './libsp']
+  env: ['GO111MODULE=on', 'GOPROXY=https://proxy.golang.org']
