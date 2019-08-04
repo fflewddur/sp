@@ -2,7 +2,7 @@
 
 sp is a tool for parsing Qualtrics data into a format suitable for R.
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/fflewddur/survey_parser)](https://goreportcard.com/report/github.com/fflewddur/survey_parser)
+[![Build Status](https://travis-ci.org/fflewddur/survey_parser.svg?branch=master)](https://travis-ci.org/fflewddur/survey_parser) [![Go Report Card](https://goreportcard.com/badge/github.com/fflewddur/survey_parser)](https://goreportcard.com/report/github.com/fflewddur/survey_parser)
 
 ## Getting Started
 
