@@ -17,6 +17,8 @@ type Survey struct {
 	Questions   []*Question
 }
 
+const timeFormat = "2006-01-02 15:04:05"
+
 // UnmarshalJSON fills the fields of s with the data found in b
 func (s *Survey) UnmarshalJSON(b []byte) error {
 	var qs qsf
@@ -27,13 +29,13 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 	s.Title = qs.SurveyEntry.SurveyName
 	s.Description = qs.SurveyEntry.SurveyDescription
 	s.Status = qs.SurveyEntry.SurveyStatus
-	if t, err := time.Parse(time.RFC3339, qs.SurveyEntry.SurveyCreationDate); err == nil {
+	if t, err := time.Parse(timeFormat, qs.SurveyEntry.SurveyCreationDate); err == nil {
 		s.CreatedOn = t
 	}
-	if t, err := time.Parse(time.RFC3339, qs.SurveyEntry.SurveyStartDate); err == nil {
+	if t, err := time.Parse(timeFormat, qs.SurveyEntry.SurveyStartDate); err == nil {
 		s.LaunchedOn = t
 	}
-	if t, err := time.Parse(time.RFC3339, qs.SurveyEntry.LastModified); err == nil {
+	if t, err := time.Parse(timeFormat, qs.SurveyEntry.LastModified); err == nil {
 		s.ModifiedOn = t
 	}
 

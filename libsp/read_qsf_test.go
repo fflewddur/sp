@@ -24,6 +24,9 @@ func TestReadQsf(t *testing.T) {
 	if got.Description != "Test description" {
 		t.Errorf("Description = '%s'; want 'Test description'", got.Description)
 	}
+	if got.CreatedOn.String() != "2019-02-10 21:50:52 +0000 UTC" {
+		t.Errorf("CreatedOn = '%s'; want '2019-02-10 21:50:52 +0000 UTC'", got.CreatedOn)
+	}
 	if len(got.Questions) != 10 {
 		t.Errorf("len(Questions) = %d; want 10", len(got.Questions))
 	}
