@@ -2,6 +2,7 @@ package libsp
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -9,6 +10,10 @@ import (
 
 // ReadQsf reads a Qualtrics survey definition file (.qsf) from disk
 func ReadQsf(r *bufio.Reader) (survey *Survey, err error) {
+	if r == nil {
+		e := errors.New("r cannot be nil")
+		return nil, e
+	}
 	bytes := make([]byte, 0)
 	for {
 		line, _, err := r.ReadLine()
