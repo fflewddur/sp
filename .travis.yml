@@ -15,4 +15,7 @@ notifications:
   email: false
 
 script:
-  - go test -v -race ./libsp
+  - go test -v -race -coverprofile=coverage.txt -covermode=atomic ./libsp
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
