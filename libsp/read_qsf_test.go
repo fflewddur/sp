@@ -27,6 +27,12 @@ func TestReadQsf(t *testing.T) {
 	if got.CreatedOn.String() != "2019-02-10 21:50:52 +0000 UTC" {
 		t.Errorf("CreatedOn = '%s'; want '2019-02-10 21:50:52 +0000 UTC'", got.CreatedOn)
 	}
+	if got.ModifiedOn.String() != "2019-02-10 21:55:31 +0000 UTC" {
+		t.Errorf("ModifiedOn = '%s'; want '2019-02-10 21:55:31 +0000 UTC'", got.ModifiedOn)
+	}
+	if got.LaunchedOn.String() != "2019-08-01 01:23:45 +0000 UTC" {
+		t.Errorf("LaunchedOn = '%s'; want '2019-08-01 01:23:45 +0000 UTC'", got.LaunchedOn)
+	}
 	if len(got.Questions) != 10 {
 		t.Errorf("len(Questions) = %d; want 10", len(got.Questions))
 	}
@@ -56,7 +62,7 @@ var qsfContent = `{
         "SurveyLanguage": "EN",
         "SurveyActiveResponseSet": "RS_2uzQg6GtgfLcVb7",
         "SurveyStatus": "Inactive",
-        "SurveyStartDate": "0000-00-00 00:00:00",
+        "SurveyStartDate": "2019-08-01 01:23:45",
         "SurveyExpirationDate": "0000-00-00 00:00:00",
         "SurveyCreationDate": "2019-02-10 21:50:52",
         "CreatorID": "UR_5AXpopyMdC5gltr",
