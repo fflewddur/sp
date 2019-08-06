@@ -14,7 +14,11 @@ git:
 notifications:
   email: false
 
+install:
+  - go get -u github.com/golang/lint/golint
+
 script:
+  - golint ./...
   - go test -v -race -coverprofile=coverage.txt -covermode=atomic ./libsp
 
 after_success:
