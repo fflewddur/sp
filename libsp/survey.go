@@ -2,6 +2,7 @@ package libsp
 
 import (
 	"encoding/json"
+	"errors"
 	"regexp"
 	"time"
 )
@@ -24,6 +25,9 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 	var qs qsf
 	if err := json.Unmarshal(b, &qs); err != nil {
 		return err
+	}
+	if qs.SurveyEntry == nil {
+		return errors.New("json had no SurveyEntry object")
 	}
 
 	s.Title = qs.SurveyEntry.SurveyName

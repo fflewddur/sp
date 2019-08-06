@@ -38,13 +38,27 @@ func TestReadQsf(t *testing.T) {
 	}
 }
 
+func TestIncompleteQSF(t *testing.T) {
+	r := bufio.NewReader(strings.NewReader(qsfContentIncomplete))
+	got, err := ReadQsf(r)
+	if err == nil {
+		t.Error("err = nil; want err != nil")
+	}
+	if got != nil {
+		t.Error("survey != nil; want survey = nil")
+	}
+	if err.Error() != "could not parse: json had no SurveyEntry object" {
+		t.Errorf("err = '%s'; want 'could not parse: json had no SurveyEntry object'", err)
+	}
+}
+
 func TestNilReader(t *testing.T) {
 	got, err := ReadQsf(nil)
 	if err == nil {
 		t.Error("err = nil; want err != nil")
 	}
 	if err.Error() != "r cannot be nil" {
-		t.Errorf("err.Error() = '%s'; want 'r cannot be nil'", err.Error())
+		t.Errorf("err.Error() = '%s'; want 'r cannot be nil'", err)
 	}
 	if got != nil {
 		t.Error("got != nil; want got = nil")
@@ -753,3 +767,5 @@ var qsfContent = `{
         }
     ]
 }`
+
+var qsfContentIncomplete = `{}`
