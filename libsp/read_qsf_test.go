@@ -6,45 +6,89 @@ import (
 	"testing"
 )
 
-func TestReadQsf(t *testing.T) {
+func TestReadQsfMetadata(t *testing.T) {
 	r := bufio.NewReader(strings.NewReader(qsfContent))
-	got, err := ReadQsf(r)
+	s, err := ReadQsf(r)
 	if err != nil {
 		t.Error("err != nil; want err = nil")
 	}
-	if got == nil {
+	if s == nil {
 		t.Error("survey = nil; want survey != nil")
 	}
-	if got.Title != "Test survey" {
-		t.Errorf("Title = '%s'; want 'Test survey'", got.Title)
+	if s.Title != "Test survey" {
+		t.Errorf("Title = '%s'; want 'Test survey'", s.Title)
 	}
-	if got.Status != "Inactive" {
-		t.Errorf("Status = '%s'; want 'Inactive'", got.Status)
+	if s.Status != "Inactive" {
+		t.Errorf("Status = '%s'; want 'Inactive'", s.Status)
 	}
-	if got.Description != "Test description" {
-		t.Errorf("Description = '%s'; want 'Test description'", got.Description)
+	if s.Description != "Test description" {
+		t.Errorf("Description = '%s'; want 'Test description'", s.Description)
 	}
-	if got.CreatedOn.String() != "2019-02-10 21:50:52 +0000 UTC" {
-		t.Errorf("CreatedOn = '%s'; want '2019-02-10 21:50:52 +0000 UTC'", got.CreatedOn)
+	if s.CreatedOn.String() != "2019-02-10 21:50:52 +0000 UTC" {
+		t.Errorf("CreatedOn = '%s'; want '2019-02-10 21:50:52 +0000 UTC'", s.CreatedOn)
 	}
-	if got.ModifiedOn.String() != "2019-02-10 21:55:31 +0000 UTC" {
-		t.Errorf("ModifiedOn = '%s'; want '2019-02-10 21:55:31 +0000 UTC'", got.ModifiedOn)
+	if s.ModifiedOn.String() != "2019-02-10 21:55:31 +0000 UTC" {
+		t.Errorf("ModifiedOn = '%s'; want '2019-02-10 21:55:31 +0000 UTC'", s.ModifiedOn)
 	}
-	if got.LaunchedOn.String() != "2019-08-01 01:23:45 +0000 UTC" {
-		t.Errorf("LaunchedOn = '%s'; want '2019-08-01 01:23:45 +0000 UTC'", got.LaunchedOn)
+	if s.LaunchedOn.String() != "2019-08-01 01:23:45 +0000 UTC" {
+		t.Errorf("LaunchedOn = '%s'; want '2019-08-01 01:23:45 +0000 UTC'", s.LaunchedOn)
 	}
-	if len(got.Questions) != 10 {
-		t.Errorf("len(Questions) = %d; want 10", len(got.Questions))
+}
+
+func TestReadQsfQuestions(t *testing.T) {
+	r := bufio.NewReader(strings.NewReader(qsfContent))
+	s, err := ReadQsf(r)
+	if err != nil {
+		t.Error("err != nil; want err = nil")
+	}
+	if s == nil {
+		t.Error("survey = nil; want survey != nil")
+	}
+	if len(s.Questions) != 10 {
+		t.Errorf("len(Questions) = %d; want 10", len(s.Questions))
+	}
+	if _, ok := s.Questions["Q1"]; !ok {
+		t.Error("Q1 not found in s.Questions")
+	}
+	if _, ok := s.Questions["Q2"]; !ok {
+		t.Error("Q2 not found in s.Questions")
+	}
+	if _, ok := s.Questions["Q3"]; !ok {
+		t.Error("Q3 not found in s.Questions")
+	}
+	if _, ok := s.Questions["Q4"]; !ok {
+		t.Error("Q4 not found in s.Questions")
+	}
+	if _, ok := s.Questions["Q5"]; !ok {
+		t.Error("Q5 not found in s.Questions")
+	}
+	if _, ok := s.Questions["Q6"]; !ok {
+		t.Error("Q6 not found in s.Questions")
+	}
+	if _, ok := s.Questions["Q7"]; !ok {
+		t.Error("Q7 not found in s.Questions")
+	}
+	if _, ok := s.Questions["Q8"]; !ok {
+		t.Error("Q8 not found in s.Questions")
+	}
+	if _, ok := s.Questions["Q9"]; !ok {
+		t.Error("Q9 not found in s.Questions")
+	}
+	if _, ok := s.Questions["Q10"]; !ok {
+		t.Error("Q10 not found in s.Questions")
+	}
+	if _, ok := s.Questions["Q11"]; ok {
+		t.Error("Q11 found in s.Questions")
 	}
 }
 
 func TestIncompleteQSF(t *testing.T) {
 	r := bufio.NewReader(strings.NewReader(qsfContentIncomplete))
-	got, err := ReadQsf(r)
+	s, err := ReadQsf(r)
 	if err == nil {
 		t.Error("err = nil; want err != nil")
 	}
-	if got != nil {
+	if s != nil {
 		t.Error("survey != nil; want survey = nil")
 	}
 	if err.Error() != "could not parse: json had no SurveyEntry object" {
@@ -53,14 +97,14 @@ func TestIncompleteQSF(t *testing.T) {
 }
 
 func TestNilReader(t *testing.T) {
-	got, err := ReadQsf(nil)
+	s, err := ReadQsf(nil)
 	if err == nil {
 		t.Error("err = nil; want err != nil")
 	}
 	if err.Error() != "r cannot be nil" {
 		t.Errorf("err.Error() = '%s'; want 'r cannot be nil'", err)
 	}
-	if got != nil {
+	if s != nil {
 		t.Error("got != nil; want got = nil")
 	}
 }

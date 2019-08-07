@@ -15,7 +15,7 @@ type Survey struct {
 	CreatedOn   time.Time
 	LaunchedOn  time.Time
 	ModifiedOn  time.Time
-	Questions   []*Question
+	Questions   map[string]*Question
 }
 
 const timeFormat = "2006-01-02 15:04:05"
@@ -43,6 +43,7 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 		s.ModifiedOn = t
 	}
 
+	s.Questions = make(map[string]*Question)
 	for _, e := range qs.SurveyElements {
 		if e.Element == "SQ" {
 			q := new(Question)
@@ -50,7 +51,7 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 			q.Wording = e.Payload.QuestionText
 			q.Type = e.Payload.QuestionType
 
-			s.Questions = append(s.Questions, q)
+			s.Questions[q.ID] = q
 		}
 	}
 
