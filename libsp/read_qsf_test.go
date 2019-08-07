@@ -47,38 +47,38 @@ func TestReadQsfQuestions(t *testing.T) {
 	if len(s.Questions) != 10 {
 		t.Errorf("len(Questions) = %d; want 10", len(s.Questions))
 	}
-	if _, ok := s.Questions["Q1"]; !ok {
-		t.Error("Q1 not found in s.Questions")
+	if _, ok := s.Questions["QID1"]; !ok {
+		t.Error("QID1 not found in s.Questions")
 	}
-	if _, ok := s.Questions["Q2"]; !ok {
-		t.Error("Q2 not found in s.Questions")
+	if _, ok := s.Questions["QID2"]; !ok {
+		t.Error("QID2 not found in s.Questions")
 	}
-	if _, ok := s.Questions["Q3"]; !ok {
-		t.Error("Q3 not found in s.Questions")
+	if _, ok := s.Questions["QID3"]; !ok {
+		t.Error("QID3 not found in s.Questions")
 	}
-	if _, ok := s.Questions["Q4"]; !ok {
-		t.Error("Q4 not found in s.Questions")
+	if _, ok := s.Questions["QID4"]; !ok {
+		t.Error("QID4 not found in s.Questions")
 	}
-	if _, ok := s.Questions["Q5"]; !ok {
-		t.Error("Q5 not found in s.Questions")
+	if _, ok := s.Questions["QID5"]; !ok {
+		t.Error("QID5 not found in s.Questions")
 	}
-	if _, ok := s.Questions["Q6"]; !ok {
-		t.Error("Q6 not found in s.Questions")
+	if _, ok := s.Questions["QID6"]; !ok {
+		t.Error("QID6 not found in s.Questions")
 	}
-	if _, ok := s.Questions["Q7"]; !ok {
-		t.Error("Q7 not found in s.Questions")
+	if _, ok := s.Questions["QID7"]; !ok {
+		t.Error("QID7 not found in s.Questions")
 	}
-	if _, ok := s.Questions["Q8"]; !ok {
-		t.Error("Q8 not found in s.Questions")
+	if _, ok := s.Questions["QID8"]; !ok {
+		t.Error("QID8 not found in s.Questions")
 	}
-	if _, ok := s.Questions["Q9"]; !ok {
-		t.Error("Q9 not found in s.Questions")
+	if _, ok := s.Questions["QID9"]; !ok {
+		t.Error("QID9 not found in s.Questions")
 	}
-	if _, ok := s.Questions["Q10"]; !ok {
-		t.Error("Q10 not found in s.Questions")
+	if _, ok := s.Questions["QID10"]; !ok {
+		t.Error("QID10 not found in s.Questions")
 	}
-	if _, ok := s.Questions["Q11"]; ok {
-		t.Error("Q11 found in s.Questions")
+	if _, ok := s.Questions["QID11"]; ok {
+		t.Error("QID11 found in s.Questions")
 	}
 }
 

@@ -47,7 +47,7 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 	for _, e := range qs.SurveyElements {
 		if e.Element == "SQ" {
 			q := new(Question)
-			q.ID = e.Payload.DataExportTag
+			q.ID = e.Payload.QuestionID
 			q.Wording = e.Payload.QuestionText
 			q.Type = e.Payload.QuestionType
 
@@ -104,4 +104,5 @@ type qsfPayload struct {
 	DataExportTag string
 	QuestionType  string
 	Selector      string
+	QuestionID    string
 }
