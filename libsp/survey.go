@@ -3,7 +3,9 @@ package libsp
 import (
 	"encoding/json"
 	"errors"
+	"log"
 	"regexp"
+	"strconv"
 	"time"
 )
 
@@ -49,7 +51,8 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 			q := new(Question)
 			q.ID = e.Payload.QuestionID
 			q.Wording = e.Payload.QuestionText
-			q.Type = e.Payload.QuestionType
+			q.Type = QTypeFromString(e.Payload.QuestionType)
+			q.Choices = e.Payload.OrderedChoices()
 
 			s.Questions[q.ID] = q
 		}
@@ -105,4 +108,23 @@ type qsfPayload struct {
 	QuestionType  string
 	Selector      string
 	QuestionID    string
+	Choices       map[int]qsfChoice
+	ChoiceOrder   []string
+}
+
+func (p *qsfPayload) OrderedChoices() []string {
+	orderedChoices := []string{}
+	for _, s := range p.ChoiceOrder {
+		i, err := strconv.Atoi(s)
+		if err != nil {
+			log.Fatalf("could not convert '%s' to int: %s", s, err)
+		}
+		orderedChoices = append(orderedChoices, p.Choices[i].Display)
+	}
+
+	return orderedChoices
+}
+
+type qsfChoice struct {
+	Display string
 }

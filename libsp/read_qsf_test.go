@@ -82,6 +82,47 @@ func TestReadQsfQuestions(t *testing.T) {
 	}
 }
 
+func TestReadQsfChoiceOrder(t *testing.T) {
+	r := bufio.NewReader(strings.NewReader(qsfContent))
+	s, err := ReadQsf(r)
+	if err != nil {
+		t.Error("err != nil; want err = nil")
+	}
+	if s == nil {
+		t.Error("survey = nil; want survey != nil")
+	}
+
+	// Ascending order
+	q, ok := s.Questions["QID2"]
+	if !ok {
+		t.Error("QID2 not found in s.Questions")
+	}
+	if q.Choices[0] != "Click to write Choice 1" {
+		t.Errorf("Choices[0] = '%s'; wanted 'Click to write Choice 1'", q.Choices[0])
+	}
+	if q.Choices[1] != "Click to write Choice 2" {
+		t.Errorf("Choices[1] = '%s'; wanted 'Click to write Choice 2'", q.Choices[1])
+	}
+	if q.Choices[2] != "Click to write Choice 3" {
+		t.Errorf("Choices[2] = '%s'; wanted 'Click to write Choice 3'", q.Choices[2])
+	}
+
+	// Descending order
+	q, ok = s.Questions["QID9"]
+	if !ok {
+		t.Error("QID9 not found in s.Questions")
+	}
+	if q.Choices[0] != "Click to write Choice 3 (ordered first)" {
+		t.Errorf("Choices[0] = '%s'; wanted 'Click to write Choice 3 (ordered first)'", q.Choices[0])
+	}
+	if q.Choices[1] != "Click to write Choice 2 (ordered second)" {
+		t.Errorf("Choices[1] = '%s'; wanted 'Click to write Choice 2 (ordered second)'", q.Choices[1])
+	}
+	if q.Choices[2] != "Click to write Choice 1 (ordered third)" {
+		t.Errorf("Choices[2] = '%s'; wanted 'Click to write Choice 1 (ordered third)'", q.Choices[2])
+	}
+}
+
 func TestIncompleteQSF(t *testing.T) {
 	r := bufio.NewReader(strings.NewReader(qsfContentIncomplete))
 	s, err := ReadQsf(r)
@@ -400,19 +441,19 @@ var qsfContent = `{
                 "QuestionDescription": "Form",
                 "Choices": {
                     "1": {
-                        "Display": "Click to write Choice 1"
+                        "Display": "Click to write Choice 1 (ordered third)"
                     },
                     "2": {
-                        "Display": "Click to write Choice 2"
+                        "Display": "Click to write Choice 2 (ordered second)"
                     },
                     "3": {
-                        "Display": "Click to write Choice 3"
+                        "Display": "Click to write Choice 3 (ordered first)"
                     }
                 },
                 "ChoiceOrder": [
-                    "1",
+                    "3",
                     "2",
-                    "3"
+                    "1"
                 ],
                 "Validation": {
                     "Settings": {
