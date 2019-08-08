@@ -51,7 +51,7 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 			q := new(Question)
 			q.ID = e.Payload.QuestionID
 			q.Wording = e.Payload.QuestionText
-			q.Type = QTypeFromString(e.Payload.QuestionType)
+			q.Type = QTypeFromString(e.Payload.QuestionType, e.Payload.Selector)
 			q.Choices = e.Payload.OrderedChoices()
 
 			s.Questions[q.ID] = q
