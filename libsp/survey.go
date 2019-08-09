@@ -92,7 +92,7 @@ type qsfSurveyElement struct {
 }
 
 func (e *qsfSurveyElement) UnmarshalJSON(b []byte) error {
-	// Survey Questions have a Payload object, other elements have an array of Payload objects
+	// Survey questions have a Payload object, other elements have an array of Payload objects
 	if ok, err := regexp.Match("\"Element\":[\\s*]\"SQ\"", b); err != nil {
 		return err
 	} else if ok {

@@ -18,12 +18,23 @@ var rootCmd = &cobra.Command{
 		path := args[0]
 
 		log.Printf("Reading '%s'", path)
-		file, err := os.Open(path) // For read access.
+		qsf, err := os.Open(path) // For read access.
 		if err != nil {
 			log.Fatalf("Error reading '%s': %s", path, err)
 		}
-		reader := bufio.NewReader(file)
-		libsp.ReadQsf(reader)
+		defer qsf.Close()
+
+		qsfReader := bufio.NewReader(qsf)
+
+		s, err := libsp.ReadQsf(qsfReader)
+		if err != nil {
+			log.Fatalf("Error parsing '%s': %s", path, err)
+		}
+
+		log.Printf("Title = '%s', # of questions = %d, description = '%s'\n", s.Title, len(s.Questions), s.Description)
+		for _, q := range s.Questions {
+			log.Printf("ID: %s Wording: %s\n\tChoices: %v", q.ID, q.Wording, q.ResponseChoices())
+		}
 	},
 	Version: "0.0.1",
 }

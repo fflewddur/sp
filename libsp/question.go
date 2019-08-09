@@ -6,21 +6,36 @@ import "log"
 type Question struct {
 	ID           string
 	Wording      string
-	Type         QType
-	Choices      []string
+	qType        QType
+	choices      []string
 	subQuestions []string
+}
+
+// Type returns a QType representing the type of survey question
+func (q *Question) Type() QType {
+	return q.qType
+}
+
+// ResponseChoices returns a slice of string holding the response choices available to survey respondents
+func (q *Question) ResponseChoices() []string {
+	return q.choices
+}
+
+// SubQuestions returns a slice of string holding the subquestions asked as part of this question (e.g., rows of a matrix question)
+func (q *Question) SubQuestions() []string {
+	return q.subQuestions
 }
 
 func newQuestion(p *qsfPayload) *Question {
 	q := new(Question)
 	q.ID = p.QuestionID
 	q.Wording = p.QuestionText
-	q.Type = newQTypeFromString(p.QuestionType, p.Selector)
-	if q.Type.choicesAreQuestions() {
+	q.qType = newQTypeFromString(p.QuestionType, p.Selector)
+	if q.qType.choicesAreQuestions() {
 		q.subQuestions = p.OrderedChoices()
-		q.Choices = p.OrderedAnswers()
+		q.choices = p.OrderedAnswers()
 	} else {
-		q.Choices = p.OrderedChoices()
+		q.choices = p.OrderedChoices()
 	}
 
 	return q
