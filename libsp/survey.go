@@ -1,11 +1,11 @@
 package libsp
 
 import (
+	"bufio"
 	"encoding/json"
 	"errors"
 	"log"
 	"regexp"
-	"strconv"
 	"time"
 )
 
@@ -21,6 +21,18 @@ type Survey struct {
 }
 
 const timeFormat = "2006-01-02 15:04:05"
+
+// WriteCSV saves the parsed survey questions and responses in comma-separated value format
+func (s *Survey) WriteCSV(w *bufio.Writer) error {
+	log.Print("Sorry, Survey.WriteCSV() isn't implemented yet :(")
+	return nil
+}
+
+// WriteR saves an R script suitable for importing the survey questions to R
+func (s *Survey) WriteR(w *bufio.Writer) error {
+	log.Print("Sorry, Survey.WriteR() isn't implemented yet :(")
+	return nil
+}
 
 // UnmarshalJSON fills the fields of s with the data found in b
 func (s *Survey) UnmarshalJSON(b []byte) error {
@@ -48,12 +60,7 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 	s.Questions = make(map[string]*Question)
 	for _, e := range qs.SurveyElements {
 		if e.Element == "SQ" {
-			q := new(Question)
-			q.ID = e.Payload.QuestionID
-			q.Wording = e.Payload.QuestionText
-			q.Type = QTypeFromString(e.Payload.QuestionType, e.Payload.Selector)
-			q.Choices = e.Payload.OrderedChoices()
-
+			q := newQuestion(e.Payload)
 			s.Questions[q.ID] = q
 		}
 	}
@@ -109,20 +116,35 @@ type qsfPayload struct {
 	Selector      string
 	QuestionID    string
 	Choices       map[int]qsfChoice
-	ChoiceOrder   []string
+	ChoiceOrder   []json.Number
+	Answers       map[int]qsfChoice
+	AnswerOrder   []json.Number
 }
 
 func (p *qsfPayload) OrderedChoices() []string {
-	orderedChoices := []string{}
+	ordered := []string{}
 	for _, s := range p.ChoiceOrder {
-		i, err := strconv.Atoi(s)
+		i, err := s.Int64()
 		if err != nil {
 			log.Fatalf("could not convert '%s' to int: %s", s, err)
 		}
-		orderedChoices = append(orderedChoices, p.Choices[i].Display)
+		ordered = append(ordered, p.Choices[int(i)].Display)
 	}
 
-	return orderedChoices
+	return ordered
+}
+
+func (p *qsfPayload) OrderedAnswers() []string {
+	ordered := []string{}
+	for _, s := range p.AnswerOrder {
+		i, err := s.Int64()
+		if err != nil {
+			log.Fatalf("could not convert '%s' to int: %s", s, err)
+		}
+		ordered = append(ordered, p.Answers[int(i)].Display)
+	}
+
+	return ordered
 }
 
 type qsfChoice struct {

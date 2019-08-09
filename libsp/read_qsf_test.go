@@ -123,6 +123,40 @@ func TestReadQsfChoiceOrder(t *testing.T) {
 	}
 }
 
+func TestReadQsfAnswerOrder(t *testing.T) {
+	r := bufio.NewReader(strings.NewReader(qsfContent))
+	s, err := ReadQsf(r)
+	if err != nil {
+		t.Error("err != nil; want err = nil")
+	}
+	if s == nil {
+		t.Error("survey = nil; want survey != nil")
+	}
+
+	q, ok := s.Questions["QID5"]
+	if !ok {
+		t.Error("QID5 not found in s.Questions")
+	}
+	if q.Choices[0] != "Click to write Scale point 1" {
+		t.Errorf("Choices[0] = '%s'; wanted 'Click to write Scale point 1'", q.Choices[0])
+	}
+	if q.Choices[1] != "Click to write Scale point 2" {
+		t.Errorf("Choices[1] = '%s'; wanted 'Click to write Scale point 2'", q.Choices[1])
+	}
+	if q.Choices[2] != "Click to write Scale point 3" {
+		t.Errorf("Choices[2] = '%s'; wanted 'Click to write Scale point 3'", q.Choices[2])
+	}
+	if q.subQuestions[0] != "Click to write Statement 1" {
+		t.Errorf("Choices[0] = '%s'; wanted 'Click to write Statement 1'", q.subQuestions[0])
+	}
+	if q.subQuestions[1] != "Click to write Statement 2" {
+		t.Errorf("Choices[1] = '%s'; wanted 'Click to write Statement 2'", q.subQuestions[1])
+	}
+	if q.subQuestions[2] != "Click to write Statement 3" {
+		t.Errorf("Choices[2] = '%s'; wanted 'Click to write Statement 3'", q.subQuestions[2])
+	}
+}
+
 func TestIncompleteQSF(t *testing.T) {
 	r := bufio.NewReader(strings.NewReader(qsfContentIncomplete))
 	s, err := ReadQsf(r)
