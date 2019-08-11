@@ -34,6 +34,11 @@ func (s *Survey) WriteR(w *bufio.Writer) error {
 	return nil
 }
 
+// ReadXML reads a Qualtrics XML file of participant responses
+func (s *Survey) ReadXML(r *bufio.Reader) error {
+	return nil
+}
+
 // UnmarshalJSON fills the fields of s with the data found in b
 func (s *Survey) UnmarshalJSON(b []byte) error {
 	var qs qsf
