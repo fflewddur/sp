@@ -42,5 +42,4 @@ func TestReadXML(t *testing.T) {
 	if err != nil {
 		t.Errorf("err = %s; want err = nil", err)
 	}
-
 }
