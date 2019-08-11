@@ -8,6 +8,7 @@ import (
 	"log"
 	"regexp"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/beevik/etree"
@@ -49,11 +50,17 @@ func (s *Survey) ReadXML(r *bufio.Reader) error {
 	responses := []*Response{}
 	root := doc.SelectElement("Responses")
 	for _, resp := range root.SelectElements("Response") {
-		r := new(Response)
+		r := NewResponse()
 		r.ID = getStringElement("_recordId", resp)
 		r.Progress = getIntElement("progress", resp)
 		r.Duration = getIntElement("duration", resp)
 		r.Finished = getBoolElement("finished", resp)
+
+		for _, e := range resp.ChildElements() {
+			if strings.HasPrefix(e.Tag, "QID") {
+				r.AddAnswer(e.Tag, e.Text())
+			}
+		}
 
 		responses = append(responses, r)
 	}

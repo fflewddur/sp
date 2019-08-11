@@ -46,6 +46,7 @@ func TestReadXML(t *testing.T) {
 	if len(s.Responses) != 2 {
 		t.Errorf("len(Responses) = %d; wanted 2", len(s.Responses))
 	}
+
 	r := s.Responses[0]
 	if r.ID != "R_eg2X4t8Notm1zeV" {
 		t.Errorf("ID = '%s'; wanted 'R_eg2X4t8Notm1zeV'", r.ID)
@@ -57,6 +58,20 @@ func TestReadXML(t *testing.T) {
 		t.Errorf("Duration = %d; wanted 62", r.Duration)
 	}
 	if r.Finished != true {
+		t.Errorf("Finished = %t; wanted true", r.Finished)
+	}
+
+	r = s.Responses[1]
+	if r.ID != "R_6EBZzqhSZOghMWt" {
+		t.Errorf("ID = '%s'; wanted 'R_6EBZzqhSZOghMWt'", r.ID)
+	}
+	if r.Progress != 80 {
+		t.Errorf("Progress = %d; wanted 100", r.Progress)
+	}
+	if r.Duration != 69 {
+		t.Errorf("Duration = %d; wanted 62", r.Duration)
+	}
+	if r.Finished != false {
 		t.Errorf("Finished = %t; wanted true", r.Finished)
 	}
 }

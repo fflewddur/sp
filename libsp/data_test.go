@@ -751,9 +751,9 @@ var xmlTestContent = `<?xml version="1.0" ?>
 		<endDate>2019-02-18 21:46:24</endDate>
 		<status>IP Address</status>
 		<ipAddress>*******</ipAddress>
-		<progress>100</progress>
+		<progress>80</progress>
 		<duration>69</duration>
-		<finished>True</finished>
+		<finished>False</finished>
 		<recordedDate>2019-02-18 21:46:24</recordedDate>
 		<_recordId>R_6EBZzqhSZOghMWt</_recordId>
 		<recipientLastName>*******</recipientLastName>
