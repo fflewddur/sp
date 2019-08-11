@@ -4,9 +4,13 @@ import (
 	"bufio"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"regexp"
+	"strconv"
 	"time"
+
+	"github.com/beevik/etree"
 )
 
 // Survey represents a survey, includings its questions, potential responses, and meta-data
@@ -37,7 +41,56 @@ func (s *Survey) WriteR(w *bufio.Writer) error {
 
 // ReadXML reads a Qualtrics XML file of participant responses
 func (s *Survey) ReadXML(r *bufio.Reader) error {
+	doc := etree.NewDocument()
+	_, err := doc.ReadFrom(r)
+	if err != nil {
+		return fmt.Errorf("could not parse xml: %s", err)
+	}
+	responses := []*Response{}
+	root := doc.SelectElement("Responses")
+	for _, resp := range root.SelectElements("Response") {
+		r := new(Response)
+		r.ID = getStringElement("_recordId", resp)
+		r.Progress = getIntElement("progress", resp)
+		r.Duration = getIntElement("duration", resp)
+		r.Finished = getBoolElement("finished", resp)
+
+		responses = append(responses, r)
+	}
+	s.Responses = responses
 	return nil
+}
+
+func getStringElement(name string, e *etree.Element) string {
+	var retval string
+	if v := e.SelectElement(name); v != nil {
+		retval = v.Text()
+	}
+	return retval
+}
+
+func getIntElement(name string, e *etree.Element) int {
+	var retval int
+	if v := e.SelectElement(name); v != nil {
+		var err error
+		retval, err = strconv.Atoi(v.Text())
+		if err != nil {
+			log.Printf("error converting '%s' to int: %s", v.Text(), err)
+		}
+	}
+	return retval
+}
+
+func getBoolElement(name string, e *etree.Element) bool {
+	var retval bool
+	if v := e.SelectElement(name); v != nil {
+		var err error
+		retval, err = strconv.ParseBool(v.Text())
+		if err != nil {
+			log.Printf("error converting '%s' to bool: %s", v.Text(), err)
+		}
+	}
+	return retval
 }
 
 // UnmarshalJSON fills the fields of s with the data found in b
