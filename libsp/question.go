@@ -47,6 +47,7 @@ type QType int
 // Types of supported survey questions
 const (
 	Unknown QType = iota
+	Description
 	MultipleChoice
 	TextEntry
 	Matrix
@@ -57,6 +58,8 @@ const (
 // newQTypeFromString returns the corresponding QType value for the given string
 func newQTypeFromString(t, s string) QType {
 	switch t {
+	case "DB":
+		return Description
 	case "Matrix":
 		if s == "MaxDiff" {
 			return MaxDiff
