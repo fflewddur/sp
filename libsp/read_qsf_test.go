@@ -44,8 +44,8 @@ func TestReadQsfQuestions(t *testing.T) {
 	if s == nil {
 		t.Error("survey = nil; want survey != nil")
 	}
-	if len(s.Questions) != 10 {
-		t.Errorf("len(Questions) = %d; want 10", len(s.Questions))
+	if len(s.Questions) != 11 {
+		t.Errorf("len(Questions) = %d; want 11", len(s.Questions))
 	}
 	if _, ok := s.Questions["QID1"]; !ok {
 		t.Error("QID1 not found in s.Questions")
@@ -77,8 +77,25 @@ func TestReadQsfQuestions(t *testing.T) {
 	if _, ok := s.Questions["QID10"]; !ok {
 		t.Error("QID10 not found in s.Questions")
 	}
-	if _, ok := s.Questions["QID11"]; ok {
+	if _, ok := s.Questions["QID11"]; !ok {
+		t.Error("QID11 not found in s.Questions")
+	}
+	if _, ok := s.Questions["QID12"]; ok {
 		t.Error("QID11 found in s.Questions")
+	}
+}
+
+func TestReadQsfMinified(t *testing.T) {
+	r := bufio.NewReader(strings.NewReader(qsfTestContentMin))
+	s, err := ReadQsf(r)
+	if err != nil {
+		t.Error("err != nil; want err = nil")
+	}
+	if s == nil {
+		t.Error("survey = nil; want survey != nil")
+	}
+	if len(s.Questions) != 10 {
+		t.Errorf("len(Questions) = %d; want 10", len(s.Questions))
 	}
 }
 
@@ -100,6 +117,9 @@ func TestReadQsfTypes(t *testing.T) {
 	}
 	if s.Questions["QID10"].Type() != RankOrder {
 		t.Errorf("Type = %v; wanted %v", s.Questions["QID10"].Type(), RankOrder)
+	}
+	if s.Questions["QID11"].Type() != Description {
+		t.Errorf("Type = %v; wanted %v", s.Questions["QID11"].Type(), Description)
 	}
 }
 
