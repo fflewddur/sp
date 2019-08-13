@@ -26,6 +26,11 @@ func (q *Question) SubQuestions() []string {
 	return q.subQuestions
 }
 
+// CSVCols returns a slice of string holding the ordered CSV column names for this question
+func (q *Question) CSVCols() []string {
+	return nil
+}
+
 func newQuestion(p *qsfPayload) *Question {
 	q := new(Question)
 	q.ID = p.QuestionID
@@ -48,9 +53,11 @@ type QType int
 const (
 	Unknown QType = iota
 	Description
-	MultipleChoice
+	MultipleChoiceSingleResponse
+	MultipleChoiceMultiResponse
 	TextEntry
-	Matrix
+	MatrixSingleResponse
+	MatrixMultiResponse
 	MaxDiff
 	RankOrder
 )
@@ -63,10 +70,15 @@ func newQTypeFromString(t, s string) QType {
 	case "Matrix":
 		if s == "MaxDiff" {
 			return MaxDiff
+		} else if s == "MultipleAnswer" {
+			return MatrixMultiResponse
 		}
-		return Matrix
+		return MatrixSingleResponse
 	case "MC":
-		return MultipleChoice
+		if s == "MAVR" || s == "MAHR" || s == "MACOL" || s == "MSB" {
+			return MultipleChoiceMultiResponse
+		}
+		return MultipleChoiceSingleResponse
 	case "RO":
 		return RankOrder
 	case "TE":
@@ -82,8 +94,10 @@ func newQTypeFromString(t, s string) QType {
 func (qt QType) choicesAreQuestions() bool {
 	retval := false
 	switch qt {
-	case Matrix:
-		retval = true
+	case MatrixSingleResponse:
+		fallthrough
+	case MatrixMultiResponse:
+		fallthrough
 	case MaxDiff:
 		retval = true
 	}

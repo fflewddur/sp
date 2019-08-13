@@ -109,8 +109,17 @@ func TestReadQsfTypes(t *testing.T) {
 		t.Error("survey = nil; want survey != nil")
 	}
 
-	if s.Questions["QID1"].Type() != MultipleChoice {
-		t.Errorf("Type = %v; wanted %v", s.Questions["QID1"].Type(), MultipleChoice)
+	if s.Questions["QID1"].Type() != MultipleChoiceSingleResponse {
+		t.Errorf("Type = %v; wanted %v", s.Questions["QID1"].Type(), MultipleChoiceSingleResponse)
+	}
+	if s.Questions["QID4"].Type() != MultipleChoiceMultiResponse {
+		t.Errorf("Type = %v; wanted %v", s.Questions["QID4"].Type(), MultipleChoiceMultiResponse)
+	}
+	if s.Questions["QID5"].Type() != MatrixSingleResponse {
+		t.Errorf("Type = %v; wanted %v", s.Questions["QID5"].Type(), MatrixSingleResponse)
+	}
+	if s.Questions["QID6"].Type() != MaxDiff {
+		t.Errorf("Type = %v; wanted %v", s.Questions["QID6"].Type(), MaxDiff)
 	}
 	if s.Questions["QID7"].Type() != TextEntry {
 		t.Errorf("Type = %v; wanted %v", s.Questions["QID7"].Type(), TextEntry)
