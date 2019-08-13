@@ -2,6 +2,7 @@ package libsp
 
 import (
 	"bufio"
+	"encoding/csv"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -29,9 +30,25 @@ type Survey struct {
 const timeFormat = "2006-01-02 15:04:05"
 
 // WriteCSV saves the parsed survey questions and responses in comma-separated value format
-func (s *Survey) WriteCSV(w *bufio.Writer) error {
-	log.Print("Sorry, Survey.WriteCSV() isn't implemented yet :(")
+func (s *Survey) WriteCSV(bw *bufio.Writer) error {
+	if bw == nil {
+		return errors.New("bw cannot be nil")
+	}
+
+	w := csv.NewWriter(bw)
+
+	w.Write(s.csvCols())
+	w.Flush()
+
+	if err := w.Error(); err != nil {
+		return fmt.Errorf("error writing csv: %s", err)
+	}
+
 	return nil
+}
+
+func (s *Survey) csvCols() []string {
+	return []string{"id", "finished", "progress", "duration"}
 }
 
 // WriteR saves an R script suitable for importing the survey questions to R

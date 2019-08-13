@@ -2,6 +2,8 @@ package libsp
 
 import (
 	"bufio"
+	"bytes"
+	"io"
 	"strings"
 	"testing"
 )
@@ -12,9 +14,31 @@ func TestWriteCSV(t *testing.T) {
 	if s == nil {
 		t.Error("s = nil; want s != nil")
 	}
-	err = s.WriteCSV(nil)
+	var b bytes.Buffer
+	w := bufio.NewWriter(&b)
+	err = s.WriteCSV(w)
 	if err != nil {
 		t.Errorf("err = %s; want err = nil", err)
+	}
+	line, err := b.ReadString('\n')
+	line = strings.TrimSpace(line)
+	if err != nil && err != io.EOF {
+		t.Errorf("err = %s; want err = nil", err)
+	}
+	if line != "id,finished,progress,duration" {
+		t.Errorf("line = '%s'; wanted 'id,finished,progress,duration'", line)
+	}
+}
+
+func TestWriteCSVNil(t *testing.T) {
+	r := bufio.NewReader(strings.NewReader(qsfTestContent))
+	s, err := ReadQsf(r)
+	if s == nil {
+		t.Error("s = nil; want s != nil")
+	}
+	err = s.WriteCSV(nil)
+	if err != nil && err.Error() != "bw cannot be nil" {
+		t.Errorf("err = %s; want err = 'bw cannot be nil'", err)
 	}
 }
 
