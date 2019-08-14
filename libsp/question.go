@@ -1,7 +1,5 @@
 package libsp
 
-import "log"
-
 // Question represents a survey question
 type Question struct {
 	ID           string
@@ -11,7 +9,7 @@ type Question struct {
 	subQuestions []string
 }
 
-// Type returns a QType representing the type of survey question
+// Type returns a QType representing the type of this survey question
 func (q *Question) Type() QType {
 	return q.qType
 }
@@ -28,6 +26,16 @@ func (q *Question) SubQuestions() []string {
 
 // CSVCols returns a slice of string holding the ordered CSV column names for this question
 func (q *Question) CSVCols() []string {
+	suffixes := q.qType.suffixes(q)
+	cols := make([]string, 0)
+	for _, s := range suffixes {
+		cols = append(cols, q.ID+s)
+	}
+	return cols
+}
+
+// ResponseCols returns a slice of string holding the ordered responses in r for this question
+func (q *Question) ResponseCols(r *Response) []string {
 	return nil
 }
 
@@ -53,13 +61,14 @@ type QType int
 const (
 	Unknown QType = iota
 	Description
+	Form
 	MultipleChoiceSingleResponse
 	MultipleChoiceMultiResponse
-	TextEntry
 	MatrixSingleResponse
 	MatrixMultiResponse
 	MaxDiff
 	RankOrder
+	TextEntry
 )
 
 // newQTypeFromString returns the corresponding QType value for the given string
@@ -82,9 +91,10 @@ func newQTypeFromString(t, s string) QType {
 	case "RO":
 		return RankOrder
 	case "TE":
+		if s == "FORM" {
+			return Form
+		}
 		return TextEntry
-	default:
-		log.Fatalf("'%s' is not a valid question type", t)
 	}
 
 	return Unknown
@@ -102,4 +112,18 @@ func (qt QType) choicesAreQuestions() bool {
 		retval = true
 	}
 	return retval
+}
+
+func (qt QType) suffixes(q *Question) []string {
+	// TODO support each type below:
+	// Description: ?
+	// Form: [question id]_[choice id]
+	// MultipleChoiceSingleResponse: [question id]
+	// MultipleChoiceMultiResponse: [question id]_[choice id]
+	// MatrixSingleResponse: [question id]_[subquestion id]
+	// MatrixMultiResponse: ?
+	// MaxDiff: [question id]_[choice id]
+	// RankOrder: [question id]_[choice id]
+	// TextEntry: [question id]_TEXT
+	return []string{""}
 }

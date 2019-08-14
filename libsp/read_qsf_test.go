@@ -124,6 +124,9 @@ func TestReadQsfTypes(t *testing.T) {
 	if s.Questions["QID7"].Type() != TextEntry {
 		t.Errorf("Type = %v; wanted %v", s.Questions["QID7"].Type(), TextEntry)
 	}
+	if s.Questions["QID9"].Type() != Form {
+		t.Errorf("Type = %v; wanted %v", s.Questions["QID9"].Type(), Form)
+	}
 	if s.Questions["QID10"].Type() != RankOrder {
 		t.Errorf("Type = %v; wanted %v", s.Questions["QID10"].Type(), RankOrder)
 	}
