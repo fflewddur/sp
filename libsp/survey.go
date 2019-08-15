@@ -17,14 +17,15 @@ import (
 
 // Survey represents a survey, includings its questions, potential responses, and meta-data
 type Survey struct {
-	Title       string
-	Description string
-	Status      string
-	CreatedOn   time.Time
-	LaunchedOn  time.Time
-	ModifiedOn  time.Time
-	Questions   map[string]*Question
-	Responses   []*Response
+	Title         string
+	Description   string
+	Status        string
+	CreatedOn     time.Time
+	LaunchedOn    time.Time
+	ModifiedOn    time.Time
+	QuestionOrder []string
+	Questions     map[string]*Question
+	Responses     []*Response
 }
 
 const timeFormat = "2006-01-02 15:04:05"
@@ -48,7 +49,13 @@ func (s *Survey) WriteCSV(bw *bufio.Writer) error {
 }
 
 func (s *Survey) csvCols() []string {
-	return []string{"id", "finished", "progress", "duration"}
+	cols := []string{"id", "finished", "progress", "duration"}
+	for _, id := range s.QuestionOrder {
+		q := s.Questions[id]
+		cols = append(cols, q.CSVCols()...)
+	}
+	log.Printf("cols = %v\n", cols)
+	return cols
 }
 
 // WriteR saves an R script suitable for importing the survey questions to R
@@ -144,6 +151,7 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 	for _, e := range qs.SurveyElements {
 		if e.Element == "SQ" {
 			q := newQuestion(e.Payload)
+			s.QuestionOrder = append(s.QuestionOrder, q.ID) // TODO get question order from FLOW elements in QSF
 			s.Questions[q.ID] = q
 		}
 	}
@@ -204,27 +212,31 @@ type qsfPayload struct {
 	AnswerOrder   []json.Number
 }
 
-func (p *qsfPayload) OrderedChoices() []string {
-	ordered := []string{}
+// TODO return an err instead of exiting
+func (p *qsfPayload) OrderedChoices() []Choice {
+	ordered := []Choice{}
 	for _, s := range p.ChoiceOrder {
 		i, err := s.Int64()
 		if err != nil {
 			log.Fatalf("could not convert '%s' to int: %s", s, err)
 		}
-		ordered = append(ordered, p.Choices[int(i)].Display)
+		c := Choice{ID: s.String(), Label: p.Choices[int(i)].Display}
+		ordered = append(ordered, c)
 	}
 
 	return ordered
 }
 
-func (p *qsfPayload) OrderedAnswers() []string {
-	ordered := []string{}
+// TODO return an err instead of exiting
+func (p *qsfPayload) OrderedAnswers() []Choice {
+	ordered := []Choice{}
 	for _, s := range p.AnswerOrder {
 		i, err := s.Int64()
 		if err != nil {
 			log.Fatalf("could not convert '%s' to int: %s", s, err)
 		}
-		ordered = append(ordered, p.Answers[int(i)].Display)
+		c := Choice{ID: s.String(), Label: p.Answers[int(i)].Display}
+		ordered = append(ordered, c)
 	}
 
 	return ordered

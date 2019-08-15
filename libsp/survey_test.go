@@ -40,7 +40,24 @@ func TestWriteCSV(t *testing.T) {
 	if record[3] != "duration" {
 		t.Errorf("line 0, record[3] = '%s'; want 'duration'", record[3])
 	}
-
+	if record[4] != "QID2_1" {
+		t.Errorf("line 0, record[4] = '%s'; want 'QID2_1'", record[4])
+	}
+	if record[5] != "QID2_2" {
+		t.Errorf("line 0, record[5] = '%s'; want 'QID2_2'", record[5])
+	}
+	if record[6] != "QID2_3" {
+		t.Errorf("line 0, record[6] = '%s'; want 'QID2_3'", record[6])
+	}
+	if record[7] != "QID9_3" {
+		t.Errorf("line 0, record[7] = '%s'; want 'QID9_3'", record[7])
+	}
+	if record[8] != "QID9_2" {
+		t.Errorf("line 0, record[8] = '%s'; want 'QID9_2'", record[8])
+	}
+	if record[9] != "QID9_1" {
+		t.Errorf("line 0, record[9] = '%s'; want 'QID9_1'", record[9])
+	}
 	record, err = csvReader.Read()
 	if err != io.EOF {
 		t.Errorf("err = %v; want EOF", err)

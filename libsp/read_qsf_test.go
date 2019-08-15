@@ -151,14 +151,14 @@ func TestReadQsfChoiceOrder(t *testing.T) {
 		t.Error("QID2 not found in s.Questions")
 	}
 	rc := q.ResponseChoices()
-	if rc[0] != "Click to write Choice 1" {
-		t.Errorf("Choices[0] = '%s'; wanted 'Click to write Choice 1'", rc[0])
+	if rc[0].Label != "Click to write Choice 1" {
+		t.Errorf("Choices[0] = '%s'; wanted 'Click to write Choice 1'", rc[0].Label)
 	}
-	if rc[1] != "Click to write Choice 2" {
-		t.Errorf("Choices[1] = '%s'; wanted 'Click to write Choice 2'", rc[1])
+	if rc[1].Label != "Click to write Choice 2" {
+		t.Errorf("Choices[1] = '%s'; wanted 'Click to write Choice 2'", rc[1].Label)
 	}
-	if rc[2] != "Click to write Choice 3" {
-		t.Errorf("Choices[2] = '%s'; wanted 'Click to write Choice 3'", rc[2])
+	if rc[2].Label != "Click to write Choice 3" {
+		t.Errorf("Choices[2] = '%s'; wanted 'Click to write Choice 3'", rc[2].Label)
 	}
 
 	// Descending order
@@ -167,14 +167,14 @@ func TestReadQsfChoiceOrder(t *testing.T) {
 		t.Error("QID9 not found in s.Questions")
 	}
 	rc = q.ResponseChoices()
-	if rc[0] != "Click to write Choice 3 (ordered first)" {
-		t.Errorf("Choices[0] = '%s'; wanted 'Click to write Choice 3 (ordered first)'", rc[0])
+	if rc[0].Label != "Click to write Choice 3 (ordered first)" {
+		t.Errorf("Choices[0] = '%s'; wanted 'Click to write Choice 3 (ordered first)'", rc[0].Label)
 	}
-	if rc[1] != "Click to write Choice 2 (ordered second)" {
-		t.Errorf("Choices[1] = '%s'; wanted 'Click to write Choice 2 (ordered second)'", rc[1])
+	if rc[1].Label != "Click to write Choice 2 (ordered second)" {
+		t.Errorf("Choices[1] = '%s'; wanted 'Click to write Choice 2 (ordered second)'", rc[1].Label)
 	}
-	if rc[2] != "Click to write Choice 1 (ordered third)" {
-		t.Errorf("Choices[2] = '%s'; wanted 'Click to write Choice 1 (ordered third)'", rc[2])
+	if rc[2].Label != "Click to write Choice 1 (ordered third)" {
+		t.Errorf("Choices[2] = '%s'; wanted 'Click to write Choice 1 (ordered third)'", rc[2].Label)
 	}
 }
 
@@ -193,24 +193,24 @@ func TestReadQsfAnswerOrder(t *testing.T) {
 		t.Error("QID5 not found in s.Questions")
 	}
 	rc := q.ResponseChoices()
-	if rc[0] != "Click to write Scale point 1" {
-		t.Errorf("Choices[0] = '%s'; wanted 'Click to write Scale point 1'", rc[0])
+	if rc[0].Label != "Click to write Scale point 1" {
+		t.Errorf("Choices[0] = '%s'; wanted 'Click to write Scale point 1'", rc[0].Label)
 	}
-	if rc[1] != "Click to write Scale point 2" {
-		t.Errorf("Choices[1] = '%s'; wanted 'Click to write Scale point 2'", rc[1])
+	if rc[1].Label != "Click to write Scale point 2" {
+		t.Errorf("Choices[1] = '%s'; wanted 'Click to write Scale point 2'", rc[1].Label)
 	}
-	if rc[2] != "Click to write Scale point 3" {
-		t.Errorf("Choices[2] = '%s'; wanted 'Click to write Scale point 3'", rc[2])
+	if rc[2].Label != "Click to write Scale point 3" {
+		t.Errorf("Choices[2] = '%s'; wanted 'Click to write Scale point 3'", rc[2].Label)
 	}
 	sq := q.SubQuestions()
-	if sq[0] != "Click to write Statement 1" {
-		t.Errorf("Choices[0] = '%s'; wanted 'Click to write Statement 1'", sq[0])
+	if sq[0].Label != "Click to write Statement 1" {
+		t.Errorf("Choices[0] = '%s'; wanted 'Click to write Statement 1'", sq[0].Label)
 	}
-	if sq[1] != "Click to write Statement 2" {
-		t.Errorf("Choices[1] = '%s'; wanted 'Click to write Statement 2'", sq[1])
+	if sq[1].Label != "Click to write Statement 2" {
+		t.Errorf("Choices[1] = '%s'; wanted 'Click to write Statement 2'", sq[1].Label)
 	}
-	if sq[2] != "Click to write Statement 3" {
-		t.Errorf("Choices[2] = '%s'; wanted 'Click to write Statement 3'", sq[2])
+	if sq[2].Label != "Click to write Statement 3" {
+		t.Errorf("Choices[2] = '%s'; wanted 'Click to write Statement 3'", sq[2].Label)
 	}
 }
 

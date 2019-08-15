@@ -5,8 +5,14 @@ type Question struct {
 	ID           string
 	Wording      string
 	qType        QType
-	choices      []string
-	subQuestions []string
+	choices      []Choice
+	subQuestions []Choice
+}
+
+// Choice represents one possible response to a survey question
+type Choice struct {
+	ID    string
+	Label string
 }
 
 // Type returns a QType representing the type of this survey question
@@ -14,13 +20,13 @@ func (q *Question) Type() QType {
 	return q.qType
 }
 
-// ResponseChoices returns a slice of string holding the response choices available to survey respondents
-func (q *Question) ResponseChoices() []string {
+// ResponseChoices returns a slice of Choice holding the response choices available to survey respondents
+func (q *Question) ResponseChoices() []Choice {
 	return q.choices
 }
 
-// SubQuestions returns a slice of string holding the subquestions asked as part of this question (e.g., rows of a matrix question)
-func (q *Question) SubQuestions() []string {
+// SubQuestions returns a slice of Choice holding the subquestions asked as part of this question (e.g., rows of a matrix question)
+func (q *Question) SubQuestions() []Choice {
 	return q.subQuestions
 }
 
@@ -125,5 +131,17 @@ func (qt QType) suffixes(q *Question) []string {
 	// MaxDiff: [question id]_[choice id]
 	// RankOrder: [question id]_[choice id]
 	// TextEntry: [question id]_TEXT
-	return []string{""}
+	suffixes := []string{}
+	switch qt {
+	case MultipleChoiceSingleResponse:
+		suffixes = append(suffixes, "")
+	case MultipleChoiceMultiResponse:
+		fallthrough
+	case Form:
+		for _, c := range q.choices {
+			suffixes = append(suffixes, "_"+c.ID)
+		}
+	}
+
+	return suffixes
 }
