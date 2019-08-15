@@ -3,6 +3,7 @@ package libsp
 import (
 	"bufio"
 	"bytes"
+	"encoding/csv"
 	"io"
 	"strings"
 	"testing"
@@ -12,21 +13,37 @@ func TestWriteCSV(t *testing.T) {
 	r := bufio.NewReader(strings.NewReader(qsfTestContent))
 	s, err := ReadQsf(r)
 	if s == nil {
-		t.Error("s = nil; want s != nil")
+		t.Error("s = nil")
 	}
 	var b bytes.Buffer
 	w := bufio.NewWriter(&b)
 	err = s.WriteCSV(w)
 	if err != nil {
-		t.Errorf("err = %s; want err = nil", err)
+		t.Errorf("err = %s", err)
 	}
-	line, err := b.ReadString('\n')
-	line = strings.TrimSpace(line)
-	if err != nil && err != io.EOF {
-		t.Errorf("err = %s; want err = nil", err)
+
+	r = bufio.NewReader(&b)
+	csvReader := csv.NewReader(r)
+	record, err := csvReader.Read()
+	if err != nil {
+		t.Errorf("err = %s", err)
 	}
-	if line != "id,finished,progress,duration" {
-		t.Errorf("line = '%s'; wanted 'id,finished,progress,duration'", line)
+	if record[0] != "id" {
+		t.Errorf("line 0, record[0] = '%s'; want 'id'", record[0])
+	}
+	if record[1] != "finished" {
+		t.Errorf("line 0, record[1] = '%s'; want 'finished'", record[1])
+	}
+	if record[2] != "progress" {
+		t.Errorf("line 0, record[2] = '%s'; want 'progress'", record[2])
+	}
+	if record[3] != "duration" {
+		t.Errorf("line 0, record[3] = '%s'; want 'duration'", record[3])
+	}
+
+	record, err = csvReader.Read()
+	if err != io.EOF {
+		t.Errorf("err = %v; want EOF", err)
 	}
 }
 
