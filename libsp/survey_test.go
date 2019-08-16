@@ -28,36 +28,28 @@ func TestWriteCSV(t *testing.T) {
 	if err != nil {
 		t.Errorf("err = %s", err)
 	}
-	if record[0] != "id" {
-		t.Errorf("line 0, record[0] = '%s'; want 'id'", record[0])
+
+	var tests = []struct {
+		col  int
+		want string
+	}{
+		{0, "id"},
+		{1, "finished"},
+		{2, "progress"},
+		{3, "duration"},
+		{4, "QID2_1"},
+		{5, "QID2_2"},
+		{6, "QID2_3"},
+		{7, "QID9_3"},
+		{8, "QID9_2"},
+		{9, "QID9_1"},
 	}
-	if record[1] != "finished" {
-		t.Errorf("line 0, record[1] = '%s'; want 'finished'", record[1])
+	for _, test := range tests {
+		if record[test.col] != test.want {
+			t.Errorf("line 0, record[%d] = '%s'; want '%s'", test.col, record[0], test.want)
+		}
 	}
-	if record[2] != "progress" {
-		t.Errorf("line 0, record[2] = '%s'; want 'progress'", record[2])
-	}
-	if record[3] != "duration" {
-		t.Errorf("line 0, record[3] = '%s'; want 'duration'", record[3])
-	}
-	if record[4] != "QID2_1" {
-		t.Errorf("line 0, record[4] = '%s'; want 'QID2_1'", record[4])
-	}
-	if record[5] != "QID2_2" {
-		t.Errorf("line 0, record[5] = '%s'; want 'QID2_2'", record[5])
-	}
-	if record[6] != "QID2_3" {
-		t.Errorf("line 0, record[6] = '%s'; want 'QID2_3'", record[6])
-	}
-	if record[7] != "QID9_3" {
-		t.Errorf("line 0, record[7] = '%s'; want 'QID9_3'", record[7])
-	}
-	if record[8] != "QID9_2" {
-		t.Errorf("line 0, record[8] = '%s'; want 'QID9_2'", record[8])
-	}
-	if record[9] != "QID9_1" {
-		t.Errorf("line 0, record[9] = '%s'; want 'QID9_1'", record[9])
-	}
+
 	record, err = csvReader.Read()
 	if err != io.EOF {
 		t.Errorf("err = %v; want EOF", err)
@@ -105,31 +97,29 @@ func TestReadXML(t *testing.T) {
 		t.Errorf("len(Responses) = %d; wanted 2", len(s.Responses))
 	}
 
-	r := s.Responses[0]
-	if r.ID != "R_eg2X4t8Notm1zeV" {
-		t.Errorf("ID = '%s'; wanted 'R_eg2X4t8Notm1zeV'", r.ID)
+	var tests = []struct {
+		index    int
+		id       string
+		progress int
+		duration int
+		finished bool
+	}{
+		{0, "R_eg2X4t8Notm1zeV", 100, 62, true},
+		{1, "R_6EBZzqhSZOghMWt", 80, 69, false},
 	}
-	if r.Progress != 100 {
-		t.Errorf("Progress = %d; wanted 100", r.Progress)
-	}
-	if r.Duration != 62 {
-		t.Errorf("Duration = %d; wanted 62", r.Duration)
-	}
-	if r.Finished != true {
-		t.Errorf("Finished = %t; wanted true", r.Finished)
-	}
-
-	r = s.Responses[1]
-	if r.ID != "R_6EBZzqhSZOghMWt" {
-		t.Errorf("ID = '%s'; wanted 'R_6EBZzqhSZOghMWt'", r.ID)
-	}
-	if r.Progress != 80 {
-		t.Errorf("Progress = %d; wanted 100", r.Progress)
-	}
-	if r.Duration != 69 {
-		t.Errorf("Duration = %d; wanted 62", r.Duration)
-	}
-	if r.Finished != false {
-		t.Errorf("Finished = %t; wanted true", r.Finished)
+	for _, test := range tests {
+		r := s.Responses[test.index]
+		if r.ID != test.id {
+			t.Errorf("Responses[%d].ID = '%s'; wanted '%s'", test.index, r.ID, test.id)
+		}
+		if r.Progress != test.progress {
+			t.Errorf("Responses[%d].Progress = %d; wanted %d", test.index, r.Progress, test.progress)
+		}
+		if r.Duration != test.duration {
+			t.Errorf("Responses[%d].Duration = %d; wanted %d", test.index, r.Duration, test.duration)
+		}
+		if r.Finished != test.finished {
+			t.Errorf("Responses[%d].Finished = %t", test.index, r.Finished)
+		}
 	}
 }
