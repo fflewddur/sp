@@ -6,6 +6,11 @@ import (
 	"testing"
 )
 
+type tChoice struct {
+	order int
+	label string
+}
+
 func TestReadQsfMetadata(t *testing.T) {
 	r := bufio.NewReader(strings.NewReader(qsfTestContent))
 	s, err := ReadQsf(r)
@@ -44,44 +49,31 @@ func TestReadQsfQuestions(t *testing.T) {
 	if s == nil {
 		t.Error("survey = nil; want survey != nil")
 	}
+	tests := []struct {
+		id   string
+		want bool
+	}{
+		{"", false},
+		{"QID1", true},
+		{"QID2", true},
+		{"QID3", true},
+		{"QID4", true},
+		{"QID5", true},
+		{"QID6", true},
+		{"QID7", true},
+		{"QID8", true},
+		{"QID9", true},
+		{"QID10", true},
+		{"QID11", true},
+		{"QID12", false},
+	}
 	if len(s.Questions) != 11 {
 		t.Errorf("len(Questions) = %d; want 11", len(s.Questions))
 	}
-	if _, ok := s.Questions["QID1"]; !ok {
-		t.Error("QID1 not found in s.Questions")
-	}
-	if _, ok := s.Questions["QID2"]; !ok {
-		t.Error("QID2 not found in s.Questions")
-	}
-	if _, ok := s.Questions["QID3"]; !ok {
-		t.Error("QID3 not found in s.Questions")
-	}
-	if _, ok := s.Questions["QID4"]; !ok {
-		t.Error("QID4 not found in s.Questions")
-	}
-	if _, ok := s.Questions["QID5"]; !ok {
-		t.Error("QID5 not found in s.Questions")
-	}
-	if _, ok := s.Questions["QID6"]; !ok {
-		t.Error("QID6 not found in s.Questions")
-	}
-	if _, ok := s.Questions["QID7"]; !ok {
-		t.Error("QID7 not found in s.Questions")
-	}
-	if _, ok := s.Questions["QID8"]; !ok {
-		t.Error("QID8 not found in s.Questions")
-	}
-	if _, ok := s.Questions["QID9"]; !ok {
-		t.Error("QID9 not found in s.Questions")
-	}
-	if _, ok := s.Questions["QID10"]; !ok {
-		t.Error("QID10 not found in s.Questions")
-	}
-	if _, ok := s.Questions["QID11"]; !ok {
-		t.Error("QID11 not found in s.Questions")
-	}
-	if _, ok := s.Questions["QID12"]; ok {
-		t.Error("QID11 found in s.Questions")
+	for _, test := range tests {
+		if _, ok := s.Questions[test.id]; test.want != ok {
+			t.Errorf("Questions[%s] = %t", test.id, ok)
+		}
 	}
 }
 
@@ -109,29 +101,26 @@ func TestReadQsfTypes(t *testing.T) {
 		t.Error("survey = nil; want survey != nil")
 	}
 
-	if s.Questions["QID1"].Type() != MultipleChoiceSingleResponse {
-		t.Errorf("Type = %v; wanted %v", s.Questions["QID1"].Type(), MultipleChoiceSingleResponse)
+	tests := []struct {
+		id   string
+		want QType
+	}{
+		{"QID1", MultipleChoiceSingleResponse},
+		{"QID2", MultipleChoiceMultiResponse},
+		{"QID3", MultipleChoiceSingleResponse},
+		{"QID4", MultipleChoiceMultiResponse},
+		{"QID5", MatrixSingleResponse},
+		{"QID6", MaxDiff},
+		{"QID7", TextEntry},
+		{"QID8", TextEntry},
+		{"QID9", Form},
+		{"QID10", RankOrder},
+		{"QID11", Description},
 	}
-	if s.Questions["QID4"].Type() != MultipleChoiceMultiResponse {
-		t.Errorf("Type = %v; wanted %v", s.Questions["QID4"].Type(), MultipleChoiceMultiResponse)
-	}
-	if s.Questions["QID5"].Type() != MatrixSingleResponse {
-		t.Errorf("Type = %v; wanted %v", s.Questions["QID5"].Type(), MatrixSingleResponse)
-	}
-	if s.Questions["QID6"].Type() != MaxDiff {
-		t.Errorf("Type = %v; wanted %v", s.Questions["QID6"].Type(), MaxDiff)
-	}
-	if s.Questions["QID7"].Type() != TextEntry {
-		t.Errorf("Type = %v; wanted %v", s.Questions["QID7"].Type(), TextEntry)
-	}
-	if s.Questions["QID9"].Type() != Form {
-		t.Errorf("Type = %v; wanted %v", s.Questions["QID9"].Type(), Form)
-	}
-	if s.Questions["QID10"].Type() != RankOrder {
-		t.Errorf("Type = %v; wanted %v", s.Questions["QID10"].Type(), RankOrder)
-	}
-	if s.Questions["QID11"].Type() != Description {
-		t.Errorf("Type = %v; wanted %v", s.Questions["QID11"].Type(), Description)
+	for _, test := range tests {
+		if s.Questions[test.id].Type() != test.want {
+			t.Errorf("Questions[%s].Type() = %v; wanted %v", test.id, s.Questions[test.id].Type(), test.want)
+		}
 	}
 }
 
@@ -145,36 +134,24 @@ func TestReadQsfChoiceOrder(t *testing.T) {
 		t.Error("survey = nil; want survey != nil")
 	}
 
-	// Ascending order
-	q, ok := s.Questions["QID2"]
-	if !ok {
-		t.Error("QID2 not found in s.Questions")
+	tests := []struct {
+		id      string
+		choices []tChoice
+	}{
+		{"QID2", []tChoice{{0, "Click to write Choice 1"}, {1, "Click to write Choice 2"}, {2, "Click to write Choice 3"}}},
+		{"QID9", []tChoice{{0, "Click to write Choice 3 (ordered first)"}, {1, "Click to write Choice 2 (ordered second)"}, {2, "Click to write Choice 1 (ordered third)"}}},
 	}
-	rc := q.ResponseChoices()
-	if rc[0].Label != "Click to write Choice 1" {
-		t.Errorf("Choices[0] = '%s'; wanted 'Click to write Choice 1'", rc[0].Label)
-	}
-	if rc[1].Label != "Click to write Choice 2" {
-		t.Errorf("Choices[1] = '%s'; wanted 'Click to write Choice 2'", rc[1].Label)
-	}
-	if rc[2].Label != "Click to write Choice 3" {
-		t.Errorf("Choices[2] = '%s'; wanted 'Click to write Choice 3'", rc[2].Label)
-	}
-
-	// Descending order
-	q, ok = s.Questions["QID9"]
-	if !ok {
-		t.Error("QID9 not found in s.Questions")
-	}
-	rc = q.ResponseChoices()
-	if rc[0].Label != "Click to write Choice 3 (ordered first)" {
-		t.Errorf("Choices[0] = '%s'; wanted 'Click to write Choice 3 (ordered first)'", rc[0].Label)
-	}
-	if rc[1].Label != "Click to write Choice 2 (ordered second)" {
-		t.Errorf("Choices[1] = '%s'; wanted 'Click to write Choice 2 (ordered second)'", rc[1].Label)
-	}
-	if rc[2].Label != "Click to write Choice 1 (ordered third)" {
-		t.Errorf("Choices[2] = '%s'; wanted 'Click to write Choice 1 (ordered third)'", rc[2].Label)
+	for _, test := range tests {
+		q, ok := s.Questions[test.id]
+		if !ok {
+			t.Errorf("%s not found in Questions", test.id)
+		}
+		rc := q.ResponseChoices()
+		for i, c := range rc {
+			if test.choices[i].label != c.Label {
+				t.Errorf("Choices[%d] = '%s'; wanted '%s'", i, c.Label, test.choices[i].label)
+			}
+		}
 	}
 }
 
@@ -188,29 +165,30 @@ func TestReadQsfAnswerOrder(t *testing.T) {
 		t.Error("survey = nil; want survey != nil")
 	}
 
-	q, ok := s.Questions["QID5"]
-	if !ok {
-		t.Error("QID5 not found in s.Questions")
+	tests := []struct {
+		id      string
+		choices []tChoice
+		answers []tChoice
+	}{
+		{"QID5", []tChoice{{0, "Click to write Scale point 1"}, {1, "Click to write Scale point 2"}, {2, "Click to write Scale point 3"}}, []tChoice{{0, "Click to write Statement 1"}, {1, "Click to write Statement 2"}, {2, "Click to write Statement 3"}}},
 	}
-	rc := q.ResponseChoices()
-	if rc[0].Label != "Click to write Scale point 1" {
-		t.Errorf("Choices[0] = '%s'; wanted 'Click to write Scale point 1'", rc[0].Label)
-	}
-	if rc[1].Label != "Click to write Scale point 2" {
-		t.Errorf("Choices[1] = '%s'; wanted 'Click to write Scale point 2'", rc[1].Label)
-	}
-	if rc[2].Label != "Click to write Scale point 3" {
-		t.Errorf("Choices[2] = '%s'; wanted 'Click to write Scale point 3'", rc[2].Label)
-	}
-	sq := q.SubQuestions()
-	if sq[0].Label != "Click to write Statement 1" {
-		t.Errorf("Choices[0] = '%s'; wanted 'Click to write Statement 1'", sq[0].Label)
-	}
-	if sq[1].Label != "Click to write Statement 2" {
-		t.Errorf("Choices[1] = '%s'; wanted 'Click to write Statement 2'", sq[1].Label)
-	}
-	if sq[2].Label != "Click to write Statement 3" {
-		t.Errorf("Choices[2] = '%s'; wanted 'Click to write Statement 3'", sq[2].Label)
+	for _, test := range tests {
+		q, ok := s.Questions[test.id]
+		if !ok {
+			t.Errorf("%s not found in Questions", test.id)
+		}
+		rc := q.ResponseChoices()
+		for i, c := range rc {
+			if test.choices[i].label != c.Label {
+				t.Errorf("Questions[%s].Choices[%d] = '%s'; wanted '%s'", test.id, i, c.Label, test.choices[i].label)
+			}
+		}
+		sq := q.SubQuestions()
+		for i, c := range sq {
+			if test.answers[i].label != c.Label {
+				t.Errorf("Questions[%s].Answers[%d] = '%s'; wanted '%s'", test.id, i, c.Label, test.answers[i].label)
+			}
+		}
 	}
 }
 

@@ -106,6 +106,22 @@ func newQTypeFromString(t, s string) QType {
 	return Unknown
 }
 
+func (qt QType) String() string {
+	s := []string{
+		"Unknown",
+		"Description",
+		"Form",
+		"MultipleChoiceSingleResponse",
+		"MultipleChoiceMultiResponse",
+		"MatrixSingleResponse",
+		"MatrixMultiResponse",
+		"MaxDiff",
+		"RankOrder",
+		"TextEntry",
+	}
+	return s[qt]
+}
+
 // choicesAreQuestions returns true if the survey definition for this question uses the Choices field to hold question wording
 func (qt QType) choicesAreQuestions() bool {
 	retval := false
