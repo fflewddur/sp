@@ -30,9 +30,9 @@ func TestWriteCSV(t *testing.T) {
 	csvReader := csv.NewReader(r)
 
 	var tests = [][]string{
-		[]string{"id", "finished", "progress", "duration", "QID2_1", "QID2_2", "QID2_3", "QID9_3", "QID9_2", "QID9_1", "QID6_1", "QID6_2", "QID6_3", "QID8_TEXT", "QID4_1", "QID4_2", "QID4_3", "QID10_1", "QID10_2", "QID10_3", "QID3", "QID1", "QID7_TEXT"},
-		[]string{"R_eg2X4t8Notm1zeV", "true", "100", "62", "", "", "", "line three", "line two", "line one", "Click to write Scale point 1", "Click to write Scale point 2", "", "Hello, world.", "Click to write Choice 1", "Click to write Choice 2", "", "3", "1", "2", "Click to write Choice 3", "Click to write Choice 1", "Hello!"},
-		[]string{"R_6EBZzqhSZOghMWt", "false", "80", "69", "", "", "", "c", "b", "a", "Click to write Scale point 2", "", "Click to write Scale point 1", "multiple\nlines\nof\ntext.", "", "Click to write Choice 2", "Click to write Choice 3", "1", "2", "3", "Click to write Choice 1", "Click to write Choice 3", "just one line"},
+		[]string{"id", "finished", "progress", "duration", "QID2_1", "QID2_2", "QID2_3", "QID9_3", "QID9_2", "QID9_1", "QID5_1", "QID5_2", "QID5_3", "QID6_1", "QID6_2", "QID6_3", "QID8_TEXT", "QID4_1", "QID4_2", "QID4_3", "QID10_1", "QID10_2", "QID10_3", "QID3", "QID1", "QID7_TEXT"},
+		[]string{"R_eg2X4t8Notm1zeV", "true", "100", "62", "", "", "", "line three", "line two", "line one", "Click to write Scale point 1", "Click to write Scale point 2", "Click to write Scale point 3", "Click to write Scale point 1", "Click to write Scale point 2", "", "Hello, world.", "Click to write Choice 1", "Click to write Choice 2", "", "3", "1", "2", "Click to write Choice 3", "Click to write Choice 1", "Hello!"},
+		[]string{"R_6EBZzqhSZOghMWt", "false", "80", "69", "", "", "", "c", "b", "a", "Click to write Scale point 3", "Click to write Scale point 3", "Click to write Scale point 1", "Click to write Scale point 2", "", "Click to write Scale point 1", "multiple\nlines\nof\ntext.", "", "Click to write Choice 2", "Click to write Choice 3", "1", "2", "3", "Click to write Choice 1", "Click to write Choice 3", "just one line"},
 	}
 	row := 0
 	var record []string
@@ -42,6 +42,9 @@ func TestWriteCSV(t *testing.T) {
 			t.Errorf("err = %s", err)
 		}
 
+		if len(record) != len(test) {
+			t.Errorf("row %d, len(record) = %d; wanted %d", row, len(record), len(test))
+		}
 		for i, want := range test {
 			if record[i] != want {
 				t.Errorf("row %d, record[%d] = '%s'; want '%s'", row, i, record[i], want)

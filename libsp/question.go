@@ -145,13 +145,17 @@ func (qt QType) suffixes(q *Question) []string {
 	// +Form: [question id]_[choice id]
 	// +MultipleChoiceSingleResponse: [question id]
 	// +MultipleChoiceMultiResponse: [question id]_[choice id]
-	// MatrixSingleResponse: [question id]_[subquestion id]
+	// +MatrixSingleResponse: [question id]_[subquestion id]
 	// MatrixMultiResponse: ?
 	// +MaxDiff: [question id]_[choice id]
 	// +RankOrder: [question id]_[choice id]
-	// TextEntry: [question id]_TEXT
+	// +TextEntry: [question id]_TEXT
 	suffixes := []string{}
 	switch qt {
+	case MatrixSingleResponse:
+		for _, sq := range q.subQuestions {
+			suffixes = append(suffixes, "_"+sq.ID)
+		}
 	case MultipleChoiceSingleResponse:
 		suffixes = append(suffixes, "")
 	case MultipleChoiceMultiResponse:
