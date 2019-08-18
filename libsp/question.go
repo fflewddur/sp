@@ -164,6 +164,8 @@ func (qt QType) suffixes(q *Question) []string {
 		for _, c := range q.choices {
 			suffixes = append(suffixes, "_"+c.ID)
 		}
+	case TextEntry:
+		suffixes = append(suffixes, "_TEXT")
 	}
 
 	return suffixes
