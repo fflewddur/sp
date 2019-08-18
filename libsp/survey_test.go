@@ -15,6 +15,10 @@ func TestWriteCSV(t *testing.T) {
 	if s == nil {
 		t.Error("s = nil")
 	}
+	r = bufio.NewReader(strings.NewReader(xmlTestContent))
+	if err = s.ReadXML(r); err != nil {
+		t.Errorf("could not parse xml: %s", err)
+	}
 	var b bytes.Buffer
 	w := bufio.NewWriter(&b)
 	err = s.WriteCSV(w)
@@ -24,33 +28,46 @@ func TestWriteCSV(t *testing.T) {
 
 	r = bufio.NewReader(&b)
 	csvReader := csv.NewReader(r)
-	record, err := csvReader.Read()
-	if err != nil {
-		t.Errorf("err = %s", err)
-	}
 
 	var tests = []struct {
+		row  int
 		col  int
 		want string
 	}{
-		{0, "id"},
-		{1, "finished"},
-		{2, "progress"},
-		{3, "duration"},
-		{4, "QID2_1"},
-		{5, "QID2_2"},
-		{6, "QID2_3"},
-		{7, "QID9_3"},
-		{8, "QID9_2"},
-		{9, "QID9_1"},
+		{0, 0, "id"}, {0, 1, "finished"}, {0, 2, "progress"}, {0, 3, "duration"},
+		{0, 4, "QID2_1"}, {0, 5, "QID2_2"}, {0, 6, "QID2_3"},
+		{0, 7, "QID9_3"}, {0, 8, "QID9_2"}, {0, 9, "QID9_1"},
+		{1, 0, "R_eg2X4t8Notm1zeV"}, {1, 1, "true"}, {1, 2, "100"}, {1, 3, "62"},
+		{1, 4, ""},
+		{1, 5, ""},
+		{1, 6, ""},
+		{1, 7, "line three"},
+		{1, 8, "line two"},
+		{1, 9, "line one"},
+		{2, 0, "R_6EBZzqhSZOghMWt"}, {2, 1, "false"}, {2, 2, "80"}, {2, 3, "69"},
+		{2, 4, ""},
+		{2, 5, ""},
+		{2, 6, ""},
+		{2, 7, "c"},
+		{2, 8, "b"},
+		{2, 9, "a"},
 	}
+	row := -1
+	var record []string
 	for _, test := range tests {
+		if row != test.row {
+			record, err = csvReader.Read()
+			if err != nil {
+				t.Errorf("err = %s", err)
+			}
+			row = test.row
+		}
 		if record[test.col] != test.want {
-			t.Errorf("line 0, record[%d] = '%s'; want '%s'", test.col, record[0], test.want)
+			t.Errorf("row %d, record[%d] = '%s'; want '%s'", row, test.col, record[test.col], test.want)
 		}
 	}
 
-	record, err = csvReader.Read()
+	_, err = csvReader.Read()
 	if err != io.EOF {
 		t.Errorf("err = %v; want EOF", err)
 	}

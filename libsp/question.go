@@ -42,7 +42,12 @@ func (q *Question) CSVCols() []string {
 
 // ResponseCols returns a slice of string holding the ordered responses in r for this question
 func (q *Question) ResponseCols(r *Response) []string {
-	return nil
+	suffixes := q.qType.suffixes(q)
+	cols := make([]string, 0)
+	for _, s := range suffixes {
+		cols = append(cols, r.answers[q.ID+s])
+	}
+	return cols
 }
 
 func newQuestion(p *qsfPayload) *Question {

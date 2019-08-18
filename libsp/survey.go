@@ -37,8 +37,16 @@ func (s *Survey) WriteCSV(bw *bufio.Writer) error {
 	}
 
 	w := csv.NewWriter(bw)
-
 	w.Write(s.csvCols())
+	for _, r := range s.Responses {
+		row := []string{r.ID, fmt.Sprintf("%t", r.Finished), fmt.Sprintf("%d", r.Progress), fmt.Sprintf("%d", r.Duration)}
+
+		for _, id := range s.QuestionOrder {
+			q := s.Questions[id]
+			row = append(row, q.ResponseCols(r)...)
+		}
+		w.Write(row)
+	}
 	w.Flush()
 
 	if err := w.Error(); err != nil {
@@ -54,7 +62,6 @@ func (s *Survey) csvCols() []string {
 		q := s.Questions[id]
 		cols = append(cols, q.CSVCols()...)
 	}
-	log.Printf("cols = %v\n", cols)
 	return cols
 }
 
