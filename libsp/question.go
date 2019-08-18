@@ -134,8 +134,6 @@ func (qt QType) choicesAreQuestions() bool {
 	case MatrixSingleResponse:
 		fallthrough
 	case MatrixMultiResponse:
-		fallthrough
-	case MaxDiff:
 		retval = true
 	}
 	return retval
@@ -144,19 +142,23 @@ func (qt QType) choicesAreQuestions() bool {
 func (qt QType) suffixes(q *Question) []string {
 	// TODO support each type below:
 	// Description: ?
-	// Form: [question id]_[choice id]
-	// MultipleChoiceSingleResponse: [question id]
-	// MultipleChoiceMultiResponse: [question id]_[choice id]
+	// +Form: [question id]_[choice id]
+	// +MultipleChoiceSingleResponse: [question id]
+	// +MultipleChoiceMultiResponse: [question id]_[choice id]
 	// MatrixSingleResponse: [question id]_[subquestion id]
 	// MatrixMultiResponse: ?
-	// MaxDiff: [question id]_[choice id]
-	// RankOrder: [question id]_[choice id]
+	// +MaxDiff: [question id]_[choice id]
+	// +RankOrder: [question id]_[choice id]
 	// TextEntry: [question id]_TEXT
 	suffixes := []string{}
 	switch qt {
 	case MultipleChoiceSingleResponse:
 		suffixes = append(suffixes, "")
 	case MultipleChoiceMultiResponse:
+		fallthrough
+	case MaxDiff:
+		fallthrough
+	case RankOrder:
 		fallthrough
 	case Form:
 		for _, c := range q.choices {
