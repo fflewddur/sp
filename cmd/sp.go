@@ -37,6 +37,7 @@ var rootCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error reading '%s': %s", xmlPath, err)
 		}
+		defer xml.Close()
 		xmlReader := bufio.NewReader(xml)
 		err = s.ReadXML(xmlReader)
 		if err != nil {
@@ -47,6 +48,20 @@ var rootCmd = &cobra.Command{
 		for _, q := range s.Questions {
 			log.Printf("ID: %s Wording: %s\n\tChoices: %v", q.ID, q.Wording, q.ResponseChoices())
 		}
+
+		csvPath := buildCSVPath(qsfPath)
+		log.Printf("Writing '%s'", csvPath)
+		csv, err := os.Create(csvPath)
+		if err != nil {
+			log.Fatalf("Error opening '%s': %s", csvPath, err)
+		}
+		defer csv.Close()
+		w := bufio.NewWriter(csv)
+		err = s.WriteCSV(w)
+		if err != nil {
+			log.Fatalf("Error writing '%s': %s", csvPath, err)
+		}
+		log.Println("Completed successfully!")
 	},
 	Version: "0.0.1",
 }
@@ -57,6 +72,14 @@ func buildXMLPath(qsfPath string) string {
 		qsfPath = qsfPath[:i]
 	}
 	return qsfPath + ".xml"
+}
+
+func buildCSVPath(qsfPath string) string {
+	i := strings.LastIndex(qsfPath, ".")
+	if i > 0 {
+		qsfPath = qsfPath[:i]
+	}
+	return qsfPath + ".csv"
 }
 
 // Execute runs the command
