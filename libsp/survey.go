@@ -229,7 +229,16 @@ func (p *qsfPayload) OrderedChoices() []Choice {
 			log.Fatalf("could not convert '%s' to int: %s", s, err)
 		}
 		i := int(i64)
-		c := Choice{ID: s.String(), Label: p.Choices[i].Display, HasText: p.Choices[i].TextEntry}
+
+		hasText := false
+		if len(p.Choices[i].TextEntry) > 0 {
+			hasText, err = strconv.ParseBool(p.Choices[i].TextEntry)
+			if err != nil {
+				log.Fatalf("could not convert '%s' to bool: %s", p.Choices[i].TextEntry, err)
+			}
+		}
+
+		c := Choice{ID: s.String(), Label: p.Choices[i].Display, HasText: hasText}
 		ordered = append(ordered, c)
 	}
 
@@ -245,7 +254,16 @@ func (p *qsfPayload) OrderedAnswers() []Choice {
 			log.Fatalf("could not convert '%s' to int: %s", s, err)
 		}
 		i := int(i64)
-		c := Choice{ID: s.String(), Label: p.Answers[i].Display, HasText: p.Answers[i].TextEntry}
+
+		hasText := false
+		if len(p.Answers[i].TextEntry) > 0 {
+			hasText, err = strconv.ParseBool(p.Answers[i].TextEntry)
+			if err != nil {
+				log.Fatalf("could not convert '%s' to bool: %s", p.Answers[i].TextEntry, err)
+			}
+		}
+
+		c := Choice{ID: s.String(), Label: p.Answers[i].Display, HasText: hasText}
 		ordered = append(ordered, c)
 	}
 
@@ -254,5 +272,5 @@ func (p *qsfPayload) OrderedAnswers() []Choice {
 
 type qsfChoice struct {
 	Display   string
-	TextEntry bool
+	TextEntry string
 }
