@@ -12,6 +12,9 @@ import (
 func TestWriteCSV(t *testing.T) {
 	r := bufio.NewReader(strings.NewReader(qsfTestContent))
 	s, err := ReadQsf(r)
+	if err != nil {
+		t.Errorf("err = %s", err)
+	}
 	if s == nil {
 		t.Error("s = nil")
 	}
@@ -30,9 +33,10 @@ func TestWriteCSV(t *testing.T) {
 	csvReader := csv.NewReader(r)
 
 	var tests = [][]string{
-		[]string{"id", "finished", "progress", "duration", "QID2_1", "QID2_2", "QID2_3", "QID9_3", "QID9_2", "QID9_1", "QID5_1", "QID5_2", "QID5_3", "QID6_1", "QID6_2", "QID6_3", "QID8_TEXT", "QID4_1", "QID4_2", "QID4_3", "QID10_1", "QID10_2", "QID10_3", "QID3", "QID1", "QID7_TEXT"},
-		[]string{"R_eg2X4t8Notm1zeV", "true", "100", "62", "", "", "", "line three", "line two", "line one", "Click to write Scale point 1", "Click to write Scale point 2", "Click to write Scale point 3", "Click to write Scale point 1", "Click to write Scale point 2", "", "Hello, world.", "Click to write Choice 1", "Click to write Choice 2", "", "3", "1", "2", "Click to write Choice 3", "Click to write Choice 1", "Hello!"},
-		[]string{"R_6EBZzqhSZOghMWt", "false", "80", "69", "", "", "", "c", "b", "a", "Click to write Scale point 3", "Click to write Scale point 3", "Click to write Scale point 1", "Click to write Scale point 2", "", "Click to write Scale point 1", "multiple\nlines\nof\ntext.", "", "Click to write Choice 2", "Click to write Choice 3", "1", "2", "3", "Click to write Choice 1", "Click to write Choice 3", "just one line"},
+		[]string{"id", "finished", "progress", "duration", "QID2_1", "QID2_2", "QID2_3", "QID12", "QID9_1", "QID9_2", "QID9_3", "QID5_1", "QID5_2", "QID5_3", "QID5_4", "QID6_1", "QID6_2", "QID6_3", "QID8_TEXT", "QID4_1", "QID4_2", "QID4_3", "QID4_5", "QID4_6", "QID4_4", "QID15", "QID11", "QID10_1", "QID10_2", "QID10_3", "QID3", "QID1", "QID7_TEXT"},
+		[]string{"R_1dtWhiBDD96nfyk", "true", "100", "122", "", "", "", "", "field 1", "field 2", "field 3", "Click to write Scale point 1", "Click to write Scale point 2", "Click to write Scale point 3", "Click to write Scale point 3", "Click to write Scale point 1", "", "Click to write Scale point 2", "multiple\nlines\nof\ntext?", "", "", "Click to write Choice 3", "Other1", "Other2", "", "6", "Click to write Choice 2", "3", "2", "1", "Click to write Choice 2", "Click to write Choice 1", "one line of text"},
+		[]string{"R_z72KJQMnr3lxZGp", "true", "100", "104", "", "", "", "", "name", "email", "job role", "Click to write Scale point 3", "Click to write Scale point 2", "", "", "", "Click to write Scale point 2", "Click to write Scale point 1", "bar", "", "", "", "", "", "None", "10", "Click to write Choice 3", "1", "2", "3", "Click to write Choice 2", "Click to write Choice 3", "foo"},
+		[]string{"R_3MPTb9vwnCBmijR", "false", "33", "22", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Click to write Choice 2", "", "", "", "", "", "", "", "", "", "Click to write Choice 2", "Click to write Choice 2", ""},
 	}
 	row := 0
 	var record []string
@@ -62,8 +66,11 @@ func TestWriteCSV(t *testing.T) {
 func TestWriteCSVNil(t *testing.T) {
 	r := bufio.NewReader(strings.NewReader(qsfTestContent))
 	s, err := ReadQsf(r)
+	if err != nil {
+		t.Errorf("err = %s", err)
+	}
 	if s == nil {
-		t.Error("s = nil; want s != nil")
+		t.Error("s = nil")
 	}
 	err = s.WriteCSV(nil)
 	if err != nil && err.Error() != "bw cannot be nil" {
@@ -74,30 +81,36 @@ func TestWriteCSVNil(t *testing.T) {
 func TestWriteR(t *testing.T) {
 	r := bufio.NewReader(strings.NewReader(qsfTestContent))
 	s, err := ReadQsf(r)
+	if err != nil {
+		t.Errorf("err = %s", err)
+	}
 	if s == nil {
-		t.Error("s = nil; want s != nil")
+		t.Error("s = nil")
 	}
 	err = s.WriteR(nil)
 	if err != nil {
-		t.Errorf("err = %s; want err = nil", err)
+		t.Errorf("err = %s", err)
 	}
 }
 
 func TestReadXML(t *testing.T) {
 	reader := bufio.NewReader(strings.NewReader(qsfTestContent))
 	s, err := ReadQsf(reader)
+	if err != nil {
+		t.Errorf("err = %s", err)
+	}
 	if s == nil {
-		t.Error("s = nil; want s != nil")
+		t.Error("s = nil")
 	}
 
 	reader = bufio.NewReader(strings.NewReader(xmlTestContent))
 	err = s.ReadXML(reader)
 	if err != nil {
-		t.Errorf("err = %s; want err = nil", err)
+		t.Errorf("err = %s", err)
 	}
 
-	if len(s.Responses) != 2 {
-		t.Errorf("len(Responses) = %d; wanted 2", len(s.Responses))
+	if len(s.Responses) != 3 {
+		t.Errorf("len(Responses) = %d; wanted 3", len(s.Responses))
 	}
 
 	var tests = []struct {
@@ -107,8 +120,9 @@ func TestReadXML(t *testing.T) {
 		duration int
 		finished bool
 	}{
-		{0, "R_eg2X4t8Notm1zeV", 100, 62, true},
-		{1, "R_6EBZzqhSZOghMWt", 80, 69, false},
+		{0, "R_1dtWhiBDD96nfyk", 100, 122, true},
+		{1, "R_z72KJQMnr3lxZGp", 100, 104, true},
+		{2, "R_3MPTb9vwnCBmijR", 33, 22, false},
 	}
 	for _, test := range tests {
 		r := s.Responses[test.index]

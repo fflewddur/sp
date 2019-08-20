@@ -212,6 +212,7 @@ type qsfPayload struct {
 	DataExportTag string
 	QuestionType  string
 	Selector      string
+	SubSelector   string
 	QuestionID    string
 	Choices       map[int]qsfChoice
 	ChoiceOrder   []json.Number
@@ -223,11 +224,12 @@ type qsfPayload struct {
 func (p *qsfPayload) OrderedChoices() []Choice {
 	ordered := []Choice{}
 	for _, s := range p.ChoiceOrder {
-		i, err := s.Int64()
+		i64, err := s.Int64()
 		if err != nil {
 			log.Fatalf("could not convert '%s' to int: %s", s, err)
 		}
-		c := Choice{ID: s.String(), Label: p.Choices[int(i)].Display}
+		i := int(i64)
+		c := Choice{ID: s.String(), Label: p.Choices[i].Display, HasText: p.Choices[i].TextEntry}
 		ordered = append(ordered, c)
 	}
 
@@ -238,11 +240,12 @@ func (p *qsfPayload) OrderedChoices() []Choice {
 func (p *qsfPayload) OrderedAnswers() []Choice {
 	ordered := []Choice{}
 	for _, s := range p.AnswerOrder {
-		i, err := s.Int64()
+		i64, err := s.Int64()
 		if err != nil {
 			log.Fatalf("could not convert '%s' to int: %s", s, err)
 		}
-		c := Choice{ID: s.String(), Label: p.Answers[int(i)].Display}
+		i := int(i64)
+		c := Choice{ID: s.String(), Label: p.Answers[i].Display, HasText: p.Answers[i].TextEntry}
 		ordered = append(ordered, c)
 	}
 
@@ -250,5 +253,6 @@ func (p *qsfPayload) OrderedAnswers() []Choice {
 }
 
 type qsfChoice struct {
-	Display string
+	Display   string
+	TextEntry bool
 }

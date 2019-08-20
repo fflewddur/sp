@@ -11,8 +11,9 @@ type Question struct {
 
 // Choice represents one possible response to a survey question
 type Choice struct {
-	ID    string
-	Label string
+	ID      string
+	Label   string
+	HasText bool
 }
 
 // Type returns a QType representing the type of this survey question
@@ -54,7 +55,7 @@ func newQuestion(p *qsfPayload) *Question {
 	q := new(Question)
 	q.ID = p.QuestionID
 	q.Wording = p.QuestionText
-	q.qType = newQTypeFromString(p.QuestionType, p.Selector)
+	q.qType = newQTypeFromString(p.QuestionType, p.Selector, p.SubSelector)
 	if q.qType.choicesAreQuestions() {
 		q.subQuestions = p.OrderedChoices()
 		q.choices = p.OrderedAnswers()
@@ -83,14 +84,14 @@ const (
 )
 
 // newQTypeFromString returns the corresponding QType value for the given string
-func newQTypeFromString(t, s string) QType {
+func newQTypeFromString(t, s, ss string) QType {
 	switch t {
 	case "DB":
 		return Description
 	case "Matrix":
 		if s == "MaxDiff" {
 			return MaxDiff
-		} else if s == "MultipleAnswer" {
+		} else if ss == "MultipleAnswer" {
 			return MatrixMultiResponse
 		}
 		return MatrixSingleResponse
@@ -150,6 +151,7 @@ func (qt QType) suffixes(q *Question) []string {
 	// +MaxDiff: [question id]_[choice id]
 	// +RankOrder: [question id]_[choice id]
 	// +TextEntry: [question id]_TEXT
+	// NPS: [question id] and [question id]_NPS_GROUP
 	suffixes := []string{}
 	switch qt {
 	case MatrixSingleResponse:
@@ -167,6 +169,9 @@ func (qt QType) suffixes(q *Question) []string {
 	case Form:
 		for _, c := range q.choices {
 			suffixes = append(suffixes, "_"+c.ID)
+			if c.HasText {
+				suffixes = append(suffixes, "_"+c.ID+"_TEXT")
+			}
 		}
 	case TextEntry:
 		suffixes = append(suffixes, "_TEXT")
