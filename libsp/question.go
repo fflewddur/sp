@@ -160,6 +160,9 @@ func (qt QType) suffixes(q *Question) []string {
 	case MatrixSingleResponse:
 		for _, sq := range q.subQuestions {
 			suffixes = append(suffixes, "_"+sq.ID)
+			if sq.HasText {
+				suffixes = append(suffixes, "_"+sq.ID+"_TEXT")
+			}
 		}
 	case MultipleChoiceSingleResponse:
 		suffixes = append(suffixes, "")
