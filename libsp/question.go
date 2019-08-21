@@ -1,5 +1,7 @@
 package libsp
 
+import "fmt"
+
 // Question represents a survey question
 type Question struct {
 	ID           string
@@ -51,19 +53,29 @@ func (q *Question) ResponseCols(r *Response) []string {
 	return cols
 }
 
-func newQuestion(p *qsfPayload) *Question {
+func newQuestion(p *qsfPayload) (*Question, error) {
 	q := new(Question)
 	q.ID = p.QuestionID
 	q.Wording = p.QuestionText
 	q.qType = newQTypeFromString(p.QuestionType, p.Selector, p.SubSelector)
+	var err error
 	if q.qType.choicesAreQuestions() {
-		q.subQuestions = p.OrderedChoices()
-		q.choices = p.OrderedAnswers()
+		q.subQuestions, err = p.OrderedChoices()
+		if err != nil {
+			return nil, fmt.Errorf("could not parse choices: %s", err)
+		}
+		q.choices, err = p.OrderedAnswers()
+		if err != nil {
+			return nil, fmt.Errorf("could not parse answers: %s", err)
+		}
 	} else {
-		q.choices = p.OrderedChoices()
+		q.choices, err = p.OrderedChoices()
+		if err != nil {
+			return nil, fmt.Errorf("could not parse choices: %s", err)
+		}
 	}
 
-	return q
+	return q, nil
 }
 
 // QType represents the type of a survey question

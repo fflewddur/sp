@@ -15,7 +15,7 @@ import (
 	"github.com/beevik/etree"
 )
 
-// Survey represents a survey, includings its questions, potential responses, and meta-data
+// Survey represents a survey, including its questions, potential responses, and meta-data
 type Survey struct {
 	Title         string
 	Description   string
@@ -157,7 +157,10 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 	s.Questions = make(map[string]*Question)
 	for _, e := range qs.SurveyElements {
 		if e.Element == "SQ" {
-			q := newQuestion(e.Payload)
+			q, err := newQuestion(e.Payload)
+			if err != nil {
+				return fmt.Errorf("could not create question from JSON: %s", err)
+			}
 			s.QuestionOrder = append(s.QuestionOrder, q.ID) // TODO get question order from FLOW elements in QSF
 			s.Questions[q.ID] = q
 		}
@@ -220,8 +223,7 @@ type qsfPayload struct {
 	AnswerOrder   []json.Number
 }
 
-// TODO return an err instead of exiting
-func (p *qsfPayload) OrderedChoices() []Choice {
+func (p *qsfPayload) OrderedChoices() ([]Choice, error) {
 	ordered := []Choice{}
 	for _, s := range p.ChoiceOrder {
 		i64, err := s.Int64()
@@ -242,11 +244,10 @@ func (p *qsfPayload) OrderedChoices() []Choice {
 		ordered = append(ordered, c)
 	}
 
-	return ordered
+	return ordered, nil
 }
 
-// TODO return an err instead of exiting
-func (p *qsfPayload) OrderedAnswers() []Choice {
+func (p *qsfPayload) OrderedAnswers() ([]Choice, error) {
 	ordered := []Choice{}
 	for _, s := range p.AnswerOrder {
 		i64, err := s.Int64()
@@ -267,7 +268,7 @@ func (p *qsfPayload) OrderedAnswers() []Choice {
 		ordered = append(ordered, c)
 	}
 
-	return ordered
+	return ordered, nil
 }
 
 type qsfChoice struct {
