@@ -163,6 +163,11 @@ func (qt QType) suffixes(q *Question) []string {
 		}
 	case MultipleChoiceSingleResponse:
 		suffixes = append(suffixes, "")
+		for _, c := range q.choices {
+			if c.HasText {
+				suffixes = append(suffixes, "_"+c.ID+"_TEXT")
+			}
+		}
 	case NPS:
 		suffixes = append(suffixes, "")
 		suffixes = append(suffixes, "_NPS_GROUP")
