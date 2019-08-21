@@ -79,6 +79,7 @@ const (
 	MatrixSingleResponse
 	MatrixMultiResponse
 	MaxDiff
+	NPS
 	RankOrder
 	TextEntry
 )
@@ -98,6 +99,8 @@ func newQTypeFromString(t, s, ss string) QType {
 	case "MC":
 		if s == "MAVR" || s == "MAHR" || s == "MACOL" || s == "MSB" {
 			return MultipleChoiceMultiResponse
+		} else if s == "NPS" {
+			return NPS
 		}
 		return MultipleChoiceSingleResponse
 	case "RO":
@@ -122,6 +125,7 @@ func (qt QType) String() string {
 		"MatrixSingleResponse",
 		"MatrixMultiResponse",
 		"MaxDiff",
+		"NPS",
 		"RankOrder",
 		"TextEntry",
 	}
@@ -142,7 +146,6 @@ func (qt QType) choicesAreQuestions() bool {
 
 func (qt QType) suffixes(q *Question) []string {
 	// TODO support each type below:
-	// Description: ?
 	// +Form: [question id]_[choice id]
 	// +MultipleChoiceSingleResponse: [question id]
 	// +MultipleChoiceMultiResponse: [question id]_[choice id]
@@ -151,7 +154,7 @@ func (qt QType) suffixes(q *Question) []string {
 	// +MaxDiff: [question id]_[choice id]
 	// +RankOrder: [question id]_[choice id]
 	// +TextEntry: [question id]_TEXT
-	// NPS: [question id] and [question id]_NPS_GROUP
+	// +NPS: [question id] and [question id]_NPS_GROUP
 	suffixes := []string{}
 	switch qt {
 	case MatrixSingleResponse:
@@ -160,6 +163,9 @@ func (qt QType) suffixes(q *Question) []string {
 		}
 	case MultipleChoiceSingleResponse:
 		suffixes = append(suffixes, "")
+	case NPS:
+		suffixes = append(suffixes, "")
+		suffixes = append(suffixes, "_NPS_GROUP")
 	case MultipleChoiceMultiResponse:
 		fallthrough
 	case MaxDiff:
