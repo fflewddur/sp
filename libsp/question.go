@@ -166,8 +166,9 @@ func (qt QType) suffixes(q *Question) []string {
 	// +MultipleChoiceSingleResponse: [question id]
 	// +MultipleChoiceMultiResponse: [question id]_[choice id]
 	// +MatrixSingleResponse: [question id]_[subquestion id]
-	// MatrixMultiResponse: ?
+	// MatrixMultiResponse: [question id]_[subquestion id]_[choice id]
 	// +MaxDiff: [question id]_[choice id]
+	// PickGroupRank: ?
 	// +RankOrder: [question id]_[choice id]
 	// +TextEntry: [question id]_TEXT
 	// +NPS: [question id] and [question id]_NPS_GROUP
@@ -201,6 +202,15 @@ func (qt QType) suffixes(q *Question) []string {
 			suffixes = append(suffixes, "_"+c.ID)
 			if c.HasText {
 				suffixes = append(suffixes, "_"+c.ID+"_TEXT")
+			}
+		}
+	case MatrixMultiResponse:
+		for _, sq := range q.subQuestions {
+			for _, c := range q.choices {
+				suffixes = append(suffixes, "_"+sq.ID+"_"+c.ID)
+			}
+			if sq.HasText {
+				suffixes = append(suffixes, "_"+sq.ID+"_TEXT")
 			}
 		}
 	case TextEntry:
