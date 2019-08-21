@@ -108,8 +108,6 @@ func TestReadQsfTypes(t *testing.T) {
 		t.Error("survey = nil; want survey != nil")
 	}
 
-	// TODO test for NPS question type
-	// TODO test for pick/group/rank question type
 	// TODO test for timing question type
 	tests := []struct {
 		id   string
@@ -128,6 +126,8 @@ func TestReadQsfTypes(t *testing.T) {
 		{"QID11", MultipleChoiceSingleResponse},
 		{"QID13", MatrixMultiResponse},
 		{"QID14", Description},
+		{"QID15", NPS},
+		{"QID17", PickGroupRank},
 	}
 	for _, test := range tests {
 		if s.Questions[test.id].Type() != test.want {

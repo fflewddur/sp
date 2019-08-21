@@ -164,6 +164,9 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 			s.QuestionOrder = append(s.QuestionOrder, q.ID) // TODO get question order from FLOW elements in QSF
 			s.Questions[q.ID] = q
 		}
+		// TODO parse survery blocks from BL element
+		// TODO parse Trash block in BL and remove those questions from our output
+		// TODO parse survey question count to verify we didn't miss any questions
 	}
 
 	return nil

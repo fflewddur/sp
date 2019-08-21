@@ -92,6 +92,7 @@ const (
 	MatrixMultiResponse
 	MaxDiff
 	NPS
+	PickGroupRank
 	RankOrder
 	TextEntry
 )
@@ -115,6 +116,8 @@ func newQTypeFromString(t, s, ss string) QType {
 			return NPS
 		}
 		return MultipleChoiceSingleResponse
+	case "PGR":
+		return PickGroupRank
 	case "RO":
 		return RankOrder
 	case "TE":
@@ -138,6 +141,7 @@ func (qt QType) String() string {
 		"MatrixMultiResponse",
 		"MaxDiff",
 		"NPS",
+		"PickGroupRank",
 		"RankOrder",
 		"TextEntry",
 	}

@@ -1,5 +1,7 @@
 package libsp
 
+// spell-checker: disable
+
 var qsfTestContent = `{
     "SurveyEntry": {
         "SurveyID": "SV_6mudEEycYo5zehT",
@@ -1334,3 +1336,5 @@ text?</QID8_TEXT>
 		<Q_DataPolicyViolations></Q_DataPolicyViolations>
 	</Response>
 </Responses>`
+
+// spell-checker: enable
