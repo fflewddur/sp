@@ -32,7 +32,6 @@ func TestWriteCSV(t *testing.T) {
 	r = bufio.NewReader(&b)
 	csvReader := csv.NewReader(r)
 
-	// TODO test QID17's PGR data
 	// TODO test QID16's timing data
 	var tests = [][]string{
 		[]string{"id", "finished", "progress", "duration",
@@ -42,6 +41,7 @@ func TestWriteCSV(t *testing.T) {
 			"QID6_1", "QID6_2", "QID6_3", "QID8_TEXT",
 			"QID4_1", "QID4_2", "QID4_3", "QID4_5", "QID4_5_TEXT", "QID4_6", "QID4_6_TEXT", "QID4_4",
 			"QID15", "QID15_NPS_GROUP", "QID11", "QID11_3_TEXT",
+			"QID17_1_GROUP", "QID17_1_RANK", "QID17_2_GROUP", "QID17_2_RANK", "QID17_3_GROUP", "QID17_3_RANK", "QID17_4_GROUP", "QID17_4_RANK", "QID17_5_GROUP", "QID17_5_RANK", "QID17_5_TEXT",
 			"QID10_1", "QID10_2", "QID10_3", "QID3", "QID1", "QID7_TEXT"},
 		[]string{"R_1dtWhiBDD96nfyk", "true", "100", "122",
 			"", "", "", "", "field 1", "field 2", "field 3",
@@ -50,6 +50,7 @@ func TestWriteCSV(t *testing.T) {
 			"Click to write Scale point 1", "", "Click to write Scale point 2", "multiple\nlines\nof\ntext?",
 			"", "", "Click to write Choice 3", "Other1", "other response 1", "Other2", "other response 2", "",
 			"6", "Detractor", "Click to write Choice 2", "",
+			"Click to write Group 1", "3", "Click to write Group 2", "1", "Click to write Group 1", "2", "Click to write Group 1", "1", "Click to write Group 3", "1", "in group 3",
 			"3", "2", "1", "Click to write Choice 2", "Click to write Choice 1", "one line of text"},
 		[]string{"R_z72KJQMnr3lxZGp", "true", "100", "104",
 			"", "", "", "", "name", "email", "job role",
@@ -58,16 +59,19 @@ func TestWriteCSV(t *testing.T) {
 			"", "Click to write Scale point 2", "Click to write Scale point 1", "bar",
 			"", "", "", "", "", "", "", "None",
 			"10", "Promoter", "Click to write Choice 3", "other text",
+			"Click to write Group 1", "2", "Click to write Group 1", "1", "Click to write Group 2", "2", "Click to write Group 2", "1", "", "", "",
 			"1", "2", "3", "Click to write Choice 2", "Click to write Choice 3", "foo"},
 		[]string{"R_3MPTb9vwnCBmijR", "false", "33", "22",
-			"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Click to write Choice 2", "", "", "", "", "", "", "", "", "", "", "", "", "", "Click to write Choice 2", "Click to write Choice 2", ""},
+			"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Click to write Choice 2", "", "", "", "", "", "", "", "", "", "",
+			"", "", "", "", "", "", "", "", "", "", "",
+			"", "", "", "Click to write Choice 2", "Click to write Choice 2", ""},
 	}
 	row := 0
 	var record []string
 	for _, test := range tests {
 		record, err = csvReader.Read()
 		if err != nil {
-			t.Errorf("err = %s", err)
+			t.Errorf("row %d, err = %s", row, err)
 		}
 
 		if len(record) != len(test) {

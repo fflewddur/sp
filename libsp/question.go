@@ -9,6 +9,7 @@ type Question struct {
 	qType        QType
 	choices      []Choice
 	subQuestions []Choice
+	groups       []string
 }
 
 // Choice represents one possible response to a survey question
@@ -35,20 +36,64 @@ func (q *Question) SubQuestions() []Choice {
 
 // CSVCols returns a slice of string holding the ordered CSV column names for this question
 func (q *Question) CSVCols() []string {
-	suffixes := q.qType.suffixes(q)
 	cols := make([]string, 0)
+	suffixes := []string{}
+	if q.qType == PickGroupRank {
+		for _, c := range q.choices {
+			suffixes = append(suffixes, fmt.Sprintf("_%s_GROUP", c.ID))
+			suffixes = append(suffixes, fmt.Sprintf("_%s_RANK", c.ID))
+			if c.HasText {
+				suffixes = append(suffixes, "_"+c.ID+"_TEXT")
+			}
+		}
+	} else {
+		suffixes = q.qType.suffixes(q)
+	}
 	for _, s := range suffixes {
 		cols = append(cols, q.ID+s)
 	}
+
 	return cols
 }
 
 // ResponseCols returns a slice of string holding the ordered responses in r for this question
 func (q *Question) ResponseCols(r *Response) []string {
-	suffixes := q.qType.suffixes(q)
 	cols := make([]string, 0)
-	for _, s := range suffixes {
-		cols = append(cols, r.answers[q.ID+s])
+	if q.qType == PickGroupRank {
+		cols = q.groupsAndRanks(r)
+	} else {
+		suffixes := q.qType.suffixes(q)
+		for _, s := range suffixes {
+			cols = append(cols, r.answers[q.ID+s])
+		}
+	}
+
+	return cols
+}
+
+// groupsAndRanks returns the groups and ranks for each choice in this Question.
+// PickGroupRank responses are structured differently than other question types,
+// so it needs its own logic.
+func (q *Question) groupsAndRanks(r *Response) []string {
+	cols := make([]string, 0)
+	for _, c := range q.choices {
+		var group, rank string
+		for gi, g := range q.groups {
+			gk := fmt.Sprintf("%s_%d_GROUP_%s", q.ID, gi, c.ID)
+			if v, ok := r.answers[gk]; ok && len(v) > 0 {
+				group = g
+				rk := fmt.Sprintf("%s_G%d_%s_RANK", q.ID, gi, c.ID)
+				if v, ok := r.answers[rk]; ok && len(v) > 0 {
+					rank = v
+				}
+			}
+		}
+		cols = append(cols, group)
+		cols = append(cols, rank)
+
+		if c.HasText {
+			cols = append(cols, r.answers[q.ID+"_"+c.ID+"_TEXT"])
+		}
 	}
 	return cols
 }
@@ -74,6 +119,7 @@ func newQuestion(p *qsfPayload) (*Question, error) {
 			return nil, fmt.Errorf("could not parse choices: %s", err)
 		}
 	}
+	q.groups = p.Groups
 
 	return q, nil
 }
@@ -161,19 +207,36 @@ func (qt QType) choicesAreQuestions() bool {
 }
 
 func (qt QType) suffixes(q *Question) []string {
-	// TODO support each type below:
-	// +Form: [question id]_[choice id]
-	// +MultipleChoiceSingleResponse: [question id]
-	// +MultipleChoiceMultiResponse: [question id]_[choice id]
-	// +MatrixSingleResponse: [question id]_[subquestion id]
+	// These are the formats for the keys to lookup responses for each question type
+	// Form: [question id]_[choice id]
+	// MultipleChoiceSingleResponse: [question id]
+	// MultipleChoiceMultiResponse: [question id]_[choice id]
+	// MatrixSingleResponse: [question id]_[subquestion id]
 	// MatrixMultiResponse: [question id]_[subquestion id]_[choice id]
-	// +MaxDiff: [question id]_[choice id]
-	// PickGroupRank: ?
-	// +RankOrder: [question id]_[choice id]
-	// +TextEntry: [question id]_TEXT
-	// +NPS: [question id] and [question id]_NPS_GROUP
+	// MaxDiff: [question id]_[choice id]
+	// PickGroupRank groupings: [question id]_[group index]_[choice id]
+	// PickGroupRank rankings: [question id]_G[group index]_choice id]_RANK
+	// RankOrder: [question id]_[choice id]
+	// TextEntry: [question id]_TEXT
+	// NPS: [question id] and [question id]_NPS_GROUP
 	suffixes := []string{}
 	switch qt {
+	case Form, MaxDiff, MultipleChoiceMultiResponse, RankOrder:
+		for _, c := range q.choices {
+			suffixes = append(suffixes, "_"+c.ID)
+			if c.HasText {
+				suffixes = append(suffixes, "_"+c.ID+"_TEXT")
+			}
+		}
+	case MatrixMultiResponse:
+		for _, sq := range q.subQuestions {
+			for _, c := range q.choices {
+				suffixes = append(suffixes, "_"+sq.ID+"_"+c.ID)
+			}
+			if sq.HasText {
+				suffixes = append(suffixes, "_"+sq.ID+"_TEXT")
+			}
+		}
 	case MatrixSingleResponse:
 		for _, sq := range q.subQuestions {
 			suffixes = append(suffixes, "_"+sq.ID)
@@ -191,26 +254,14 @@ func (qt QType) suffixes(q *Question) []string {
 	case NPS:
 		suffixes = append(suffixes, "")
 		suffixes = append(suffixes, "_NPS_GROUP")
-	case MultipleChoiceMultiResponse:
-		fallthrough
-	case MaxDiff:
-		fallthrough
-	case RankOrder:
-		fallthrough
-	case Form:
-		for _, c := range q.choices {
-			suffixes = append(suffixes, "_"+c.ID)
-			if c.HasText {
-				suffixes = append(suffixes, "_"+c.ID+"_TEXT")
-			}
-		}
-	case MatrixMultiResponse:
-		for _, sq := range q.subQuestions {
+	case PickGroupRank:
+		for gi := range q.groups {
 			for _, c := range q.choices {
-				suffixes = append(suffixes, "_"+sq.ID+"_"+c.ID)
-			}
-			if sq.HasText {
-				suffixes = append(suffixes, "_"+sq.ID+"_TEXT")
+				suffixes = append(suffixes, fmt.Sprintf("_%d_%s", gi, c.ID))
+				suffixes = append(suffixes, fmt.Sprintf("_G%d_%s_RANK", gi, c.ID))
+				if c.HasText {
+					suffixes = append(suffixes, "_"+c.ID+"_TEXT")
+				}
 			}
 		}
 	case TextEntry:

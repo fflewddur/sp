@@ -224,6 +224,7 @@ type qsfPayload struct {
 	ChoiceOrder   []json.Number
 	Answers       map[int]qsfChoice
 	AnswerOrder   []json.Number
+	Groups        []string
 }
 
 func (p *qsfPayload) OrderedChoices() ([]Choice, error) {
