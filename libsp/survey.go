@@ -26,6 +26,7 @@ type Survey struct {
 	QuestionOrder []string
 	Questions     map[string]*Question
 	Responses     []*Response
+	blocks        []*block
 }
 
 const timeFormat = "2006-01-02 15:04:05"
@@ -156,20 +157,54 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 
 	s.Questions = make(map[string]*Question)
 	for _, e := range qs.SurveyElements {
-		if e.Element == "SQ" {
+		switch e.Element {
+		case "BL":
+			for _, p := range e.blocks.Payload {
+				b := new(block)
+				b.Type = p.Type
+				b.ID = p.ID
+				for _, be := range p.BlockElements {
+					if be.Type == "Question" {
+						b.QuestionIDs = append(b.QuestionIDs, be.QuestionID)
+					}
+				}
+				s.blocks = append(s.blocks, b)
+			}
+		case "FL":
+			// TODO parse question order from FL object
+		case "QC":
+			// TODO parse survey question count to verify we didn't miss any questions
+		case "SQ":
 			q, err := newQuestion(e.Payload)
 			if err != nil {
 				return fmt.Errorf("could not create question from JSON: %s", err)
 			}
-			s.QuestionOrder = append(s.QuestionOrder, q.ID) // TODO get question order from FLOW elements in QSF
 			s.Questions[q.ID] = q
 		}
-		// TODO parse survery blocks from BL element
-		// TODO parse Trash block in BL and remove those questions from our output
-		// TODO parse survey question count to verify we didn't miss any questions
 	}
 
+	s.emptyTrash()
+	s.sortQuestions()
+
 	return nil
+}
+
+func (s *Survey) emptyTrash() {
+	for _, b := range s.blocks {
+		if b.Type == "Trash" {
+			for _, id := range b.QuestionIDs {
+				delete(s.Questions, id)
+			}
+		}
+	}
+}
+
+func (s *Survey) sortQuestions() {
+	// TODO sort questions based on order from FL and BL elements in QSF
+	s.QuestionOrder = []string{}
+	for _, q := range s.Questions {
+		s.QuestionOrder = append(s.QuestionOrder, q.ID)
+	}
 }
 
 type qsf struct {
@@ -193,19 +228,31 @@ type qsfSurveyElement struct {
 	PrimaryAttribute   string
 	SecondaryAttribute string
 	Payload            *qsfPayload
+	blocks             *qsfSurveyElementBlocks
 }
 
 func (e *qsfSurveyElement) UnmarshalJSON(b []byte) error {
 	// Survey questions have a Payload object, other elements have an array of Payload objects
-	if ok, err := regexp.Match(`"Element"\s*:\s*"SQ"`, b); err != nil {
-		return err
-	} else if ok {
+	re := regexp.MustCompile(`"Element"\s*:\s*"(.*?)"`)
+	m := re.FindSubmatch(b)
+	if m == nil || len(m) <= 1 {
+		return nil
+	}
+
+	element := string(m[1])
+	switch element {
+	case "SQ":
 		var q qsfSurveyElementQuestion
 		json.Unmarshal(b, &q)
 		e.Element = q.Element
 		e.PrimaryAttribute = q.PrimaryAttribute
 		e.SecondaryAttribute = q.SecondaryAttribute
 		e.Payload = q.Payload
+	case "BL":
+		var bl qsfSurveyElementBlocks
+		json.Unmarshal(b, &bl)
+		e.Element = bl.Element
+		e.blocks = &bl
 	}
 
 	return nil
@@ -214,6 +261,7 @@ func (e *qsfSurveyElement) UnmarshalJSON(b []byte) error {
 type qsfSurveyElementQuestion qsfSurveyElement
 
 type qsfPayload struct {
+	Type          string
 	QuestionText  string
 	DataExportTag string
 	QuestionType  string
@@ -278,4 +326,22 @@ func (p *qsfPayload) OrderedAnswers() ([]Choice, error) {
 type qsfChoice struct {
 	Display   string
 	TextEntry string
+}
+
+type qsfSurveyElementBlocks struct {
+	Element string
+	Payload []*qsfSurveyElementBlock
+}
+
+type qsfSurveyElementBlock struct {
+	Type          string
+	ID            string
+	BlockElements []*qsfPayload
+}
+
+type block struct {
+	// TODO maybe make this an enum?
+	Type        string
+	ID          string
+	QuestionIDs []string
 }

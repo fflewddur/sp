@@ -56,7 +56,7 @@ func TestReadQsfQuestions(t *testing.T) {
 		{"", false},
 		{"QID0", false},
 		{"QID1", true},
-		{"QID2", true}, // TODO test that this question is in the trash and has no output
+		{"QID2", false},
 		{"QID3", true},
 		{"QID4", true},
 		{"QID5", true},
@@ -66,7 +66,7 @@ func TestReadQsfQuestions(t *testing.T) {
 		{"QID9", true},
 		{"QID10", true},
 		{"QID11", true},
-		{"QID12", true},
+		{"QID12", false},
 		{"QID13", true},
 		{"QID14", true},
 		{"QID15", true},
@@ -74,8 +74,8 @@ func TestReadQsfQuestions(t *testing.T) {
 		{"QID17", true},
 		{"QID18", false},
 	}
-	if len(s.Questions) != 17 {
-		t.Errorf("len(Questions) = %d; want 17", len(s.Questions))
+	if len(s.Questions) != 15 {
+		t.Errorf("len(Questions) = %d; want 15", len(s.Questions))
 	}
 	for _, test := range tests {
 		if _, ok := s.Questions[test.id]; test.want != ok {
@@ -93,8 +93,8 @@ func TestReadQsfMinified(t *testing.T) {
 	if s == nil {
 		t.Error("survey = nil")
 	}
-	if len(s.Questions) != 10 {
-		t.Errorf("len(Questions) = %d; want 10", len(s.Questions))
+	if len(s.Questions) != 9 {
+		t.Errorf("len(Questions) = %d; want 9", len(s.Questions))
 	}
 }
 
@@ -114,7 +114,6 @@ func TestReadQsfTypes(t *testing.T) {
 		want QType
 	}{
 		{"QID1", MultipleChoiceSingleResponse},
-		{"QID2", MultipleChoiceMultiResponse},
 		{"QID3", MultipleChoiceSingleResponse},
 		{"QID4", MultipleChoiceMultiResponse},
 		{"QID5", MatrixSingleResponse},

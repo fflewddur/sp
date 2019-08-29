@@ -35,7 +35,7 @@ func TestWriteCSV(t *testing.T) {
 	// TODO test QID16's timing data
 	var tests = [][]string{
 		[]string{"id", "finished", "progress", "duration",
-			"QID2_1", "QID2_2", "QID2_3", "QID12", "QID9_1", "QID9_2", "QID9_3",
+			"QID9_1", "QID9_2", "QID9_3",
 			"QID13_1_1", "QID13_1_2", "QID13_1_3", "QID13_2_1", "QID13_2_2", "QID13_2_3", "QID13_3_1", "QID13_3_2", "QID13_3_3", "QID13_5_1", "QID13_5_2", "QID13_5_3", "QID13_4_1", "QID13_4_2", "QID13_4_3", "QID13_4_TEXT",
 			"QID5_1", "QID5_2", "QID5_3", "QID5_4", "QID5_4_TEXT",
 			"QID6_1", "QID6_2", "QID6_3", "QID8_TEXT",
@@ -44,7 +44,7 @@ func TestWriteCSV(t *testing.T) {
 			"QID17_1_GROUP", "QID17_1_RANK", "QID17_2_GROUP", "QID17_2_RANK", "QID17_3_GROUP", "QID17_3_RANK", "QID17_4_GROUP", "QID17_4_RANK", "QID17_5_GROUP", "QID17_5_RANK", "QID17_5_TEXT",
 			"QID10_1", "QID10_2", "QID10_3", "QID3", "QID1", "QID7_TEXT"},
 		[]string{"R_1dtWhiBDD96nfyk", "true", "100", "122",
-			"", "", "", "", "field 1", "field 2", "field 3",
+			"field 1", "field 2", "field 3",
 			"Col 1", "Col 2", "", "", "Col 2", "Col 3", "", "Col 2", "", "", "Col 2", "", "", "", "Col 3", "other matrix multiple row",
 			"Click to write Scale point 1", "Click to write Scale point 2", "Click to write Scale point 3", "Click to write Scale point 3", "other matrix row",
 			"Click to write Scale point 1", "", "Click to write Scale point 2", "multiple\nlines\nof\ntext?",
@@ -53,7 +53,7 @@ func TestWriteCSV(t *testing.T) {
 			"Click to write Group 1", "3", "Click to write Group 2", "1", "Click to write Group 1", "2", "Click to write Group 1", "1", "Click to write Group 3", "1", "in group 3",
 			"3", "2", "1", "Click to write Choice 2", "Click to write Choice 1", "one line of text"},
 		[]string{"R_z72KJQMnr3lxZGp", "true", "100", "104",
-			"", "", "", "", "name", "email", "job role",
+			"name", "email", "job role",
 			"Col 1", "", "", "", "", "", "Col 1", "Col 2", "Col 3", "", "", "", "", "", "", "",
 			"Click to write Scale point 3", "Click to write Scale point 2", "", "", "",
 			"", "Click to write Scale point 2", "Click to write Scale point 1", "bar",
@@ -62,7 +62,7 @@ func TestWriteCSV(t *testing.T) {
 			"Click to write Group 1", "2", "Click to write Group 1", "1", "Click to write Group 2", "2", "Click to write Group 2", "1", "", "", "",
 			"1", "2", "3", "Click to write Choice 2", "Click to write Choice 3", "foo"},
 		[]string{"R_3MPTb9vwnCBmijR", "false", "33", "22",
-			"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Click to write Choice 2", "", "", "", "", "", "", "", "", "", "",
+			"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Click to write Choice 2", "", "", "", "", "", "", "", "", "", "",
 			"", "", "", "", "", "", "", "", "", "", "",
 			"", "", "", "Click to write Choice 2", "Click to write Choice 2", ""},
 	}
