@@ -26,7 +26,8 @@ type Survey struct {
 	QuestionOrder []string
 	Questions     map[string]*Question
 	Responses     []*Response
-	blocks        []*block
+	blocks        map[string]*block
+	blockOrder    []string
 }
 
 const timeFormat = "2006-01-02 15:04:05"
@@ -156,6 +157,7 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 	}
 
 	s.Questions = make(map[string]*Question)
+	s.blocks = make(map[string]*block)
 	for _, e := range qs.SurveyElements {
 		switch e.Element {
 		case "BL":
@@ -168,10 +170,12 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 						b.QuestionIDs = append(b.QuestionIDs, be.QuestionID)
 					}
 				}
-				s.blocks = append(s.blocks, b)
+				s.blocks[b.ID] = b
 			}
 		case "FL":
-			// TODO parse question order from FL object
+			for _, f := range e.flows.Payload.Flow {
+				s.blockOrder = append(s.blockOrder, f.ID)
+			}
 		case "QC":
 			// TODO parse survey question count to verify we didn't miss any questions
 		case "SQ":
@@ -200,10 +204,9 @@ func (s *Survey) emptyTrash() {
 }
 
 func (s *Survey) sortQuestions() {
-	// TODO sort questions based on order from FL and BL elements in QSF
 	s.QuestionOrder = []string{}
-	for _, q := range s.Questions {
-		s.QuestionOrder = append(s.QuestionOrder, q.ID)
+	for _, b := range s.blockOrder {
+		s.QuestionOrder = append(s.QuestionOrder, s.blocks[b].QuestionIDs...)
 	}
 }
 
@@ -229,6 +232,7 @@ type qsfSurveyElement struct {
 	SecondaryAttribute string
 	Payload            *qsfPayload
 	blocks             *qsfSurveyElementBlocks
+	flows              *qsfSurveyElementFlows
 }
 
 func (e *qsfSurveyElement) UnmarshalJSON(b []byte) error {
@@ -239,6 +243,7 @@ func (e *qsfSurveyElement) UnmarshalJSON(b []byte) error {
 		return nil
 	}
 
+	// TODO check for errors on each json.Unmarshal()
 	element := string(m[1])
 	switch element {
 	case "SQ":
@@ -253,6 +258,11 @@ func (e *qsfSurveyElement) UnmarshalJSON(b []byte) error {
 		json.Unmarshal(b, &bl)
 		e.Element = bl.Element
 		e.blocks = &bl
+	case "FL":
+		var fl qsfSurveyElementFlows
+		json.Unmarshal(b, &fl)
+		e.Element = fl.Element
+		e.flows = &fl
 	}
 
 	return nil
@@ -344,4 +354,19 @@ type block struct {
 	Type        string
 	ID          string
 	QuestionIDs []string
+}
+
+type qsfSurveyElementFlows struct {
+	Element string
+	Payload *qsfSurveyElementFlowPayload
+}
+
+type qsfSurveyElementFlowPayload struct {
+	Flow []*qsfSurveyElementFlow
+}
+
+type qsfSurveyElementFlow struct {
+	ID     string
+	Type   string
+	FlowID string
 }
