@@ -17,6 +17,7 @@ func TestWriteCSV(t *testing.T) {
 	}
 	if s == nil {
 		t.Error("s = nil")
+		return
 	}
 	r = bufio.NewReader(strings.NewReader(xmlTestContent))
 	if err = s.ReadXML(r); err != nil {
@@ -106,6 +107,7 @@ func TestWriteCSVNil(t *testing.T) {
 	}
 	if s == nil {
 		t.Error("s = nil")
+		return
 	}
 	err = s.WriteCSV(nil)
 	if err != nil && err.Error() != "bw cannot be nil" {
@@ -121,6 +123,7 @@ func TestWriteR(t *testing.T) {
 	}
 	if s == nil {
 		t.Error("s = nil")
+		return
 	}
 	err = s.WriteR(nil)
 	if err != nil {
@@ -136,6 +139,7 @@ func TestReadXML(t *testing.T) {
 	}
 	if s == nil {
 		t.Error("s = nil")
+		return
 	}
 
 	reader = bufio.NewReader(strings.NewReader(xmlTestContent))

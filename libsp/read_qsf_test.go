@@ -19,6 +19,7 @@ func TestReadQsfMetadata(t *testing.T) {
 	}
 	if s == nil {
 		t.Error("survey = nil")
+		return
 	}
 	if s.Title != "Test survey" {
 		t.Errorf("Title = '%s'; want 'Test survey'", s.Title)
@@ -48,6 +49,7 @@ func TestReadQsfQuestions(t *testing.T) {
 	}
 	if s == nil {
 		t.Error("survey = nil")
+		return
 	}
 	tests := []struct {
 		id   string
@@ -102,10 +104,11 @@ func TestReadQsfTypes(t *testing.T) {
 	r := bufio.NewReader(strings.NewReader(qsfTestContent))
 	s, err := ReadQsf(r)
 	if err != nil {
-		t.Error("err != nil; want err = nil")
+		t.Errorf("err = %s", err)
 	}
 	if s == nil {
-		t.Error("survey = nil; want survey != nil")
+		t.Error("survey = nil")
+		return
 	}
 
 	// TODO test for timing question type
@@ -139,10 +142,11 @@ func TestReadQsfChoiceOrder(t *testing.T) {
 	r := bufio.NewReader(strings.NewReader(qsfTestContent))
 	s, err := ReadQsf(r)
 	if err != nil {
-		t.Error("err != nil; want err = nil")
+		t.Errorf("err = %s", err)
 	}
 	if s == nil {
-		t.Error("survey = nil; want survey != nil")
+		t.Error("survey = nil")
+		return
 	}
 
 	tests := []struct {
@@ -170,10 +174,11 @@ func TestReadQsfAnswerOrder(t *testing.T) {
 	r := bufio.NewReader(strings.NewReader(qsfTestContent))
 	s, err := ReadQsf(r)
 	if err != nil {
-		t.Error("err != nil; want err = nil")
+		t.Errorf("err = %s", err)
 	}
 	if s == nil {
-		t.Error("survey = nil; want survey != nil")
+		t.Error("survey = nil")
+		return
 	}
 
 	tests := []struct {
