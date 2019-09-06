@@ -237,8 +237,8 @@ type qsfSurveyElement struct {
 
 func (e *qsfSurveyElement) UnmarshalJSON(b []byte) error {
 	// Survey questions have a Payload object, other elements have an array of Payload objects
-	re := regexp.MustCompile(`"Element"\s*:\s*"(.*?)"`)
-	m := re.FindSubmatch(b)
+	reElementType := regexp.MustCompile(`"Element"\s*:\s*"(.*?)"`)
+	m := reElementType.FindSubmatch(b)
 	if m == nil || len(m) <= 1 {
 		return nil
 	}
@@ -247,20 +247,59 @@ func (e *qsfSurveyElement) UnmarshalJSON(b []byte) error {
 	element := string(m[1])
 	switch element {
 	case "SQ":
-		var q qsfSurveyElementQuestion
-		json.Unmarshal(b, &q)
-		e.Element = q.Element
-		e.PrimaryAttribute = q.PrimaryAttribute
-		e.SecondaryAttribute = q.SecondaryAttribute
-		e.Payload = q.Payload
+		reChoiceArray := regexp.MustCompile(`"Choices"\s*:\s*\[\s*{`)
+		if reChoiceArray.Match(b) {
+			// This Question has an array of Choice objects. I've only
+			// seen this for NPS questions, in which case we don't care
+			// about the Choice values because they must always be 0 - 10.
+			var data struct {
+				Element          string
+				PrimaryAttribute string
+				Payload          struct {
+					QuestionText  string
+					DataExportTag string
+					QuestionType  string
+					Selector      string
+					QuestionID    string
+				}
+			}
+			err := json.Unmarshal(b, &data)
+			if err != nil {
+				return fmt.Errorf("could not parse SQ element: %s", err)
+			}
+			e.Element = data.Element
+			e.PrimaryAttribute = data.PrimaryAttribute
+			e.Payload = new(qsfPayload)
+			e.Payload.QuestionText = data.Payload.QuestionText
+			e.Payload.DataExportTag = data.Payload.DataExportTag
+			e.Payload.QuestionType = data.Payload.QuestionType
+			e.Payload.Selector = data.Payload.Selector
+			e.Payload.QuestionID = data.Payload.QuestionID
+		} else {
+			var q qsfSurveyElementQuestion
+			err := json.Unmarshal(b, &q)
+			if err != nil {
+				return fmt.Errorf("could not parse SQ element: %s", err)
+			}
+			e.Element = q.Element
+			e.PrimaryAttribute = q.PrimaryAttribute
+			e.SecondaryAttribute = q.SecondaryAttribute
+			e.Payload = q.Payload
+		}
 	case "BL":
 		var bl qsfSurveyElementBlocks
-		json.Unmarshal(b, &bl)
+		err := json.Unmarshal(b, &bl)
+		if err != nil {
+			return fmt.Errorf("could not parse BL element: %s", err)
+		}
 		e.Element = bl.Element
 		e.blocks = &bl
 	case "FL":
 		var fl qsfSurveyElementFlows
-		json.Unmarshal(b, &fl)
+		err := json.Unmarshal(b, &fl)
+		if err != nil {
+			return fmt.Errorf("could not parse FL element: %s", err)
+		}
 		e.Element = fl.Element
 		e.flows = &fl
 	}
