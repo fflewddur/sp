@@ -236,14 +236,14 @@ type qsfSurveyElement struct {
 }
 
 func (e *qsfSurveyElement) UnmarshalJSON(b []byte) error {
-	// Survey questions have a Payload object, other elements have an array of Payload objects
+	// Survey questions have a Payload object, other elements have an array of Payload objects.
+	// Each Payload uses slightly different types, hence all of this logic.
 	reElementType := regexp.MustCompile(`"Element"\s*:\s*"(.*?)"`)
 	m := reElementType.FindSubmatch(b)
 	if m == nil || len(m) <= 1 {
 		return nil
 	}
 
-	// TODO check for errors on each json.Unmarshal()
 	element := string(m[1])
 	switch element {
 	case "SQ":
