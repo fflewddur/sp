@@ -300,6 +300,7 @@ func (e *qsfSurveyElement) UnmarshalJSON(b []byte) error {
 	switch element {
 	case "SQ":
 		reChoiceArray := regexp.MustCompile(`"Choices"\s*:\s*\[\s*{`)
+		reMetaInfo := regexp.MustCompile(`"QuestionText":\s*"Browser Meta Info"`)
 		if reChoiceArray.Match(b) {
 			// This Question has an array of Choice objects. I've only
 			// seen this for NPS questions, in which case we don't care
@@ -317,7 +318,6 @@ func (e *qsfSurveyElement) UnmarshalJSON(b []byte) error {
 			}
 			err := json.Unmarshal(b, &data)
 			if err != nil {
-				fmt.Printf("b: %s\n", b)
 				return fmt.Errorf("could not parse SQ element: %s", err)
 			}
 			e.Element = data.Element
@@ -328,6 +328,9 @@ func (e *qsfSurveyElement) UnmarshalJSON(b []byte) error {
 			e.Payload.QuestionType = data.Payload.QuestionType
 			e.Payload.Selector = data.Payload.Selector
 			e.Payload.QuestionID = data.Payload.QuestionID
+		} else if reMetaInfo.Match(b) {
+			// This question uses a different JSON schema than the others.
+			// For now, let's ignore it.
 		} else {
 			var q qsfSurveyElementQuestion
 			err := json.Unmarshal(b, &q)

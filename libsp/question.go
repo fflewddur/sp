@@ -147,6 +147,7 @@ const (
 	Unknown QType = iota
 	Description
 	Form
+	Meta
 	MultipleChoiceSingleResponse
 	MultipleChoiceMultiResponse
 	MatrixSingleResponse
@@ -170,6 +171,8 @@ func newQTypeFromString(t, s, ss string) QType {
 			return MatrixMultiResponse
 		}
 		return MatrixSingleResponse
+	case "Meta":
+		return Meta
 	case "MC":
 		if s == "MAVR" || s == "MAHR" || s == "MACOL" || s == "MSB" {
 			return MultipleChoiceMultiResponse

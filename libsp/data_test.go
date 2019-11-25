@@ -210,6 +210,57 @@ var qsfTestContent = `{
     }, {
         "SurveyID": "SV_6mudEEycYo5zehT",
         "Element": "SQ",
+        "PrimaryAttribute": "QID99",
+        "SecondaryAttribute": "Browser Meta Info",
+        "TertiaryAttribute": null,
+        "Payload": {
+            "QuestionText": "Browser Meta Info",
+            "DefaultChoices": false,
+            "QuestionType": "Meta",
+            "Selector": "Browser",
+            "Configuration": {
+                "QuestionDescriptionOption": "UseText"
+            },
+            "QuestionDescription": "Browser Meta Info",
+            "Choices": {
+                "1": {
+                    "Display": "Browser",
+                    "TextEntry": 1
+                },
+                "2": {
+                    "Display": "Version",
+                    "TextEntry": 1
+                },
+                "3": {
+                    "Display": "Operating System",
+                    "TextEntry": 1
+                },
+                "4": {
+                    "Display": "Screen Resolution",
+                    "TextEntry": 1
+                },
+                "5": {
+                    "Display": "Flash Version",
+                    "TextEntry": 1
+                },
+                "6": {
+                    "Display": "Java Support",
+                    "TextEntry": 1
+                },
+                "7": {
+                    "Display": "User Agent",
+                    "TextEntry": 1
+                }
+            },
+            "GradingData": [],
+            "Language": [],
+            "QuestionText_Unsafe": "Browser Meta Info",
+            "DataExportTag": "Q1.2",
+            "QuestionID": "QID99"
+        }
+    }, {
+        "SurveyID": "SV_6mudEEycYo5zehT",
+        "Element": "SQ",
         "PrimaryAttribute": "QID2",
         "SecondaryAttribute": "Click to write the question text",
         "TertiaryAttribute": null,
