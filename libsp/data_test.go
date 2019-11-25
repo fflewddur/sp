@@ -273,7 +273,7 @@ var qsfTestContent = `{
             "Configuration": {
                 "QuestionDescriptionOption": "UseText"
             },
-            "QuestionDescription": "Click to write the question text",
+            "QuestionDescription": "Q2Label",
             "Choices": {
                 "1": {
                     "Display": "Click to write Choice 1"
@@ -314,7 +314,7 @@ var qsfTestContent = `{
             "Configuration": {
                 "QuestionDescriptionOption": "UseText"
             },
-            "QuestionDescription": "Click to write the question text",
+            "QuestionDescription": "Q12Label",
             "Choices": {
                 "1": {
                     "Display": "Click to write Choice 1"
@@ -362,7 +362,7 @@ var qsfTestContent = `{
                 "QuestionDescriptionOption": "UseText",
                 "AllowFreeResponse": "false"
             },
-            "QuestionDescription": "Form",
+            "QuestionDescription": "Q9Label",
             "Choices": {
                 "1": {
                     "Display": "Form line 1"
@@ -417,7 +417,7 @@ var qsfTestContent = `{
                 "WhiteSpace": "OFF",
                 "MobileFirst": true
             },
-            "QuestionDescription": "Matrix multiple response per row",
+            "QuestionDescription": "Q13Label",
             "Choices": {
                 "1": {
                     "Display": "Row 1"
@@ -483,7 +483,7 @@ var qsfTestContent = `{
                 "WhiteSpace": "OFF",
                 "MobileFirst": true
             },
-            "QuestionDescription": "Matrix single response per row",
+            "QuestionDescription": "Q5Label",
             "Choices": {
                 "1": {
                     "Display": "Click to write Statement 1"
@@ -553,7 +553,7 @@ var qsfTestContent = `{
                 "ChoiceColumnWidth": 25,
                 "MobileFirst": true
             },
-            "QuestionDescription": "MaxDiff",
+            "QuestionDescription": "Q6Label",
             "Choices": {
                 "1": {
                     "Display": "Click to write Statement 1",
@@ -612,7 +612,7 @@ var qsfTestContent = `{
                 "InputHeight": 167,
                 "AllowFreeResponse": "false"
             },
-            "QuestionDescription": "Multi line text entry",
+            "QuestionDescription": "Q8Label",
             "Validation": {
                 "Settings": {
                     "ForceResponse": "OFF",
@@ -641,7 +641,7 @@ var qsfTestContent = `{
             "Configuration": {
                 "QuestionDescriptionOption": "UseText"
             },
-            "QuestionDescription": "Multiple answer",
+            "QuestionDescription": "Q4Label",
             "Choices": {
                 "1": {
                     "Display": "Click to write Choice 1"
@@ -697,7 +697,7 @@ var qsfTestContent = `{
             "Configuration": {
                 "QuestionDescriptionOption": "UseText"
             },
-            "QuestionDescription": "On a scale from 0-10, how likely are you to recommend [INSERT COMPANY NAME HERE] to a friend or c...",
+            "QuestionDescription": "NPS",
             "Choices": [{
                 "Display": "0"
             }, {
@@ -758,7 +758,7 @@ var qsfTestContent = `{
             "Configuration": {
                 "QuestionDescriptionOption": "UseText"
             },
-            "QuestionDescription": "Other text entry",
+            "QuestionDescription": "Q11Label",
             "Choices": {
                 "1": {
                     "Display": "Click to write Choice 1 (ordered 2nd)"
@@ -809,7 +809,7 @@ var qsfTestContent = `{
                 "Stack": false,
                 "StackItemsInGroups": false
             },
-            "QuestionDescription": "Pick, group, rank",
+            "QuestionDescription": "PGR",
             "Choices": {
                 "1": {
                     "Display": "Item 1"
@@ -861,7 +861,7 @@ var qsfTestContent = `{
             "Configuration": {
                 "QuestionDescriptionOption": "UseText"
             },
-            "QuestionDescription": "Rank order",
+            "QuestionDescription": "RO",
             "Choices": {
                 "1": {
                     "Display": "Click to write Item 1"
@@ -905,7 +905,7 @@ var qsfTestContent = `{
             "Configuration": {
                 "QuestionDescriptionOption": "UseText"
             },
-            "QuestionDescription": "Select box",
+            "QuestionDescription": "Q3Label",
             "Choices": {
                 "1": {
                     "Display": "Click to write Choice 1"
@@ -946,7 +946,7 @@ var qsfTestContent = `{
             "Configuration": {
                 "QuestionDescriptionOption": "UseText"
             },
-            "QuestionDescription": "Single answer",
+            "QuestionDescription": "Q1Label",
             "Choices": {
                 "1": {
                     "Display": "Click to write Choice 1"
@@ -991,7 +991,7 @@ var qsfTestContent = `{
                 "QuestionDescriptionOption": "UseText",
                 "AllowFreeResponse": "false"
             },
-            "QuestionDescription": "Single line text entry",
+            "QuestionDescription": "Q7Label",
             "Validation": {
                 "Settings": {
                     "ForceResponse": "OFF",
@@ -1020,7 +1020,7 @@ var qsfTestContent = `{
             "Configuration": {
                 "QuestionDescriptionOption": "UseText"
             },
-            "QuestionDescription": "Some descriptive text to start things off.",
+            "QuestionDescription": "Intro",
             "ChoiceOrder": [],
             "Validation": {
                 "Settings": {

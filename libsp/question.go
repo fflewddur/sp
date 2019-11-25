@@ -6,6 +6,7 @@ import "fmt"
 type Question struct {
 	ID           string
 	Wording      string
+	label        string
 	qType        QType
 	choices      []Choice
 	subQuestions []Choice
@@ -49,11 +50,21 @@ func (q *Question) CSVCols() []string {
 	} else {
 		suffixes = q.qType.suffixes(q)
 	}
+
+	prefix := q.CSVPrefix()
 	for _, s := range suffixes {
-		cols = append(cols, q.ID+s)
+		cols = append(cols, prefix+s)
 	}
 
 	return cols
+}
+
+// CSVPrefix returns a string prefix for all CSV column names for this question
+func (q *Question) CSVPrefix() string {
+	if q.label == "" {
+		return q.ID
+	}
+	return q.label
 }
 
 // RColType returns the R type of columns associated with this question
@@ -117,6 +128,9 @@ func newQuestion(p *qsfPayload) (*Question, error) {
 	q := new(Question)
 	q.ID = p.QuestionID
 	q.Wording = p.QuestionText
+	if p.QuestionDescription != "" {
+		q.label = p.QuestionDescription
+	}
 	q.qType = newQTypeFromString(p.QuestionType, p.Selector, p.SubSelector)
 	var err error
 	if q.qType.choicesAreQuestions() {

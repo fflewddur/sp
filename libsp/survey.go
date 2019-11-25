@@ -309,11 +309,12 @@ func (e *qsfSurveyElement) UnmarshalJSON(b []byte) error {
 				Element          string
 				PrimaryAttribute string
 				Payload          struct {
-					QuestionText  string
-					DataExportTag string
-					QuestionType  string
-					Selector      string
-					QuestionID    string
+					QuestionText        string
+					DataExportTag       string
+					QuestionType        string
+					QuestionDescription string
+					Selector            string
+					QuestionID          string
 				}
 			}
 			err := json.Unmarshal(b, &data)
@@ -324,6 +325,7 @@ func (e *qsfSurveyElement) UnmarshalJSON(b []byte) error {
 			e.PrimaryAttribute = data.PrimaryAttribute
 			e.Payload = new(qsfPayload)
 			e.Payload.QuestionText = data.Payload.QuestionText
+			e.Payload.QuestionDescription = data.Payload.QuestionDescription
 			e.Payload.DataExportTag = data.Payload.DataExportTag
 			e.Payload.QuestionType = data.Payload.QuestionType
 			e.Payload.Selector = data.Payload.Selector
@@ -367,18 +369,19 @@ func (e *qsfSurveyElement) UnmarshalJSON(b []byte) error {
 type qsfSurveyElementQuestion qsfSurveyElement
 
 type qsfPayload struct {
-	Type          string
-	QuestionText  string
-	DataExportTag string
-	QuestionType  string
-	Selector      string
-	SubSelector   string
-	QuestionID    string
-	Choices       map[int]qsfChoice
-	ChoiceOrder   []json.Number
-	Answers       map[int]qsfChoice
-	AnswerOrder   []json.Number
-	Groups        []string
+	Type                string
+	QuestionText        string
+	DataExportTag       string
+	QuestionType        string
+	QuestionDescription string
+	Selector            string
+	SubSelector         string
+	QuestionID          string
+	Choices             map[int]qsfChoice
+	ChoiceOrder         []json.Number
+	Answers             map[int]qsfChoice
+	AnswerOrder         []json.Number
+	Groups              []string
 }
 
 func (p *qsfPayload) OrderedChoices() ([]Choice, error) {
