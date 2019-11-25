@@ -44,10 +44,10 @@ var rootCmd = &cobra.Command{
 			log.Fatalf("Error parsing '%s': %s", xmlPath, err)
 		}
 
-		log.Printf("Title = '%s', # of questions = %d, description = '%s'\n", s.Title, len(s.Questions), s.Description)
-		for _, q := range s.Questions {
-			log.Printf("ID: %s Wording: %s\n\tChoices: %v", q.ID, q.Wording, q.ResponseChoices())
-		}
+		// log.Printf("Title = '%s', # of questions = %d, description = '%s'\n", s.Title, len(s.Questions), s.Description)
+		// for _, q := range s.Questions {
+		// log.Printf("ID: %s Wording: %s\n\tChoices: %v", q.ID, q.Wording, q.ResponseChoices())
+		// }
 
 		csvPath := buildCSVPath(qsfPath)
 		log.Printf("Writing '%s'", csvPath)
@@ -61,7 +61,20 @@ var rootCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error writing '%s': %s", csvPath, err)
 		}
+
+		rPath := buildRPath(qsfPath)
+		log.Printf("Writing '%s'", rPath)
+		r, err := os.Create(rPath)
+		if err != nil {
+			log.Fatalf("Error opening '%s': %s", csvPath, err)
+		}
+		defer r.Close()
+		w = bufio.NewWriter(r)
+		err = s.WriteR(w)
 		log.Println("Completed successfully!")
+		if err != nil {
+			log.Fatalf("Error writing '%s': %s", rPath, err)
+		}
 	},
 	Version: "0.0.1",
 }
@@ -80,6 +93,14 @@ func buildCSVPath(qsfPath string) string {
 		qsfPath = qsfPath[:i]
 	}
 	return qsfPath + ".csv"
+}
+
+func buildRPath(qsfPath string) string {
+	i := strings.LastIndex(qsfPath, ".")
+	if i > 0 {
+		qsfPath = qsfPath[:i]
+	}
+	return qsfPath + ".r"
 }
 
 // Execute runs the command

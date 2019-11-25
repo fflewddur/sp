@@ -56,6 +56,21 @@ func (q *Question) CSVCols() []string {
 	return cols
 }
 
+// RColType returns the R type of columns associated with this question
+func (q *Question) RColType() string {
+	switch q.qType {
+	case MatrixSingleResponse:
+		fallthrough
+	case MultipleChoiceSingleResponse:
+		fallthrough
+	case NPS:
+		fallthrough
+	case PickGroupRank:
+		return "col_factor()"
+	}
+	return "col_logical()"
+}
+
 // ResponseCols returns a slice of string holding the ordered responses in r for this question
 func (q *Question) ResponseCols(r *Response) []string {
 	cols := make([]string, 0)
