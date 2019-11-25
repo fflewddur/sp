@@ -1,6 +1,8 @@
 package libsp
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Question represents a survey question
 type Question struct {
@@ -61,7 +63,7 @@ func (q *Question) CSVCols() []string {
 
 // CSVPrefix returns a string prefix for all CSV column names for this question
 func (q *Question) CSVPrefix() string {
-	if q.label == "" {
+	if q.label == "" || q.label == q.Wording || len(q.label) > 20 {
 		return q.ID
 	}
 	return q.label
