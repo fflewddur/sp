@@ -27,7 +27,7 @@ func (q *Question) Type() QType {
 	return q.qType
 }
 
-// ResponseChoices returns a slice of Choice holding the response choices available to survey respondents
+// ResponseChoices returns a slice of Choice holding the ordered response choices available to survey respondents
 func (q *Question) ResponseChoices() []Choice {
 	return q.choices
 }

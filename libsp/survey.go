@@ -2,6 +2,7 @@ package libsp
 
 import (
 	"bufio"
+	"crypto/sha1"
 	"encoding/csv"
 	"encoding/json"
 	"errors"
@@ -90,6 +91,7 @@ message(sprintf("Reading %s...", input_path))
 
 	w.WriteString("data <- read_csv(input_path, col_types = cols(\n")
 
+	// choiceScales := make(map[string][]Choice)
 	firstLine := true
 	for _, id := range s.QuestionOrder {
 		q := s.Questions[id]
@@ -111,6 +113,14 @@ message(sprintf("Reading %s...", input_path))
 				} else {
 					firstLine = false
 				}
+				// if rColType == "col_factor()" {
+				// 	q.ResponseChoices
+				// 	choices := q.ResponseChoices()
+				// 	scaleID := choiceScaleID(choices)
+				// 	if _, ok := choiceScales[scaleID]; !ok {
+				// 		choiceScales[scaleID] = choices
+				// 	}
+				// }
 				w.WriteString(fmt.Sprintf("\t%s = %s", colID, rColType))
 			}
 		}
@@ -123,6 +133,14 @@ message(sprintf("Reading %s...", input_path))
 	}
 
 	return nil
+}
+
+func choiceScaleID(choices []Choice) string {
+	s := ""
+	for _, c := range choices {
+		s += c.Label
+	}
+	return fmt.Sprintf("%x", sha1.Sum([]byte(s)))
 }
 
 // ReadXML reads a Qualtrics XML file of participant responses
@@ -381,6 +399,8 @@ type qsfPayload struct {
 	ChoiceOrder         []json.Number
 	Answers             map[int]qsfChoice
 	AnswerOrder         []json.Number
+	RecodeValues        map[int]string
+	VariableNaming      map[int]string
 	Groups              []string
 }
 

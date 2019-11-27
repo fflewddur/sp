@@ -1036,6 +1036,120 @@ var qsfTestContent = `{
     }, {
         "SurveyID": "SV_6mudEEycYo5zehT",
         "Element": "SQ",
+        "PrimaryAttribute": "QID18",
+        "SecondaryAttribute": "Q18Label",
+        "TertiaryAttribute": null,
+        "Payload": {
+            "QuestionText": "Single answer w\/ coded responses",
+            "DataExportTag": "Q18",
+            "QuestionType": "MC",
+            "Selector": "SAVR",
+            "SubSelector": "TX",
+            "DataVisibility": {
+                "Private": false,
+                "Hidden": false
+            },
+            "Configuration": {
+                "QuestionDescriptionOption": "SpecifyLabel"
+            },
+            "QuestionDescription": "Q18Label",
+            "Choices": {
+                "1": {
+                    "Display": "Click to write Choice 1 (ordered 3rd)"
+                },
+                "2": {
+                    "Display": "Click to write Choice 2 (ordered 1st)"
+                },
+                "3": {
+                    "Display": "Click to write Choice 3 (ordered 2nd)"
+                }
+            },
+            "ChoiceOrder": ["2", "3", "1"],
+            "Validation": {
+                "Settings": {
+                    "ForceResponse": "OFF",
+                    "ForceResponseType": "ON",
+                    "Type": "None"
+                }
+            },
+            "Language": [],
+            "NextChoiceId": 5,
+            "NextAnswerId": 1,
+            "QuestionID": "QID18",
+            "RecodeValues": {
+                "1": "3",
+                "2": "1",
+                "3": "2"
+            },
+            "VariableNaming": {
+                "1": "choice1",
+                "2": "choice2",
+                "3": "choice3"
+            }
+        }
+    }, {
+        "SurveyID": "SV_6mudEEycYo5zehT",
+        "Element": "SQ",
+        "PrimaryAttribute": "QID19",
+        "SecondaryAttribute": "Multiple answer w\/ coded responses",
+        "TertiaryAttribute": null,
+        "Payload": {
+            "QuestionText": "Multiple answer w\/ coded responses",
+            "DataExportTag": "Q19",
+            "QuestionType": "MC",
+            "Selector": "MAVR",
+            "SubSelector": "TX",
+            "DataVisibility": {
+                "Private": false,
+                "Hidden": false
+            },
+            "Configuration": {
+                "QuestionDescriptionOption": "UseText"
+            },
+            "QuestionDescription": "Multiple answer w\/ coded responses",
+            "Choices": {
+                "1": {
+                    "Display": "Click to write Choice 1 (ordered 1st)"
+                },
+                "2": {
+                    "Display": "Click to write Choice 2 (ordered 3rd)"
+                },
+                "3": {
+                    "Display": "Click to write Choice 3 (ordered 2nd)"
+                },
+                "4": {
+                    "Display": "None",
+                    "ExclusiveAnswer": true
+                }
+            },
+            "ChoiceOrder": ["1", "3", "2", "4"],
+            "Validation": {
+                "Settings": {
+                    "ForceResponse": "OFF",
+                    "ForceResponseType": "ON",
+                    "Type": "None"
+                }
+            },
+            "RecodeValues": {
+                "1": "1",
+                "2": "3",
+                "3": "2",
+                "4": "4"
+            },
+            "VariableNaming": {
+                "1": "first",
+                "2": "third",
+                "3": "second",
+                "4": "none"
+            },
+            "Language": [],
+            "NextChoiceId": 7,
+            "NextAnswerId": 1,
+            "QuestionID": "QID19"
+        }
+    }, {
+        "SurveyID": "SV_6mudEEycYo5zehT",
+        "Element": "SQ",
         "PrimaryAttribute": "QID16",
         "SecondaryAttribute": "Timing",
         "TertiaryAttribute": null,
