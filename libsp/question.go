@@ -93,7 +93,7 @@ func (q *Question) ResponseCols(r *Response) []string {
 	} else {
 		suffixes := q.qType.internalSuffixes(q)
 		for _, s := range suffixes {
-			col := q.choiceExportTag(r.answers[q.ID+s])
+			col := q.choiceExportTag(r.answers[q.ID+s], q.exportAsBools())
 			cols = append(cols, col)
 		}
 	}
@@ -128,14 +128,28 @@ func (q *Question) groupsAndRanks(r *Response) []string {
 	return cols
 }
 
-func (q *Question) choiceExportTag(label string) string {
+func (q *Question) choiceExportTag(label string, treatAsBool bool) string {
+	retval := label
+	text := true
 	for _, c := range q.choices {
-		if c.Label == label && c.VarName != "" {
-			return c.VarName
+		if c.Label == label {
+			text = false
+			if c.VarName != "" {
+				retval = c.VarName
+				break
+			}
 		}
 	}
 
-	return label
+	if treatAsBool && !text && label != "" {
+		retval = "TRUE"
+	}
+
+	return retval
+}
+
+func (q *Question) exportAsBools() bool {
+	return true
 }
 
 func newQuestion(p *qsfPayload) (*Question, error) {

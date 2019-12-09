@@ -245,6 +245,7 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 		case "FL":
 			for _, f := range e.flows.Payload.Flow {
 				if f.ID != "" {
+					// TODO might need to handle these at some point, looks like they're used for embedded metadata
 					s.blockOrder = append(s.blockOrder, f.ID)
 				}
 			}
