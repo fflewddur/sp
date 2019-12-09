@@ -93,7 +93,8 @@ func (q *Question) ResponseCols(r *Response) []string {
 	} else {
 		suffixes := q.qType.internalSuffixes(q)
 		for _, s := range suffixes {
-			cols = append(cols, r.answers[q.ID+s])
+			col := q.choiceExportTag(r.answers[q.ID+s])
+			cols = append(cols, col)
 		}
 	}
 
@@ -125,6 +126,16 @@ func (q *Question) groupsAndRanks(r *Response) []string {
 		}
 	}
 	return cols
+}
+
+func (q *Question) choiceExportTag(label string) string {
+	for _, c := range q.choices {
+		if c.Label == label && c.VarName != "" {
+			return c.VarName
+		}
+	}
+
+	return label
 }
 
 func newQuestion(p *qsfPayload) (*Question, error) {
