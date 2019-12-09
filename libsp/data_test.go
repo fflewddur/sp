@@ -120,6 +120,17 @@ var qsfTestContent = `{
                 "Type": "Block",
                 "FlowID": "FL_2"
             }, {
+                "Type": "EmbeddedData",
+                "FlowID": "FL_17",
+                "EmbeddedData": [{
+                    "Description": "s",
+                    "Type": "Recipient",
+                    "Field": "s",
+                    "VariableType": "String",
+                    "DataVisibility": [],
+                    "AnalyzeText": false
+                }]
+            }, {
                 "ID": "BL_4JaWHcVfXC1Sted",
                 "Type": "Standard",
                 "FlowID": "FL_3"

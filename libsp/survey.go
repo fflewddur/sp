@@ -244,7 +244,9 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 			}
 		case "FL":
 			for _, f := range e.flows.Payload.Flow {
-				s.blockOrder = append(s.blockOrder, f.ID)
+				if f.ID != "" {
+					s.blockOrder = append(s.blockOrder, f.ID)
+				}
 			}
 		case "QC":
 			// TODO parse survey question count to verify we didn't miss any questions
