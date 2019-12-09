@@ -19,6 +19,7 @@ type Question struct {
 type Choice struct {
 	ID      string
 	Label   string
+	VarName string // short variable name for use in analysis scripts
 	HasText bool
 }
 
@@ -50,7 +51,7 @@ func (q *Question) CSVCols() []string {
 			}
 		}
 	} else {
-		suffixes = q.qType.suffixes(q)
+		suffixes = q.qType.semanticSuffixes(q)
 	}
 
 	prefix := q.CSVPrefix()
@@ -90,7 +91,7 @@ func (q *Question) ResponseCols(r *Response) []string {
 	if q.qType == PickGroupRank {
 		cols = q.groupsAndRanks(r)
 	} else {
-		suffixes := q.qType.suffixes(q)
+		suffixes := q.qType.internalSuffixes(q)
 		for _, s := range suffixes {
 			cols = append(cols, r.answers[q.ID+s])
 		}
@@ -136,7 +137,7 @@ func newQuestion(p *qsfPayload) (*Question, error) {
 	q.qType = newQTypeFromString(p.QuestionType, p.Selector, p.SubSelector)
 	var err error
 	if q.qType.choicesAreQuestions() {
-		q.subQuestions, err = p.OrderedChoices()
+		q.subQuestions, err = p.OrderedChoices(q.qType.choicesAreQuestions())
 		if err != nil {
 			return nil, fmt.Errorf("could not parse choices: %s", err)
 		}
@@ -145,7 +146,7 @@ func newQuestion(p *qsfPayload) (*Question, error) {
 			return nil, fmt.Errorf("could not parse answers: %s", err)
 		}
 	} else {
-		q.choices, err = p.OrderedChoices()
+		q.choices, err = p.OrderedChoices(q.qType.choicesAreQuestions())
 		if err != nil {
 			return nil, fmt.Errorf("could not parse choices: %s", err)
 		}
@@ -240,7 +241,15 @@ func (qt QType) choicesAreQuestions() bool {
 	return retval
 }
 
-func (qt QType) suffixes(q *Question) []string {
+func (qt QType) semanticSuffixes(q *Question) []string {
+	return qt.suffixes(q, true)
+}
+
+func (qt QType) internalSuffixes(q *Question) []string {
+	return qt.suffixes(q, false)
+}
+
+func (qt QType) suffixes(q *Question, useExportTags bool) []string {
 	// These are the formats for the keys to lookup responses for each question type
 	// Form: [question id]_[choice id]
 	// MultipleChoiceSingleResponse: [question id]
@@ -257,9 +266,10 @@ func (qt QType) suffixes(q *Question) []string {
 	switch qt {
 	case Form, MaxDiff, MultipleChoiceMultiResponse, RankOrder:
 		for _, c := range q.choices {
-			suffixes = append(suffixes, "_"+c.ID)
+			s := suffix(c, useExportTags)
+			suffixes = append(suffixes, "_"+s)
 			if c.HasText {
-				suffixes = append(suffixes, "_"+c.ID+"_TEXT")
+				suffixes = append(suffixes, "_"+s+"_TEXT")
 			}
 		}
 	case MatrixMultiResponse:
@@ -273,9 +283,10 @@ func (qt QType) suffixes(q *Question) []string {
 		}
 	case MatrixSingleResponse:
 		for _, sq := range q.subQuestions {
-			suffixes = append(suffixes, "_"+sq.ID)
+			s := suffix(sq, useExportTags)
+			suffixes = append(suffixes, "_"+s)
 			if sq.HasText {
-				suffixes = append(suffixes, "_"+sq.ID+"_TEXT")
+				suffixes = append(suffixes, "_"+s+"_TEXT")
 			}
 		}
 	case MultipleChoiceSingleResponse:
@@ -303,4 +314,11 @@ func (qt QType) suffixes(q *Question) []string {
 	}
 
 	return suffixes
+}
+
+func suffix(c Choice, useExportTags bool) string {
+	if useExportTags && c.VarName != "" {
+		return c.VarName
+	}
+	return c.ID
 }

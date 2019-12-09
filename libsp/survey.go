@@ -387,24 +387,27 @@ func (e *qsfSurveyElement) UnmarshalJSON(b []byte) error {
 type qsfSurveyElementQuestion qsfSurveyElement
 
 type qsfPayload struct {
-	Type                string
-	QuestionText        string
-	DataExportTag       string
-	QuestionType        string
-	QuestionDescription string
-	Selector            string
-	SubSelector         string
-	QuestionID          string
-	Choices             map[int]qsfChoice
-	ChoiceOrder         []json.Number
-	Answers             map[int]qsfChoice
-	AnswerOrder         []json.Number
-	RecodeValues        map[int]string
-	VariableNaming      map[int]string
-	Groups              []string
+	Type                       string
+	QuestionText               string
+	DataExportTag              string
+	QuestionType               string
+	QuestionDescription        string
+	Selector                   string
+	SubSelector                string
+	QuestionID                 string
+	Choices                    map[int]qsfChoice
+	ChoiceOrder                []json.Number
+	Answers                    map[int]qsfChoice
+	AnswerOrder                []json.Number
+	RecodeValues               map[int]string
+	VariableNaming             map[int]string
+	ChoiceDataExportTags       interface{}
+	HasChoiceDataExportTags    bool
+	MappedChoiceDataExportTags map[int]string
+	Groups                     []string
 }
 
-func (p *qsfPayload) OrderedChoices() ([]Choice, error) {
+func (p *qsfPayload) OrderedChoices(choicesAreQuestions bool) ([]Choice, error) {
 	ordered := []Choice{}
 	for _, s := range p.ChoiceOrder {
 		i64, err := s.Int64()
@@ -421,7 +424,33 @@ func (p *qsfPayload) OrderedChoices() ([]Choice, error) {
 			}
 		}
 
-		c := Choice{ID: s.String(), Label: p.Choices[i].Display, HasText: hasText}
+		// Do we have ChoiceDataExportTags? Qualtrics uses 'false' if there are not, and a map[int]string if there are.
+		if _, ok := p.ChoiceDataExportTags.(bool); ok {
+			p.HasChoiceDataExportTags = false
+		} else if m, ok := p.ChoiceDataExportTags.(map[string]interface{}); ok {
+			p.MappedChoiceDataExportTags = make(map[int]string)
+			p.HasChoiceDataExportTags = true
+			for k, v := range m {
+				if key, err := strconv.Atoi(k); err == nil {
+					if val, ok := v.(string); ok {
+						p.MappedChoiceDataExportTags[key] = val
+					} else {
+						log.Fatalf("could not convert '%v' to string", v)
+					}
+				} else {
+					log.Fatalf("could not convert '%s' to int: %s", k, err)
+				}
+			}
+		}
+
+		var varName string
+		if choicesAreQuestions && p.HasChoiceDataExportTags {
+			varName = p.MappedChoiceDataExportTags[i]
+		} else {
+			varName = p.VariableNaming[i]
+		}
+
+		c := Choice{ID: s.String(), Label: p.Choices[i].Display, VarName: varName, HasText: hasText}
 		ordered = append(ordered, c)
 	}
 
@@ -445,7 +474,7 @@ func (p *qsfPayload) OrderedAnswers() ([]Choice, error) {
 			}
 		}
 
-		c := Choice{ID: s.String(), Label: p.Answers[i].Display, HasText: hasText}
+		c := Choice{ID: s.String(), Label: p.Answers[i].Display, VarName: p.VariableNaming[i], HasText: hasText}
 		ordered = append(ordered, c)
 	}
 

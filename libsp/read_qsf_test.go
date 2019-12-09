@@ -174,6 +174,43 @@ func TestReadQsfChoiceOrder(t *testing.T) {
 	}
 }
 
+func TestReadQsfChoiceExportTags(t *testing.T) {
+	r := bufio.NewReader(strings.NewReader(qsfTestContent))
+	s, err := ReadQsf(r)
+	if err != nil {
+		t.Errorf("err = %s", err)
+	}
+	if s == nil {
+		t.Error("survey = nil")
+		return
+	}
+
+	tests := []struct {
+		id      string
+		choices []tChoice
+	}{
+		{"QID5", []tChoice{{0, "statement1"}, {1, "statement2"}, {2, "statement3"}, {3, "other"}}},
+	}
+	for _, test := range tests {
+		q, ok := s.Questions[test.id]
+		if !ok {
+			t.Errorf("%s not found in Questions", test.id)
+		}
+
+		var rc []Choice
+		if q.qType.choicesAreQuestions() {
+			rc = q.SubQuestions()
+		} else {
+			rc = q.ResponseChoices()
+		}
+		for i, c := range rc {
+			if test.choices[i].label != c.VarName {
+				t.Errorf("Questions[%s].Choices[%d] = '%s'; wanted '%s'", test.id, i, c.VarName, test.choices[i].label)
+			}
+		}
+	}
+}
+
 func TestReadQsfAnswerOrder(t *testing.T) {
 	r := bufio.NewReader(strings.NewReader(qsfTestContent))
 	s, err := ReadQsf(r)

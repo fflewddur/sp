@@ -466,7 +466,7 @@ var qsfTestContent = `{
         "SurveyID": "SV_6mudEEycYo5zehT",
         "Element": "SQ",
         "PrimaryAttribute": "QID5",
-        "SecondaryAttribute": "Matrix single response per row",
+        "SecondaryAttribute": "Q5Label",
         "TertiaryAttribute": null,
         "Payload": {
             "QuestionText": "Matrix single response per row",
@@ -476,7 +476,7 @@ var qsfTestContent = `{
             "Selector": "Likert",
             "SubSelector": "SingleAnswer",
             "Configuration": {
-                "QuestionDescriptionOption": "UseText",
+                "QuestionDescriptionOption": "SpecifyLabel",
                 "TextPosition": "inline",
                 "ChoiceColumnWidth": 25,
                 "RepeatHeaders": "none",
@@ -526,7 +526,12 @@ var qsfTestContent = `{
                 }
             },
             "AnswerOrder": ["1", "2", "3", "4"],
-            "ChoiceDataExportTags": false,
+            "ChoiceDataExportTags": {
+                "1": "statement1",
+                "2": "statement2",
+                "3": "statement3",
+                "4": "other"
+            },
             "QuestionID": "QID5",
             "DataVisibility": {
                 "Private": false,
@@ -534,6 +539,18 @@ var qsfTestContent = `{
             },
             "AnalyzeChoices": {
                 "4": "No"
+            },
+            "RecodeValues": {
+                "1": "1",
+                "2": "2",
+                "3": "3",
+                "4": "4"
+            },
+            "VariableNaming": {
+                "1": "scale1",
+                "2": "scale2",
+                "3": "scale3",
+                "4": "scale.na"
             }
         }
     }, {
