@@ -40,10 +40,16 @@ var qsfTestContent = `{
                 "QuestionID": "QID1"
             }, {
                 "Type": "Question",
+                "QuestionID": "QID18"
+            }, {
+                "Type": "Question",
                 "QuestionID": "QID3"
             }, {
                 "Type": "Question",
                 "QuestionID": "QID4"
+            }, {
+                "Type": "Question",
+                "QuestionID": "QID19"
             }, {
                 "Type": "Question",
                 "QuestionID": "QID11"
@@ -1165,9 +1171,9 @@ var qsfTestContent = `{
                 "4": "4"
             },
             "VariableNaming": {
-                "1": "first",
-                "2": "third",
-                "3": "second",
+                "1": "choice1",
+                "2": "choice2",
+                "3": "choice3",
                 "4": "none"
             },
             "Language": [],
@@ -1241,6 +1247,7 @@ var xmlTestContent = `<?xml version="1.0" ?>
 		<distributionChannel>anonymous</distributionChannel>
 		<userLanguage>EN</userLanguage>
 		<QID1>Click to write Choice 1</QID1>
+		<QID18></QID18>
 		<QID3>Click to write Choice 2</QID3>
 		<QID4_1></QID4_1>
 		<QID4_2></QID4_2>
@@ -1250,12 +1257,16 @@ var xmlTestContent = `<?xml version="1.0" ?>
 		<QID4_4></QID4_4>
 		<QID4_5_TEXT>other response 1</QID4_5_TEXT>
 		<QID4_6_TEXT>other response 2</QID4_6_TEXT>
-		<QID11>Click to write Choice 2</QID11>
+		<QID19_1></QID19_1>
+		<QID19_2></QID19_2>
+		<QID19_3>choice2</QID19_3>
+		<QID19_4></QID19_4>
+		<QID11>Click to write Choice 2 (ordered 1st)</QID11>
 		<QID11_3_TEXT></QID11_3_TEXT>
-		<QID5_1>Click to write Scale point 1</QID5_1>
-		<QID5_2>Click to write Scale point 2</QID5_2>
-		<QID5_3>Click to write Scale point 3</QID5_3>
-		<QID5_4>Click to write Scale point 3</QID5_4>
+		<QID5_1>scale1</QID5_1>
+		<QID5_2>scale2</QID5_2>
+		<QID5_3>scale3</QID5_3>
+		<QID5_4>scale3</QID5_4>
 		<QID5_4_TEXT>other matrix row</QID5_4_TEXT>
 		<QID13_1_1>Col 1</QID13_1_1>
 		<QID13_1_2>Col 2</QID13_1_2>
@@ -1345,6 +1356,7 @@ text?</QID8_TEXT>
 		<distributionChannel>anonymous</distributionChannel>
 		<userLanguage>EN</userLanguage>
 		<QID1>Click to write Choice 3</QID1>
+		<QID18></QID18>
 		<QID3>Click to write Choice 2</QID3>
 		<QID4_1></QID4_1>
 		<QID4_2></QID4_2>
@@ -1354,10 +1366,14 @@ text?</QID8_TEXT>
 		<QID4_4>None</QID4_4>
 		<QID4_5_TEXT></QID4_5_TEXT>
 		<QID4_6_TEXT></QID4_6_TEXT>
+		<QID19_1></QID19_1>
+		<QID19_2></QID19_2>
+		<QID19_3></QID19_3>
+		<QID19_4>none</QID19_4>
 		<QID11>Click to write Choice 3</QID11>
 		<QID11_3_TEXT>other text</QID11_3_TEXT>
-		<QID5_1>Click to write Scale point 3</QID5_1>
-		<QID5_2>Click to write Scale point 2</QID5_2>
+		<QID5_1>scale3</QID5_1>
+		<QID5_2>scale2</QID5_2>
 		<QID5_3></QID5_3>
 		<QID5_4></QID5_4>
 		<QID5_4_TEXT></QID5_4_TEXT>
@@ -1446,6 +1462,7 @@ text?</QID8_TEXT>
 		<distributionChannel>anonymous</distributionChannel>
 		<userLanguage>EN</userLanguage>
 		<QID1>Click to write Choice 2</QID1>
+		<QID18></QID18>
 		<QID3>Click to write Choice 2</QID3>
 		<QID4_1></QID4_1>
 		<QID4_2>Click to write Choice 2</QID4_2>
@@ -1455,6 +1472,10 @@ text?</QID8_TEXT>
 		<QID4_4></QID4_4>
 		<QID4_5_TEXT></QID4_5_TEXT>
 		<QID4_6_TEXT></QID4_6_TEXT>
+		<QID19_1>choice1</QID19_1>
+		<QID19_2>choice3</QID19_2>
+		<QID19_3></QID19_3>
+		<QID19_4></QID19_4>
 		<QID11></QID11>
 		<QID11_3_TEXT></QID11_3_TEXT>
 		<QID5_1></QID5_1>

@@ -93,7 +93,7 @@ func (q *Question) ResponseCols(r *Response) []string {
 	} else {
 		suffixes := q.qType.internalSuffixes(q)
 		for _, s := range suffixes {
-			col := q.choiceExportTag(r.answers[q.ID+s], q.exportAsBools())
+			col := q.choiceExportTag(r.answers[q.ID+s], q.qType.exportAsBools())
 			cols = append(cols, col)
 		}
 	}
@@ -132,12 +132,9 @@ func (q *Question) choiceExportTag(label string, treatAsBool bool) string {
 	retval := label
 	text := true
 	for _, c := range q.choices {
-		if c.Label == label {
+		if c.Label == label || c.VarName == label {
 			text = false
-			if c.VarName != "" {
-				retval = c.VarName
-				break
-			}
+			break
 		}
 	}
 
@@ -146,10 +143,6 @@ func (q *Question) choiceExportTag(label string, treatAsBool bool) string {
 	}
 
 	return retval
-}
-
-func (q *Question) exportAsBools() bool {
-	return true
 }
 
 func newQuestion(p *qsfPayload) (*Question, error) {
@@ -241,6 +234,7 @@ func (qt QType) String() string {
 		"Unknown",
 		"Description",
 		"Form",
+		"Meta",
 		"MultipleChoiceSingleResponse",
 		"MultipleChoiceMultiResponse",
 		"MatrixSingleResponse",
@@ -252,6 +246,14 @@ func (qt QType) String() string {
 		"TextEntry",
 	}
 	return s[qt]
+}
+
+func (qt QType) exportAsBools() bool {
+	switch qt {
+	case MultipleChoiceMultiResponse, MatrixMultiResponse:
+		return true
+	}
+	return false
 }
 
 // choicesAreQuestions returns true if the survey definition for this question uses the Choices field to hold question wording

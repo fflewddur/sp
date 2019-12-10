@@ -190,6 +190,7 @@ func TestReadQsfChoiceExportTags(t *testing.T) {
 		choices []tChoice
 	}{
 		{"QID5", []tChoice{{0, "statement1"}, {1, "statement2"}, {2, "statement3"}, {3, "other"}}},
+		{"QID19", []tChoice{{0, "choice1"}, {1, "choice3"}, {2, "choice2"}, {3, "none"}}},
 	}
 	for _, test := range tests {
 		q, ok := s.Questions[test.id]
