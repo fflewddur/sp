@@ -46,7 +46,7 @@ func TestWriteCSV(t *testing.T) {
 			"Q9Label_1", "Q9Label_2", "Q9Label_3",
 			"RO_1", "RO_2", "RO_3",
 			"PGR_item.1_GROUP", "PGR_item.1_RANK", "PGR_item.2_GROUP", "PGR_item.2_RANK", "PGR_item.3_GROUP", "PGR_item.3_RANK", "PGR_item.4_GROUP", "PGR_item.4_RANK", "PGR_other_GROUP", "PGR_other_RANK", "PGR_other_text",
-			"NPS", "NPS_NPS_GROUP"},
+			"NPS", "NPS_group"},
 		[]string{"R_1dtWhiBDD96nfyk", "true", "100", "122",
 			"Click to write Choice 1", "", "Click to write Choice 2",
 			"", "", "TRUE", "TRUE", "other response 1", "TRUE", "other response 2", "",
@@ -196,7 +196,7 @@ func TestWriteR(t *testing.T) {
 		"PGR_other_GROUP = col_factor(),",
 		"PGR_other_RANK = col_factor(),",
 		"NPS = col_factor(),",
-		"NPS_NPS_GROUP = col_factor()",
+		"NPS_group = col_factor()",
 		"))",
 	}
 	for row, test := range tests {

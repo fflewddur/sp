@@ -298,8 +298,10 @@ func (qt QType) suffixes(q *Question, useExportTags bool) []string {
 	// NPS: [question id] and [question id]_NPS_GROUP
 
 	textSuffix := "_TEXT"
+	npsSuffix := "_NPS_GROUP"
 	if useExportTags {
 		textSuffix = strings.ToLower(textSuffix)
+		npsSuffix = "_group"
 	}
 
 	suffixes := []string{}
@@ -338,7 +340,7 @@ func (qt QType) suffixes(q *Question, useExportTags bool) []string {
 		}
 	case NPS:
 		suffixes = append(suffixes, "")
-		suffixes = append(suffixes, "_NPS_GROUP")
+		suffixes = append(suffixes, npsSuffix)
 	case PickGroupRank:
 		for gi := range q.groups {
 			for _, c := range q.choices {
