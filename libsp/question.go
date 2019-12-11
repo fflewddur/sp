@@ -53,7 +53,7 @@ func (q *Question) CSVCols() []string {
 			suffixes = append(suffixes, fmt.Sprintf("_%s_GROUP", label))
 			suffixes = append(suffixes, fmt.Sprintf("_%s_RANK", label))
 			if c.HasText {
-				suffixes = append(suffixes, "_"+label+"_TEXT")
+				suffixes = append(suffixes, "_"+label+"_text")
 			}
 		}
 	} else {
@@ -296,6 +296,12 @@ func (qt QType) suffixes(q *Question, useExportTags bool) []string {
 	// RankOrder: [question id]_[choice id]
 	// TextEntry: [question id]_TEXT
 	// NPS: [question id] and [question id]_NPS_GROUP
+
+	textSuffix := "_TEXT"
+	if useExportTags {
+		textSuffix = strings.ToLower(textSuffix)
+	}
+
 	suffixes := []string{}
 	switch qt {
 	case Form, MaxDiff, MultipleChoiceMultiResponse, RankOrder:
@@ -303,7 +309,7 @@ func (qt QType) suffixes(q *Question, useExportTags bool) []string {
 			s := suffix(c, useExportTags)
 			suffixes = append(suffixes, "_"+s)
 			if c.HasText {
-				suffixes = append(suffixes, "_"+s+"_TEXT")
+				suffixes = append(suffixes, "_"+s+textSuffix)
 			}
 		}
 	case MatrixMultiResponse:
@@ -312,7 +318,7 @@ func (qt QType) suffixes(q *Question, useExportTags bool) []string {
 				suffixes = append(suffixes, "_"+sq.ID+"_"+c.ID)
 			}
 			if sq.HasText {
-				suffixes = append(suffixes, "_"+sq.ID+"_TEXT")
+				suffixes = append(suffixes, "_"+sq.ID+textSuffix)
 			}
 		}
 	case MatrixSingleResponse:
@@ -320,14 +326,14 @@ func (qt QType) suffixes(q *Question, useExportTags bool) []string {
 			s := suffix(sq, useExportTags)
 			suffixes = append(suffixes, "_"+s)
 			if sq.HasText {
-				suffixes = append(suffixes, "_"+s+"_TEXT")
+				suffixes = append(suffixes, "_"+s+textSuffix)
 			}
 		}
 	case MultipleChoiceSingleResponse:
 		suffixes = append(suffixes, "")
 		for _, c := range q.choices {
 			if c.HasText {
-				suffixes = append(suffixes, "_"+c.ID+"_TEXT")
+				suffixes = append(suffixes, "_"+c.ID+textSuffix)
 			}
 		}
 	case NPS:
@@ -339,12 +345,12 @@ func (qt QType) suffixes(q *Question, useExportTags bool) []string {
 				suffixes = append(suffixes, fmt.Sprintf("_%d_%s", gi, c.ID))
 				suffixes = append(suffixes, fmt.Sprintf("_G%d_%s_RANK", gi, c.ID))
 				if c.HasText {
-					suffixes = append(suffixes, "_"+c.ID+"_TEXT")
+					suffixes = append(suffixes, "_"+c.ID+textSuffix)
 				}
 			}
 		}
 	case TextEntry:
-		suffixes = append(suffixes, "_TEXT")
+		suffixes = append(suffixes, textSuffix)
 	}
 
 	return suffixes

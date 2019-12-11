@@ -99,7 +99,7 @@ message(sprintf("Reading %s...", input_path))
 		for _, colID := range q.CSVCols() {
 			var rColType string
 
-			if strings.HasSuffix(colID, "_TEXT") {
+			if strings.HasSuffix(colID, "_text") {
 				rColType = ""
 			} else if strings.HasSuffix(colID, "_RANK") {
 				rColType = "col_factor()"
