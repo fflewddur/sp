@@ -2,6 +2,8 @@ package libsp
 
 import (
 	"fmt"
+	"regexp"
+	"strings"
 )
 
 // Question represents a survey question
@@ -44,10 +46,14 @@ func (q *Question) CSVCols() []string {
 	suffixes := []string{}
 	if q.qType == PickGroupRank {
 		for _, c := range q.choices {
-			suffixes = append(suffixes, fmt.Sprintf("_%s_GROUP", c.ID))
-			suffixes = append(suffixes, fmt.Sprintf("_%s_RANK", c.ID))
+			label := strings.ToLower(c.Label)
+			r := regexp.MustCompile(`[\s]+`)
+			label = r.ReplaceAllString(label, ".")
+			label = strings.ReplaceAll(label, ":", "")
+			suffixes = append(suffixes, fmt.Sprintf("_%s_GROUP", label))
+			suffixes = append(suffixes, fmt.Sprintf("_%s_RANK", label))
 			if c.HasText {
-				suffixes = append(suffixes, "_"+c.ID+"_TEXT")
+				suffixes = append(suffixes, "_"+label+"_TEXT")
 			}
 		}
 	} else {
@@ -64,7 +70,8 @@ func (q *Question) CSVCols() []string {
 
 // CSVPrefix returns a string prefix for all CSV column names for this question
 func (q *Question) CSVPrefix() string {
-	if q.label == "" || q.label == q.Wording || len(q.label) > 20 {
+	// FIXME len <= 30 is a hack; need to check if q.label is an ellipsized variant of q.Wording
+	if q.label == "" || q.label == q.Wording || len(q.label) > 30 {
 		return q.ID
 	}
 	return q.label
