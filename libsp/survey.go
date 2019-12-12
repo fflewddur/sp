@@ -116,13 +116,15 @@ data <- read_csv(input_path, col_types = cols(
 				}
 				if rColType == "col_factor()" {
 					var choices []Choice
+					ordered := false
 					if q.qType == PickGroupRank {
 						choices = make([]Choice, 0)
 						if rankCol {
-							for i := 1; i <= len(q.groups); i++ {
+							for i := 1; i <= len(q.ResponseChoices()); i++ {
 								c := Choice{Label: fmt.Sprintf("%d", i)}
 								choices = append(choices, c)
 							}
+							ordered = true
 						} else {
 							for _, g := range q.groups {
 								c := Choice{Label: g}
@@ -131,13 +133,18 @@ data <- read_csv(input_path, col_types = cols(
 						}
 					} else {
 						choices = q.ResponseChoices()
+						ordered = q.OrderedChoices()
 					}
 					if len(choices) > 0 {
 						scaleID := choiceScaleID(choices)
 						if _, ok := choiceScales[scaleID]; !ok {
 							choiceScales[scaleID] = choices
 						}
-						rColType = "col_factor(levels = " + scaleID + ")"
+						oString := ""
+						if ordered {
+							oString = ", ordered = TRUE"
+						}
+						rColType = "col_factor(levels = " + scaleID + oString + ")"
 					}
 				}
 				scriptImport += fmt.Sprintf("\t%s = %s", colID, rColType)

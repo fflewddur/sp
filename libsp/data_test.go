@@ -1110,11 +1110,6 @@ var qsfTestContent = `{
             "NextChoiceId": 5,
             "NextAnswerId": 1,
             "QuestionID": "QID18",
-            "RecodeValues": {
-                "1": "3",
-                "2": "1",
-                "3": "2"
-            },
             "VariableNaming": {
                 "1": "choice1",
                 "2": "choice2",
@@ -1163,12 +1158,6 @@ var qsfTestContent = `{
                     "ForceResponseType": "ON",
                     "Type": "None"
                 }
-            },
-            "RecodeValues": {
-                "1": "1",
-                "2": "3",
-                "3": "2",
-                "4": "4"
             },
             "VariableNaming": {
                 "1": "choice1",

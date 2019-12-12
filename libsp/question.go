@@ -8,13 +8,14 @@ import (
 
 // Question represents a survey question
 type Question struct {
-	ID           string
-	Wording      string
-	label        string
-	qType        QType
-	choices      []Choice
-	subQuestions []Choice
-	groups       []string
+	ID             string
+	Wording        string
+	label          string
+	qType          QType
+	choices        []Choice
+	subQuestions   []Choice
+	groups         []string
+	orderedChoices bool
 }
 
 // Choice represents one possible response to a survey question
@@ -40,6 +41,11 @@ func (q *Question) SubQuestions() []Choice {
 	return q.subQuestions
 }
 
+// OrderedChoices returns true if this question has RecodeValues set, indicating that order matters
+func (q *Question) OrderedChoices() bool {
+	return q.orderedChoices
+}
+
 // CSVCols returns a slice of string holding the ordered CSV column names for this question
 func (q *Question) CSVCols() []string {
 	cols := make([]string, 0)
@@ -60,16 +66,22 @@ func (q *Question) CSVCols() []string {
 		suffixes = q.qType.semanticSuffixes(q)
 	}
 
-	prefix := q.CSVPrefix()
+	prefix := q.csvPrefix()
 	for _, s := range suffixes {
 		cols = append(cols, prefix+s)
+	}
+
+	// replace all non-R-compatible chars with '.'
+	r := regexp.MustCompile(`[^a-zA-Z0-9_.]`)
+	for i, c := range cols {
+		cols[i] = r.ReplaceAllString(c, ".")
 	}
 
 	return cols
 }
 
 // CSVPrefix returns a string prefix for all CSV column names for this question
-func (q *Question) CSVPrefix() string {
+func (q *Question) csvPrefix() string {
 	// FIXME len <= 30 is a hack; need to check if q.label is an ellipsized variant of q.Wording
 	if q.label == "" || q.label == q.Wording || len(q.label) > 30 {
 		return q.ID
@@ -177,6 +189,8 @@ func newQuestion(p *qsfPayload) (*Question, error) {
 		}
 	}
 	q.groups = p.Groups
+	// If we've recoded values in Qualtrics, that means order matters
+	q.orderedChoices = p.RecodeValues != nil
 
 	return q, nil
 }
