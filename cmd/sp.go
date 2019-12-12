@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/fflewddur/sp/libsp"
@@ -70,7 +71,7 @@ var rootCmd = &cobra.Command{
 		}
 		defer r.Close()
 		w = bufio.NewWriter(r)
-		err = s.WriteR(w)
+		err = s.WriteR(w, filepath.Base(csvPath))
 		log.Println("Completed successfully!")
 		if err != nil {
 			log.Fatalf("Error writing '%s': %s", rPath, err)

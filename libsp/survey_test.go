@@ -131,7 +131,7 @@ func TestWriteR(t *testing.T) {
 	}
 	var b bytes.Buffer
 	w := bufio.NewWriter(&b)
-	err = s.WriteR(w)
+	err = s.WriteR(w, "test.csv")
 	if err != nil {
 		t.Errorf("err = %s", err)
 	}
@@ -229,7 +229,7 @@ func TestWriteRNil(t *testing.T) {
 		t.Error("s = nil")
 		return
 	}
-	err = s.WriteR(nil)
+	err = s.WriteR(nil, "")
 	if err != nil && err.Error() != "w cannot be nil" {
 		t.Errorf("err = %s; want err = 'w cannot be nil'", err)
 	}
