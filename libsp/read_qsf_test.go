@@ -56,6 +56,7 @@ func TestReadQsfQuestions(t *testing.T) {
 		want bool
 	}{
 		{"", false},
+		{"s", true}, // embedded data
 		{"QID0", false},
 		{"QID1", true},
 		{"QID2", false},
@@ -78,8 +79,8 @@ func TestReadQsfQuestions(t *testing.T) {
 		{"QID19", true},
 		{"QID20", false},
 	}
-	if len(s.Questions) != 17 {
-		t.Errorf("len(Questions) = %d; want 17", len(s.Questions))
+	if len(s.Questions) != 18 {
+		t.Errorf("len(Questions) = %d; want 18", len(s.Questions))
 	}
 	for _, test := range tests {
 		if _, ok := s.Questions[test.id]; test.want != ok {

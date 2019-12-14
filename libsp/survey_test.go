@@ -46,7 +46,8 @@ func TestWriteCSV(t *testing.T) {
 			"Q9Label_1", "Q9Label_2", "Q9Label_3",
 			"RO_1", "RO_2", "RO_3",
 			"PGR_item.1_GROUP", "PGR_item.1_RANK", "PGR_item.2_GROUP", "PGR_item.2_RANK", "PGR_item.3_GROUP", "PGR_item.3_RANK", "PGR_item.4_GROUP", "PGR_item.4_RANK", "PGR_other_GROUP", "PGR_other_RANK", "PGR_other_text",
-			"NPS", "NPS_group"},
+			"NPS", "NPS_group",
+			"s"},
 		[]string{"R_1dtWhiBDD96nfyk", "true", "100", "122",
 			"Click to write Choice 1", "", "Click to write Choice 2",
 			"", "", "TRUE", "TRUE", "other response 1", "TRUE", "other response 2", "",
@@ -58,7 +59,8 @@ func TestWriteCSV(t *testing.T) {
 			"field 1", "field 2", "field 3",
 			"3", "2", "1",
 			"Click to write Group 1", "3", "Click to write Group 2", "1", "Click to write Group 1", "2", "Click to write Group 1", "1", "Click to write Group 3", "1", "in group 3",
-			"6", "Detractor"},
+			"6", "Detractor",
+			"g"},
 		[]string{"R_z72KJQMnr3lxZGp", "true", "100", "104",
 			"Click to write Choice 3", "", "Click to write Choice 2",
 			"", "", "", "", "", "", "", "TRUE",
@@ -70,14 +72,15 @@ func TestWriteCSV(t *testing.T) {
 			"name", "email", "job role",
 			"1", "2", "3",
 			"Click to write Group 1", "2", "Click to write Group 1", "1", "Click to write Group 2", "2", "Click to write Group 2", "1", "", "", "",
-			"10", "Promoter"},
+			"10", "Promoter",
+			"e"},
 		[]string{"R_3MPTb9vwnCBmijR", "false", "33", "22",
 			"Click to write Choice 2", "", "Click to write Choice 2",
 			"", "TRUE", "", "", "", "", "", "",
 			"TRUE", "", "TRUE", "",
 			"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
 			"", "", "", "", "", "", "", "", "", "", "",
-			"", "", "", ""},
+			"", "", "", "", ""},
 	}
 
 	for row, test := range tests {
@@ -204,7 +207,8 @@ func TestWriteR(t *testing.T) {
 		"PGR_other_GROUP = col_factor(levels = scale_31f4e4cdef1ebccdade39117c89aaebad4a4c1b0),",
 		"PGR_other_RANK = col_factor(levels = scale_8cb2237d0679ca88db6464eac60da96345513964, ordered = TRUE),",
 		"NPS = col_factor(),",
-		"NPS_group = col_factor()",
+		"NPS_group = col_factor(),",
+		"s = col_factor()",
 		"))",
 	}
 	for row, test := range tests {

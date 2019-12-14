@@ -92,6 +92,8 @@ func (q *Question) csvPrefix() string {
 // RColType returns the R type of columns associated with this question
 func (q *Question) RColType() string {
 	switch q.qType {
+	case Embedded:
+		fallthrough
 	case MatrixSingleResponse:
 		fallthrough
 	case MultipleChoiceSingleResponse:
@@ -164,7 +166,7 @@ func (q *Question) choiceExportTag(label string, treatAsBool bool) string {
 	return retval
 }
 
-func newQuestion(p *qsfPayload) (*Question, error) {
+func newQuestionFromPayload(p *qsfPayload) (*Question, error) {
 	q := new(Question)
 	q.ID = p.QuestionID
 	q.Wording = p.QuestionText
@@ -195,6 +197,15 @@ func newQuestion(p *qsfPayload) (*Question, error) {
 	return q, nil
 }
 
+func newQuestionFromEmbeddedData(d *qsfEmbeddedData) (*Question, error) {
+	q := new(Question)
+	q.qType = Embedded
+	q.ID = d.Field
+	q.label = d.Field
+
+	return q, nil
+}
+
 // QType represents the type of a survey question
 type QType int
 
@@ -202,6 +213,7 @@ type QType int
 const (
 	Unknown QType = iota
 	Description
+	Embedded
 	Form
 	Meta
 	MultipleChoiceSingleResponse
@@ -254,6 +266,7 @@ func (qt QType) String() string {
 	s := []string{
 		"Unknown",
 		"Description",
+		"Embedded",
 		"Form",
 		"Meta",
 		"MultipleChoiceSingleResponse",
@@ -320,6 +333,8 @@ func (qt QType) suffixes(q *Question, useExportTags bool) []string {
 
 	suffixes := []string{}
 	switch qt {
+	case Embedded:
+		suffixes = append(suffixes, "")
 	case Form, MaxDiff, MultipleChoiceMultiResponse, RankOrder:
 		for _, c := range q.choices {
 			s := suffix(c, useExportTags)

@@ -214,9 +214,7 @@ func (s *Survey) ReadXML(r *bufio.Reader) error {
 		r.Finished = getBoolElement("finished", resp)
 
 		for _, e := range resp.ChildElements() {
-			if strings.HasPrefix(e.Tag, "QID") {
-				r.AddAnswer(e.Tag, e.Text())
-			}
+			r.AddAnswer(e.Tag, e.Text())
 		}
 
 		responses = append(responses, r)
@@ -282,6 +280,7 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 
 	s.Questions = make(map[string]*Question)
 	s.blocks = make(map[string]*block)
+	embeddedDataIDs := []string{}
 	for _, e := range qs.SurveyElements {
 		switch e.Element {
 		case "BL":
@@ -301,12 +300,22 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 				if f.ID != "" {
 					// TODO might need to handle these at some point, looks like they're used for embedded metadata
 					s.blockOrder = append(s.blockOrder, f.ID)
+				} else if f.Type == "EmbeddedData" {
+					// Treat embedded data as survey questions
+					for _, d := range f.EmbeddedData {
+						q, err := newQuestionFromEmbeddedData(d)
+						if err != nil {
+							return fmt.Errorf("could not create question from JSON: %s", err)
+						}
+						s.Questions[q.ID] = q
+						embeddedDataIDs = append(embeddedDataIDs, q.ID)
+					}
 				}
 			}
 		case "QC":
 			// TODO parse survey question count to verify we didn't miss any questions
 		case "SQ":
-			q, err := newQuestion(e.Payload)
+			q, err := newQuestionFromPayload(e.Payload)
 			if err != nil {
 				return fmt.Errorf("could not create question from JSON: %s", err)
 			}
@@ -316,6 +325,7 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 
 	s.emptyTrash()
 	s.sortQuestions()
+	s.addEmbeddedData(embeddedDataIDs)
 
 	return nil
 }
@@ -334,6 +344,12 @@ func (s *Survey) sortQuestions() {
 	s.QuestionOrder = []string{}
 	for _, b := range s.blockOrder {
 		s.QuestionOrder = append(s.QuestionOrder, s.blocks[b].QuestionIDs...)
+	}
+}
+
+func (s *Survey) addEmbeddedData(ids []string) {
+	for _, id := range ids {
+		s.QuestionOrder = append(s.QuestionOrder, id)
 	}
 }
 
@@ -571,7 +587,14 @@ type qsfSurveyElementFlowPayload struct {
 }
 
 type qsfSurveyElementFlow struct {
-	ID     string
-	Type   string
-	FlowID string
+	ID           string
+	Type         string
+	FlowID       string
+	EmbeddedData []*qsfEmbeddedData
+}
+
+type qsfEmbeddedData struct {
+	Type         string
+	Field        string
+	VariableType string
 }

@@ -1323,7 +1323,8 @@ text?</QID8_TEXT>
 		<QID17_G2_5_RANK>1</QID17_G2_5_RANK>
 		<QID17_5_TEXT>in group 3</QID17_5_TEXT>
 		<QID15_NPS_GROUP>Detractor</QID15_NPS_GROUP>
-		<QID15>6</QID15>
+        <QID15>6</QID15>
+        <s>g</s>
 		<Q_DataPolicyViolations></Q_DataPolicyViolations>
 	</Response>
 	<Response>
@@ -1429,7 +1430,8 @@ text?</QID8_TEXT>
 		<QID17_G2_5_RANK></QID17_G2_5_RANK>
 		<QID17_5_TEXT></QID17_5_TEXT>
 		<QID15_NPS_GROUP>Promoter</QID15_NPS_GROUP>
-		<QID15>10</QID15>
+        <QID15>10</QID15>
+        <s>e</s>
 		<Q_DataPolicyViolations></Q_DataPolicyViolations>
 	</Response>
 	<Response>
