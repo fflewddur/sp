@@ -135,7 +135,7 @@ func (q *Question) groupsAndRanks(r *Response) []string {
 		var group, rank string
 		for gi, g := range q.groups {
 			gk := fmt.Sprintf("%s_%d_GROUP_%s", q.ID, gi, c.ID)
-			if v, ok := r.answers[gk]; ok && len(v) > 0 {
+			if v, ok := r.answers[gk]; ok && len(v) > 0 && v != noResponseCode {
 				group = g
 				rk := fmt.Sprintf("%s_G%d_%s_RANK", q.ID, gi, c.ID)
 				if v, ok := r.answers[rk]; ok && len(v) > 0 {
@@ -155,16 +155,22 @@ func (q *Question) groupsAndRanks(r *Response) []string {
 
 func (q *Question) choiceExportTag(label string, treatAsBool bool) string {
 	retval := label
-	text := true
+	freeText := label != noResponseCode // true unless the user skipped this question
 	for _, c := range q.choices {
 		if c.Label == label || c.VarName == label {
-			text = false
+			freeText = false
 			break
 		}
 	}
 
-	if treatAsBool && !text && label != "" {
-		retval = "TRUE"
+	if treatAsBool && !freeText && label != "" {
+		if label == noResponseCode {
+			retval = "FALSE"
+		} else {
+			retval = "TRUE"
+		}
+	} else if label == noResponseCode {
+		retval = noResponseConst
 	}
 
 	return retval

@@ -33,6 +33,8 @@ type Survey struct {
 }
 
 const timeFormat = "2006-01-02 15:04:05"
+const noResponseConst = "No response"
+const noResponseCode = "-99"
 
 // WriteCSV saves the parsed survey questions and responses in comma-separated value format
 func (s *Survey) WriteCSV(bw *bufio.Writer) error {
@@ -88,6 +90,10 @@ library(readr)
 
 	scriptImport := `message(sprintf("Reading %s...", input_path))
 data <- read_csv(input_path, col_types = cols(
+	finished = col_logical(),
+	progress = col_integer(),
+	duration = col_integer(),
+	recorded = col_datetime(),
 `
 
 	choiceScales := make(map[string][]Choice)
@@ -141,7 +147,9 @@ data <- read_csv(input_path, col_types = cols(
 						choices = q.ResponseChoices()
 						ordered = q.OrderedChoices()
 					}
+
 					if len(choices) > 0 {
+						choices = addNoResponseOption(choices)
 						scaleID := choiceScaleID(choices)
 						if _, ok := choiceScales[scaleID]; !ok {
 							choiceScales[scaleID] = choices
@@ -193,6 +201,20 @@ data <- read_csv(input_path, col_types = cols(
 	}
 
 	return nil
+}
+
+func addNoResponseOption(choices []Choice) []Choice {
+	hasNoResponse := false
+	for _, c := range choices {
+		if c.Label == noResponseConst {
+			hasNoResponse = true
+		}
+	}
+	if !hasNoResponse {
+		c := Choice{Label: noResponseConst}
+		choices = append(choices, c)
+	}
+	return choices
 }
 
 func choiceScaleID(choices []Choice) string {
