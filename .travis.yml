@@ -5,7 +5,12 @@ env:
 
 go:
 - 1.12.x
+- 1.13.x
 
+os:
+  - linux
+  - osx
+  
 # Only clone the most recent commit.
 git:
   depth: 1
