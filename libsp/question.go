@@ -16,6 +16,7 @@ type Question struct {
 	subQuestions   []Choice
 	groups         []string
 	orderedChoices bool
+	dataExportTag  string
 }
 
 // Choice represents one possible response to a survey question
@@ -84,6 +85,9 @@ func (q *Question) CSVCols() []string {
 func (q *Question) csvPrefix() string {
 	// FIXME len <= 30 is a hack; need to check if q.label is an ellipsized variant of q.Wording
 	if q.label == "" || q.label == q.Wording || len(q.label) > 30 {
+		if q.dataExportTag != "" {
+			return q.dataExportTag
+		}
 		return q.ID
 	}
 	return q.label
@@ -170,6 +174,7 @@ func newQuestionFromPayload(p *qsfPayload) (*Question, error) {
 	q := new(Question)
 	q.ID = p.QuestionID
 	q.Wording = p.QuestionText
+	q.dataExportTag = p.DataExportTag
 	if p.QuestionDescription != "" {
 		q.label = p.QuestionDescription
 	}
@@ -225,6 +230,7 @@ const (
 	PickGroupRank
 	RankOrder
 	TextEntry
+	Timing
 )
 
 // newQTypeFromString returns the corresponding QType value for the given string
@@ -257,6 +263,8 @@ func newQTypeFromString(t, s, ss string) QType {
 			return Form
 		}
 		return TextEntry
+	case "Timing":
+		return Timing
 	}
 
 	return Unknown
@@ -278,6 +286,7 @@ func (qt QType) String() string {
 		"PickGroupRank",
 		"RankOrder",
 		"TextEntry",
+		"Timing",
 	}
 	return s[qt]
 }
@@ -326,9 +335,14 @@ func (qt QType) suffixes(q *Question, useExportTags bool) []string {
 
 	textSuffix := "_TEXT"
 	npsSuffix := "_NPS_GROUP"
+	timingSuffixes := []string{"_FIRST_CLICK", "_LAST_CLICK", "_PAGE_SUBMIT", "_CLICK_COUNT"}
+
 	if useExportTags {
 		textSuffix = strings.ToLower(textSuffix)
 		npsSuffix = "_group"
+		for i, s := range timingSuffixes {
+			timingSuffixes[i] = strings.ToLower(s)
+		}
 	}
 
 	suffixes := []string{}
@@ -382,6 +396,8 @@ func (qt QType) suffixes(q *Question, useExportTags bool) []string {
 		}
 	case TextEntry:
 		suffixes = append(suffixes, textSuffix)
+	case Timing:
+		suffixes = append(suffixes, timingSuffixes...)
 	}
 
 	return suffixes

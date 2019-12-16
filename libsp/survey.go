@@ -104,6 +104,12 @@ data <- read_csv(input_path, col_types = cols(
 			} else if strings.HasSuffix(colID, "_RANK") {
 				rankCol = true
 				rColType = "col_factor()"
+			} else if strings.HasSuffix(colID, "_first_click") ||
+				strings.HasSuffix(colID, "_last_click") ||
+				strings.HasSuffix(colID, "_page_submit") {
+				rColType = "col_double()"
+			} else if strings.HasSuffix(colID, "click_count") {
+				rColType = "col_integer()"
 			} else {
 				rColType = q.RColType()
 			}
