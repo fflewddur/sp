@@ -1,12 +1,15 @@
 package libsp
 
+import "time"
+
 // Response models a Qualtrics participant response
 type Response struct {
-	ID       string
-	Progress int
-	Duration int
-	Finished bool
-	answers  map[string]string
+	ID         string
+	Progress   int
+	Duration   int
+	Finished   bool
+	RecordedOn time.Time
+	answers    map[string]string
 }
 
 // NewResponse creates and initializes a Response

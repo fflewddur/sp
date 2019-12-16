@@ -46,7 +46,7 @@ func (s *Survey) WriteCSV(bw *bufio.Writer) error {
 		return fmt.Errorf("could not write CSV columns: %s", err)
 	}
 	for _, r := range s.Responses {
-		row := []string{r.ID, fmt.Sprintf("%t", r.Finished), fmt.Sprintf("%d", r.Progress), fmt.Sprintf("%d", r.Duration)}
+		row := []string{r.ID, fmt.Sprintf("%t", r.Finished), fmt.Sprintf("%d", r.Progress), fmt.Sprintf("%d", r.Duration), fmt.Sprintf("%s", r.RecordedOn.Format(timeFormat))}
 
 		for _, id := range s.QuestionOrder {
 			q := s.Questions[id]
@@ -67,7 +67,7 @@ func (s *Survey) WriteCSV(bw *bufio.Writer) error {
 }
 
 func (s *Survey) csvCols() []string {
-	cols := []string{"id", "finished", "progress", "duration"}
+	cols := []string{"id", "finished", "progress", "duration", "recorded"}
 	for _, id := range s.QuestionOrder {
 		q := s.Questions[id]
 		cols = append(cols, q.CSVCols()...)
@@ -212,6 +212,7 @@ func (s *Survey) ReadXML(r *bufio.Reader) error {
 		r.Progress = getIntElement("progress", resp)
 		r.Duration = getIntElement("duration", resp)
 		r.Finished = getBoolElement("finished", resp)
+		r.RecordedOn = getTimeElement("recordedDate", resp)
 
 		for _, e := range resp.ChildElements() {
 			r.AddAnswer(e.Tag, e.Text())
@@ -250,6 +251,18 @@ func getBoolElement(name string, e *etree.Element) bool {
 		retval, err = strconv.ParseBool(v.Text())
 		if err != nil {
 			log.Printf("error converting '%s' to bool: %s", v.Text(), err)
+		}
+	}
+	return retval
+}
+
+func getTimeElement(name string, e *etree.Element) time.Time {
+	var retval time.Time
+	if v := e.SelectElement(name); v != nil {
+		var err error
+		retval, err = time.Parse(timeFormat, v.Text())
+		if err != nil {
+			log.Printf("error converting '%s' to time: %s", v.Text(), err)
 		}
 	}
 	return retval
