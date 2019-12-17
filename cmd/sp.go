@@ -13,7 +13,7 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "sp [qsf file]",
+	Use:   "sp <qsf file>",
 	Short: "sp is a survey parser for Qualtrics data",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
@@ -77,7 +77,7 @@ var rootCmd = &cobra.Command{
 			log.Fatalf("Error writing '%s': %s", rPath, err)
 		}
 	},
-	Version: "0.0.1",
+	Version: "0.1.0",
 }
 
 func buildXMLPath(qsfPath string) string {
