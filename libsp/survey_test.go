@@ -223,6 +223,14 @@ func TestWriteR(t *testing.T) {
 		"NPS_group = col_factor(),",
 		"s = col_factor()",
 		"))",
+		"",
+		"rm(input_path)",
+		"rm(scale_0d33bdb7dd7ad7e7644895dab595541b141f5b39)",
+		"rm(scale_30f77603f9a26644196c8b5400b99945c2c294a5)",
+		"rm(scale_6e0893b06a434e2872d7c7f9430394c9318f3537)",
+		"rm(scale_6fe6de0859f881e87e5656b0b361e2830bbbc058)",
+		"rm(scale_8a3feac0fed5c3348d223a4c4a52d9b74e347e0a)",
+		"rm(scale_9bc0385ea2c175f3341306637ae392b35bd86573)",
 	}
 	for row, test := range tests {
 		line, err := r.ReadString('\n')

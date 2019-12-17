@@ -119,8 +119,9 @@ data <- read_csv(input_path, col_types = cols(
 	scriptImport += "\n))\n"
 
 	scriptDefs += addScales(choiceScales)
+	scriptCleanup := addCleanup(choiceScales)
 
-	_, err := w.WriteString(scriptPreamble + "\n" + scriptDefs + "\n" + scriptImport)
+	_, err := w.WriteString(scriptPreamble + "\n" + scriptDefs + "\n" + scriptImport + "\n" + scriptCleanup)
 	if err != nil {
 		return fmt.Errorf("could not write R script: %s", err)
 	}
@@ -213,7 +214,7 @@ func choiceScaleID(choices []Choice) string {
 }
 
 func addScales(choiceScales map[string][]Choice) string {
-	scales := make([]string, 0)
+	scales := []string{}
 	for id, scale := range choiceScales {
 		line := fmt.Sprintf("%s <- c(", id)
 		firstLine := true
@@ -236,6 +237,19 @@ func addScales(choiceScales map[string][]Choice) string {
 	defs := ""
 	for _, s := range scales {
 		defs += s
+	}
+	return defs
+}
+
+func addCleanup(choiceScales map[string][]Choice) string {
+	scales := []string{}
+	for id := range choiceScales {
+		scales = append(scales, id)
+	}
+	sort.Strings(scales)
+	defs := "rm(input_path)\n"
+	for _, s := range scales {
+		defs += fmt.Sprintf("rm(%s)\n", s)
 	}
 	return defs
 }
