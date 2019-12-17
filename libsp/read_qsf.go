@@ -27,8 +27,6 @@ func ReadQsf(r *bufio.Reader) (survey *Survey, err error) {
 	}
 
 	var s = new(Survey)
-	// TODO investigate using json.NewDecoder here (https://eli.thegreenplace.net/2019/go-json-cookbook/)
-	// Would let us move all QSF logic from survey.go
 	if err := s.UnmarshalJSON(bytes); err != nil {
 		e := fmt.Errorf("could not parse: %s", err)
 		return nil, e

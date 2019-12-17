@@ -33,7 +33,6 @@ func TestWriteCSV(t *testing.T) {
 	r = bufio.NewReader(&b)
 	csvReader := csv.NewReader(r)
 
-	// TODO test QID16's timing data
 	var tests = [][]string{
 		{"id", "finished", "progress", "duration", "recorded",
 			"Q1Label", "Q18Label", "Q3Label",

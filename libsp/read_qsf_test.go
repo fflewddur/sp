@@ -114,7 +114,6 @@ func TestReadQsfTypes(t *testing.T) {
 		return
 	}
 
-	// TODO test for timing question type
 	tests := []struct {
 		id   string
 		want QType
@@ -132,6 +131,7 @@ func TestReadQsfTypes(t *testing.T) {
 		{"QID13", MatrixMultiResponse},
 		{"QID14", Description},
 		{"QID15", NPS},
+		{"QID16", Timing},
 		{"QID17", PickGroupRank},
 		{"QID18", MultipleChoiceSingleResponse},
 		{"QID19", MultipleChoiceMultiResponse},

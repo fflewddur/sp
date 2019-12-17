@@ -354,7 +354,6 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 		case "FL":
 			for _, f := range e.flows.Payload.Flow {
 				if f.ID != "" {
-					// TODO might need to handle these at some point, looks like they're used for embedded metadata
 					s.blockOrder = append(s.blockOrder, f.ID)
 				} else if f.Type == "EmbeddedData" {
 					// Treat embedded data as survey questions
@@ -627,7 +626,6 @@ type qsfSurveyElementBlock struct {
 }
 
 type block struct {
-	// TODO maybe make this an enum?
 	Type        string
 	ID          string
 	QuestionIDs []string
