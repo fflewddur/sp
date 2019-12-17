@@ -102,24 +102,7 @@ data <- read_csv(input_path, col_types = cols(
 		q := s.Questions[id]
 
 		for _, colID := range q.CSVCols() {
-			var rColType string
-			rankCol := false
-
-			if strings.HasSuffix(colID, "_text") {
-				rColType = ""
-			} else if strings.HasSuffix(colID, "_RANK") {
-				rankCol = true
-				rColType = "col_factor()"
-			} else if strings.HasSuffix(colID, "_first_click") ||
-				strings.HasSuffix(colID, "_last_click") ||
-				strings.HasSuffix(colID, "_page_submit") {
-				rColType = "col_double()"
-			} else if strings.HasSuffix(colID, "click_count") {
-				rColType = "col_integer()"
-			} else {
-				rColType = q.RColType()
-			}
-
+			rColType, isRankCol := getColType(colID, q)
 			if rColType != "" {
 				if !firstLine {
 					scriptImport += ",\n"
@@ -127,39 +110,7 @@ data <- read_csv(input_path, col_types = cols(
 					firstLine = false
 				}
 				if rColType == "col_factor()" {
-					var choices []Choice
-					ordered := false
-					if q.qType == PickGroupRank {
-						choices = make([]Choice, 0)
-						if rankCol {
-							for i := 1; i <= len(q.ResponseChoices()); i++ {
-								c := Choice{Label: fmt.Sprintf("%d", i)}
-								choices = append(choices, c)
-							}
-							ordered = true
-						} else {
-							for _, g := range q.groups {
-								c := Choice{Label: g}
-								choices = append(choices, c)
-							}
-						}
-					} else {
-						choices = q.ResponseChoices()
-						ordered = q.OrderedChoices()
-					}
-
-					if len(choices) > 0 {
-						choices = addNoResponseOption(choices)
-						scaleID := choiceScaleID(choices)
-						if _, ok := choiceScales[scaleID]; !ok {
-							choiceScales[scaleID] = choices
-						}
-						oString := ""
-						if ordered {
-							oString = ", ordered = TRUE"
-						}
-						rColType = "col_factor(levels = " + scaleID + oString + ")"
-					}
+					rColType = colTypeWithScales(q, isRankCol, choiceScales)
 				}
 				scriptImport += fmt.Sprintf("\t%s = %s", colID, rColType)
 			}
@@ -167,29 +118,7 @@ data <- read_csv(input_path, col_types = cols(
 	}
 	scriptImport += "\n))\n"
 
-	scales := make([]string, 0)
-	for id, scale := range choiceScales {
-		line := fmt.Sprintf("%s <- c(", id)
-		firstLine := true
-		for _, c := range scale {
-			if !firstLine {
-				line += ", "
-			} else {
-				firstLine = false
-			}
-			s := c.VarName
-			if s == "" {
-				s = c.Label
-			}
-			line += `"` + s + `"`
-		}
-		line += ")\n"
-		scales = append(scales, line)
-	}
-	sort.Strings(scales)
-	for _, s := range scales {
-		scriptDefs += s
-	}
+	scriptDefs += addScales(choiceScales)
 
 	_, err := w.WriteString(scriptPreamble + "\n" + scriptDefs + "\n" + scriptImport)
 	if err != nil {
@@ -201,6 +130,64 @@ data <- read_csv(input_path, col_types = cols(
 	}
 
 	return nil
+}
+
+func getColType(colID string, q *Question) (rColType string, isRankCol bool) {
+	isRankCol = false
+	if strings.HasSuffix(colID, "_text") {
+		rColType = ""
+	} else if strings.HasSuffix(colID, "_RANK") {
+		isRankCol = true
+		rColType = "col_factor()"
+	} else if strings.HasSuffix(colID, "_first_click") ||
+		strings.HasSuffix(colID, "_last_click") ||
+		strings.HasSuffix(colID, "_page_submit") {
+		rColType = "col_double()"
+	} else if strings.HasSuffix(colID, "click_count") {
+		rColType = "col_integer()"
+	} else {
+		rColType = q.RColType()
+	}
+	return
+}
+
+func colTypeWithScales(q *Question, isRankCol bool, choiceScales map[string][]Choice) string {
+	var choices []Choice
+	ordered := false
+	if q.qType == PickGroupRank {
+		choices = make([]Choice, 0)
+		if isRankCol {
+			for i := 1; i <= len(q.ResponseChoices()); i++ {
+				c := Choice{Label: fmt.Sprintf("%d", i)}
+				choices = append(choices, c)
+			}
+			ordered = true
+		} else {
+			for _, g := range q.groups {
+				c := Choice{Label: g}
+				choices = append(choices, c)
+			}
+		}
+	} else {
+		choices = q.ResponseChoices()
+		ordered = q.OrderedChoices()
+	}
+
+	rColType := "col_factor()"
+	if len(choices) > 0 {
+		choices = addNoResponseOption(choices)
+		scaleID := choiceScaleID(choices)
+		if _, ok := choiceScales[scaleID]; !ok {
+			choiceScales[scaleID] = choices
+		}
+		oString := ""
+		if ordered {
+			oString = ", ordered = TRUE"
+		}
+		rColType = "col_factor(levels = " + scaleID + oString + ")"
+	}
+
+	return rColType
 }
 
 func addNoResponseOption(choices []Choice) []Choice {
@@ -223,6 +210,34 @@ func choiceScaleID(choices []Choice) string {
 		s += c.Label
 	}
 	return fmt.Sprintf("scale_%x", sha1.Sum([]byte(s)))
+}
+
+func addScales(choiceScales map[string][]Choice) string {
+	scales := make([]string, 0)
+	for id, scale := range choiceScales {
+		line := fmt.Sprintf("%s <- c(", id)
+		firstLine := true
+		for _, c := range scale {
+			if !firstLine {
+				line += ", "
+			} else {
+				firstLine = false
+			}
+			s := c.VarName
+			if s == "" {
+				s = c.Label
+			}
+			line += `"` + s + `"`
+		}
+		line += ")\n"
+		scales = append(scales, line)
+	}
+	sort.Strings(scales)
+	defs := ""
+	for _, s := range scales {
+		defs += s
+	}
+	return defs
 }
 
 // ReadXML reads a Qualtrics XML file of participant responses
