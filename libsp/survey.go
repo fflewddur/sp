@@ -479,6 +479,7 @@ func (e *qsfSurveyElement) UnmarshalJSON(b []byte) error {
 			}
 			err := json.Unmarshal(b, &data)
 			if err != nil {
+				fmt.Printf("b: %s\n", b)
 				return fmt.Errorf("could not parse SQ element: %s", err)
 			}
 			e.Element = data.Element
@@ -509,7 +510,16 @@ func (e *qsfSurveyElement) UnmarshalJSON(b []byte) error {
 		var bl qsfSurveyElementBlocks
 		err := json.Unmarshal(b, &bl)
 		if err != nil {
-			return fmt.Errorf("could not parse BL element: %s", err)
+			var blm qsfSurveyElementBlocksMap
+			err := json.Unmarshal(b, &blm)
+			if err != nil {
+				fmt.Printf("b: %s\n", b)
+				return fmt.Errorf("could not parse BL element: %s", err)
+			}
+			bl.Element = blm.Element
+			for _, v := range blm.Payload {
+				bl.Payload = append(bl.Payload, v)
+			}
 		}
 		e.Element = bl.Element
 		e.blocks = &bl
@@ -517,6 +527,7 @@ func (e *qsfSurveyElement) UnmarshalJSON(b []byte) error {
 		var fl qsfSurveyElementFlows
 		err := json.Unmarshal(b, &fl)
 		if err != nil {
+			fmt.Printf("b: %s\n", b)
 			return fmt.Errorf("could not parse FL element: %s", err)
 		}
 		e.Element = fl.Element
@@ -631,6 +642,11 @@ type qsfChoice struct {
 type qsfSurveyElementBlocks struct {
 	Element string
 	Payload []*qsfSurveyElementBlock
+}
+
+type qsfSurveyElementBlocksMap struct {
+	Element string
+	Payload map[string]*qsfSurveyElementBlock
 }
 
 type qsfSurveyElementBlock struct {
