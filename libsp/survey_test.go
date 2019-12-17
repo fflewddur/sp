@@ -35,7 +35,7 @@ func TestWriteCSV(t *testing.T) {
 
 	// TODO test QID16's timing data
 	var tests = [][]string{
-		[]string{"id", "finished", "progress", "duration", "recorded",
+		{"id", "finished", "progress", "duration", "recorded",
 			"Q1Label", "Q18Label", "Q3Label",
 			"Q4Label_1", "Q4Label_2", "Q4Label_3", "Q4Label_5", "Q4Label_5_text", "Q4Label_6", "Q4Label_6_text", "Q4Label_4",
 			"Q19_choice1", "Q19_choice3", "Q19_choice2", "Q19_none",
@@ -50,7 +50,7 @@ func TestWriteCSV(t *testing.T) {
 			"PGR_item.1_GROUP", "PGR_item.1_RANK", "PGR_item.2_GROUP", "PGR_item.2_RANK", "PGR_item.3_GROUP", "PGR_item.3_RANK", "PGR_item.4_GROUP", "PGR_item.4_RANK", "PGR_other_GROUP", "PGR_other_RANK", "PGR_other_text",
 			"NPS", "NPS_group",
 			"s"},
-		[]string{"R_1dtWhiBDD96nfyk", "true", "100", "122", "2019-08-20 12:44:31",
+		{"R_1dtWhiBDD96nfyk", "true", "100", "122", "2019-08-20 12:44:31",
 			"Click to write Choice 1", "", "Click to write Choice 2",
 			"FALSE", "FALSE", "TRUE", "TRUE", "other response 1", "TRUE", "other response 2", "FALSE",
 			"", "TRUE", "", "",
@@ -65,7 +65,7 @@ func TestWriteCSV(t *testing.T) {
 			"Click to write Group 1", "3", "Click to write Group 2", "1", "Click to write Group 1", "2", "Click to write Group 1", "1", "Click to write Group 3", "1", "in group 3",
 			"6", "Detractor",
 			"g"},
-		[]string{"R_z72KJQMnr3lxZGp", "true", "100", "104", "2019-08-20 12:46:35",
+		{"R_z72KJQMnr3lxZGp", "true", "100", "104", "2019-08-20 12:46:35",
 			"Click to write Choice 3", "", "Click to write Choice 2",
 			"", "", "", "", "", "", "", "TRUE",
 			"", "", "", "TRUE",
@@ -80,7 +80,7 @@ func TestWriteCSV(t *testing.T) {
 			"Click to write Group 1", "2", "Click to write Group 1", "1", "Click to write Group 2", "2", "Click to write Group 2", "1", "", "", "",
 			"10", "Promoter",
 			"e"},
-		[]string{"R_3MPTb9vwnCBmijR", "false", "33", "22", "2019-08-20 12:52:35",
+		{"R_3MPTb9vwnCBmijR", "false", "33", "22", "2019-08-20 12:52:35",
 			"Click to write Choice 2", "", "Click to write Choice 2",
 			"", "TRUE", "", "", "", "", "", "",
 			"TRUE", "", "TRUE", "",
@@ -104,7 +104,6 @@ func TestWriteCSV(t *testing.T) {
 				t.Errorf("row %d, record[%d] = '%s'; want '%s'", row, i, record[i], want)
 			}
 		}
-		row++
 	}
 
 	_, err = csvReader.Read()
