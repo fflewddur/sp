@@ -27,17 +27,17 @@ func TestReadQsfMetadata(t *testing.T) {
 	if s.Status != "Active" {
 		t.Errorf("Status = '%s'; want 'Active'", s.Status)
 	}
-	if s.Description != "Test description" {
-		t.Errorf("Description = '%s'; want 'Test description'", s.Description)
+	if s.Description != "" {
+		t.Errorf("Description = '%s'; want empty string", s.Description)
 	}
 	if s.CreatedOn.String() != "2019-02-10 21:50:52 +0000 UTC" {
 		t.Errorf("CreatedOn = '%s'; want '2019-02-10 21:50:52 +0000 UTC'", s.CreatedOn)
 	}
-	if s.ModifiedOn.String() != "2019-08-20 12:23:35 +0000 UTC" {
-		t.Errorf("ModifiedOn = '%s'; want '2019-08-20 12:23:35 +0000 UTC'", s.ModifiedOn)
+	if s.ModifiedOn.String() != "2019-12-17 14:37:30 +0000 UTC" {
+		t.Errorf("ModifiedOn = '%s'; want '2019-12-17 14:37:30 +0000 UTC'", s.ModifiedOn)
 	}
-	if s.LaunchedOn.String() != "2019-08-01 01:23:45 +0000 UTC" {
-		t.Errorf("LaunchedOn = '%s'; want '2019-08-01 01:23:45 +0000 UTC'", s.LaunchedOn)
+	if s.LaunchedOn.String() != "2019-08-01 02:23:00 +0000 UTC" {
+		t.Errorf("LaunchedOn = '%s'; want '2019-08-01 02:23:00 +0000 UTC'", s.LaunchedOn)
 	}
 }
 
@@ -77,10 +77,12 @@ func TestReadQsfQuestions(t *testing.T) {
 		{"QID17", true},
 		{"QID18", true},
 		{"QID19", true},
-		{"QID20", false},
+		{"QID20", true},
+		{"QID21", true},
+		{"QID22", true},
 	}
-	if len(s.Questions) != 18 {
-		t.Errorf("len(Questions) = %d; want 18", len(s.Questions))
+	if len(s.Questions) != 21 {
+		t.Errorf("len(Questions) = %d; want 21", len(s.Questions))
 	}
 	for _, test := range tests {
 		if _, ok := s.Questions[test.id]; test.want != ok {
@@ -98,8 +100,8 @@ func TestReadQsfMinified(t *testing.T) {
 	if s == nil {
 		t.Error("survey = nil")
 	}
-	if len(s.Questions) != 9 {
-		t.Errorf("len(Questions) = %d; want 9", len(s.Questions))
+	if len(s.Questions) != 21 {
+		t.Errorf("len(Questions) = %d; want 21", len(s.Questions))
 	}
 }
 
@@ -135,10 +137,34 @@ func TestReadQsfTypes(t *testing.T) {
 		{"QID17", PickGroupRank},
 		{"QID18", MultipleChoiceSingleResponse},
 		{"QID19", MultipleChoiceMultiResponse},
+		{"QID20", MultipleChoiceSingleResponse},
+		{"QID21", MultipleChoiceSingleResponse},
+		{"QID22", Meta},
 	}
 	for _, test := range tests {
+		if s.Questions[test.id] == nil {
+			t.Errorf("Questions[%s] = nil", test.id)
+		}
 		if s.Questions[test.id].Type() != test.want {
 			t.Errorf("Questions[%s].Type() = %v; wanted %v", test.id, s.Questions[test.id].Type(), test.want)
+		}
+	}
+}
+
+func TestForNilQuestions(t *testing.T) {
+	r := bufio.NewReader(strings.NewReader(qsfTestContent))
+	s, err := ReadQsf(r)
+	if err != nil {
+		t.Errorf("err = %s", err)
+	}
+	if s == nil {
+		t.Error("survey = nil")
+		return
+	}
+
+	for _, i := range s.QuestionOrder {
+		if s.Questions[i] == nil {
+			t.Errorf("Questions[%s] = nil", i)
 		}
 	}
 }

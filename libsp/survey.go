@@ -15,6 +15,7 @@ import (
 	"time"
 
 	"github.com/beevik/etree"
+	"github.com/mitchellh/mapstructure"
 )
 
 // Survey represents a survey, including its questions, potential responses, and meta-data
@@ -460,7 +461,6 @@ func (e *qsfSurveyElement) UnmarshalJSON(b []byte) error {
 	switch element {
 	case "SQ":
 		reChoiceArray := regexp.MustCompile(`"Choices"\s*:\s*\[\s*{`)
-		reMetaInfo := regexp.MustCompile(`"QuestionText":\s*"Browser Meta Info"`)
 		if reChoiceArray.Match(b) {
 			// This Question has an array of Choice objects. I've only
 			// seen this for NPS questions, in which case we don't care
@@ -491,9 +491,6 @@ func (e *qsfSurveyElement) UnmarshalJSON(b []byte) error {
 			e.Payload.QuestionType = data.Payload.QuestionType
 			e.Payload.Selector = data.Payload.Selector
 			e.Payload.QuestionID = data.Payload.QuestionID
-		} else if reMetaInfo.Match(b) {
-			// This question uses a different JSON schema than the others.
-			// For now, let's ignore it.
 		} else {
 			var q qsfSurveyElementQuestion
 			err := json.Unmarshal(b, &q)
@@ -548,8 +545,10 @@ type qsfPayload struct {
 	Selector                   string
 	SubSelector                string
 	QuestionID                 string
-	Choices                    map[int]qsfChoice
+	ChoiceMap                  map[int]qsfChoice
+	Choices                    interface{}
 	ChoiceOrder                []json.Number
+	DynamicChoices             *qsfDynChoices
 	Answers                    map[int]qsfChoice
 	AnswerOrder                []json.Number
 	RecodeValues               map[int]string
@@ -558,6 +557,12 @@ type qsfPayload struct {
 	HasChoiceDataExportTags    bool
 	MappedChoiceDataExportTags map[int]string
 	Groups                     []string
+}
+
+type qsfDynChoices struct {
+	DynamicType string
+	Locator     string
+	Type        string
 }
 
 func (p *qsfPayload) OrderedChoices(choicesAreQuestions bool) ([]Choice, error) {
@@ -569,11 +574,51 @@ func (p *qsfPayload) OrderedChoices(choicesAreQuestions bool) ([]Choice, error) 
 		}
 		i := int(i64)
 
+		// If DynamicChoices is not nil, then Choices should be an empty array
+		if p.DynamicChoices != nil {
+			// TODO implement logic for dynamic choices
+		} else {
+			// Otherwise, Choices should be a map[int]qsfChoice
+			choiceMap := make(map[int]qsfChoice)
+			if m, ok := p.Choices.(map[string]interface{}); ok {
+				for k, v := range m {
+					if key, err := strconv.Atoi(k); err == nil {
+						var c qsfChoice
+						if err := mapstructure.Decode(v, &c); err != nil {
+							log.Printf("could not convert '%v' to qsfChoice: %s\n", v, err)
+						}
+						choiceMap[key] = c
+					} else {
+						log.Fatalf("could not convert '%v' to int: %s", k, err)
+					}
+				}
+			}
+			p.ChoiceMap = choiceMap
+		}
+		if _, ok := p.Choices.([]bool); ok {
+			p.HasChoiceDataExportTags = false
+		} else if m, ok := p.ChoiceDataExportTags.(map[string]interface{}); ok {
+			p.MappedChoiceDataExportTags = make(map[int]string)
+			p.HasChoiceDataExportTags = true
+			for k, v := range m {
+				if key, err := strconv.Atoi(k); err == nil {
+
+					if val, ok := v.(string); ok {
+						p.MappedChoiceDataExportTags[key] = val
+					} else {
+						log.Fatalf("could not convert '%v' to string", v)
+					}
+				} else {
+					log.Fatalf("could not convert '%s' to int: %s", k, err)
+				}
+			}
+		}
+
 		hasText := false
-		if len(p.Choices[i].TextEntry) > 0 {
-			hasText, err = strconv.ParseBool(p.Choices[i].TextEntry)
+		if len(p.ChoiceMap[i].TextEntry) > 0 {
+			hasText, err = strconv.ParseBool(p.ChoiceMap[i].TextEntry)
 			if err != nil {
-				log.Fatalf("could not convert '%s' to bool: %s", p.Choices[i].TextEntry, err)
+				log.Fatalf("could not convert '%s' to bool: %s", p.ChoiceMap[i].TextEntry, err)
 			}
 		}
 
@@ -603,7 +648,7 @@ func (p *qsfPayload) OrderedChoices(choicesAreQuestions bool) ([]Choice, error) 
 			varName = p.VariableNaming[i]
 		}
 
-		c := Choice{ID: s.String(), Label: p.Choices[i].Display, VarName: varName, HasText: hasText}
+		c := Choice{ID: s.String(), Label: p.ChoiceMap[i].Display, VarName: varName, HasText: hasText}
 		ordered = append(ordered, c)
 	}
 
