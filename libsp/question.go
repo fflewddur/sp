@@ -105,6 +105,8 @@ func (q *Question) RColType() string {
 	case NPS:
 		fallthrough
 	case PickGroupRank:
+		fallthrough
+	case RankOrder:
 		return "col_factor()"
 	}
 	return "col_logical()"
@@ -169,7 +171,7 @@ func (q *Question) choiceExportTag(label string, treatAsBool bool) string {
 		} else {
 			retval = "TRUE"
 		}
-	} else if label == noResponseCode {
+	} else if label == noResponseCode && q.qType != Timing {
 		retval = noResponseConst
 	}
 

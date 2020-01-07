@@ -136,7 +136,10 @@ data <- read_csv(input_path, col_types = cols(
 
 func getColType(colID string, q *Question) (rColType string, isRankCol bool) {
 	isRankCol = false
-	if strings.HasSuffix(colID, "_text") {
+	if q.qType == RankOrder {
+		isRankCol = true
+		rColType = "col_factor()"
+	} else if strings.HasSuffix(colID, "_text") {
 		rColType = ""
 	} else if strings.HasSuffix(colID, "_RANK") {
 		isRankCol = true
@@ -156,7 +159,7 @@ func getColType(colID string, q *Question) (rColType string, isRankCol bool) {
 func colTypeWithScales(q *Question, isRankCol bool, choiceScales map[string][]Choice) string {
 	var choices []Choice
 	ordered := false
-	if q.qType == PickGroupRank {
+	if q.qType == PickGroupRank || q.qType == RankOrder {
 		choices = make([]Choice, 0)
 		if isRankCol {
 			for i := 1; i <= len(q.ResponseChoices()); i++ {
