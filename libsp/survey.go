@@ -352,6 +352,7 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 	s.Questions = make(map[string]*Question)
 	s.blocks = make(map[string]*block)
 	embeddedDataIDs := []string{}
+	// nQuestionsExpected := 0 // TODO Qualtrics' QC value doesn't seem to match # of questions...
 	for _, e := range qs.SurveyElements {
 		switch e.Element {
 		case "BL":
@@ -382,8 +383,12 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 					}
 				}
 			}
-		case "QC":
-			// TODO parse survey question count to verify we didn't miss any questions
+		// case "QC":
+		// 	var err error
+		// 	nQuestionsExpected, err = strconv.Atoi(e.SecondaryAttribute)
+		// 	if err != nil {
+		// 		return fmt.Errorf("could not parse '%s' to int: %s", e.SecondaryAttribute, err)
+		// 	}
 		case "SQ":
 			q, err := newQuestionFromPayload(e.Payload)
 			if err != nil {
@@ -392,6 +397,13 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 			s.Questions[q.ID] = q
 		}
 	}
+
+	// Qualtrics doesn't include embedded data in the question count.
+	// They do include questions in the trash, so can't empty that yet.
+	// nQuestions := len(s.Questions) - len(embeddedDataIDs)
+	// if nQuestionsExpected != nQuestions {
+	// 	return fmt.Errorf("expected %d questions but found %d", nQuestionsExpected, nQuestions)
+	// }
 
 	s.emptyTrash()
 	s.sortQuestions()
@@ -529,6 +541,20 @@ func (e *qsfSurveyElement) UnmarshalJSON(b []byte) error {
 		}
 		e.Element = fl.Element
 		e.flows = &fl
+	case "QC":
+		var data struct {
+			Element            string
+			PrimaryAttribute   string
+			SecondaryAttribute string
+		}
+		err := json.Unmarshal(b, &data)
+		if err != nil {
+			fmt.Printf("b: %s\n", b)
+			return fmt.Errorf("could not parse QC element: %s", err)
+		}
+		e.Element = data.Element
+		e.PrimaryAttribute = data.PrimaryAttribute
+		e.SecondaryAttribute = data.SecondaryAttribute
 	}
 
 	return nil
@@ -551,7 +577,7 @@ type qsfPayload struct {
 	DynamicChoices             *qsfDynChoices
 	Answers                    map[int]qsfChoice
 	AnswerOrder                []json.Number
-	RecodeValues               map[int]string
+	RecodeValues               map[int]interface{}
 	VariableNaming             map[int]string
 	ChoiceDataExportTags       interface{}
 	HasChoiceDataExportTags    bool
@@ -602,7 +628,6 @@ func (p *qsfPayload) OrderedChoices(choicesAreQuestions bool) ([]Choice, error) 
 			p.HasChoiceDataExportTags = true
 			for k, v := range m {
 				if key, err := strconv.Atoi(k); err == nil {
-
 					if val, ok := v.(string); ok {
 						p.MappedChoiceDataExportTags[key] = val
 					} else {
