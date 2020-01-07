@@ -99,6 +99,7 @@ func TestReadQsfMinified(t *testing.T) {
 	}
 	if s == nil {
 		t.Error("survey = nil")
+		return
 	}
 	if len(s.Questions) != 21 {
 		t.Errorf("len(Questions) = %d; want 21", len(s.Questions))

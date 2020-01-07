@@ -333,8 +333,8 @@ func (qt QType) suffixes(q *Question, useExportTags bool) []string {
 	// MatrixSingleResponse: [question id]_[subquestion id]
 	// MatrixMultiResponse: [question id]_[subquestion id]_[choice id]
 	// MaxDiff: [question id]_[choice id]
-	// PickGroupRank groupings: [question id]_[group index]_[choice id]
-	// PickGroupRank rankings: [question id]_G[group index]_choice id]_RANK
+	// PickGroupRank groupings: [question id]_[group index]_[choice id] (handled by groupsAndRanks())
+	// PickGroupRank rankings: [question id]_G[group index]_choice id]_RANK (handled by groupsAndRanks())
 	// RankOrder: [question id]_[choice id]
 	// TextEntry: [question id]_TEXT
 	// NPS: [question id] and [question id]_NPS_GROUP
@@ -390,16 +390,6 @@ func (qt QType) suffixes(q *Question, useExportTags bool) []string {
 	case NPS:
 		suffixes = append(suffixes, "")
 		suffixes = append(suffixes, npsSuffix)
-	case PickGroupRank:
-		for gi := range q.groups {
-			for _, c := range q.choices {
-				suffixes = append(suffixes, fmt.Sprintf("_%d_%s", gi, c.ID))
-				suffixes = append(suffixes, fmt.Sprintf("_G%d_%s_RANK", gi, c.ID))
-				if c.HasText {
-					suffixes = append(suffixes, "_"+c.ID+textSuffix)
-				}
-			}
-		}
 	case TextEntry:
 		suffixes = append(suffixes, textSuffix)
 	case Timing:
