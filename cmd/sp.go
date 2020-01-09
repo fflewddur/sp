@@ -77,7 +77,7 @@ var rootCmd = &cobra.Command{
 			log.Fatalf("Error writing '%s': %s", rPath, err)
 		}
 	},
-	Version: "0.1.0",
+	Version: libsp.Version,
 }
 
 func buildXMLPath(qsfPath string) string {
