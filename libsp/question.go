@@ -119,8 +119,24 @@ func (q *Question) ResponseCols(r *Response) []string {
 		cols = q.groupsAndRanks(r)
 	} else {
 		suffixes := q.qType.internalSuffixes(q)
+		allEmpty := true
+		// First, check to see if the user answered any part of this question
 		for _, s := range suffixes {
-			col := q.choiceExportTag(r.answers[q.ID+s], q.qType.exportAsBools())
+			a := r.answers[q.ID+s]
+			if a != "" && a != noResponseCode {
+				allEmpty = false
+			}
+		}
+		//
+		for _, s := range suffixes {
+			var col string
+			if allEmpty {
+				// If the user didn't answer this question, all of its columns should be NA
+				col = ""
+			} else {
+				// If the user answered this question, any unchecked options should be FALSE
+				col = q.formatResponseForCol(r.answers[q.ID+s])
+			}
 			cols = append(cols, col)
 		}
 	}
@@ -155,23 +171,24 @@ func (q *Question) groupsAndRanks(r *Response) []string {
 	return cols
 }
 
-func (q *Question) choiceExportTag(label string, treatAsBool bool) string {
-	retval := label
-	freeText := label != noResponseCode // true unless the user skipped this question
+func (q *Question) formatResponseForCol(userAnswer string) string {
+	retval := userAnswer
+	freeText := userAnswer != noResponseCode // true unless the user skipped this question
 	for _, c := range q.choices {
-		if c.Label == label || c.VarName == label {
+		if c.Label == userAnswer || c.VarName == userAnswer {
+			// set to false if the user's answer matches one of the question's choices
 			freeText = false
 			break
 		}
 	}
 
-	if treatAsBool && !freeText && label != "" {
-		if label == noResponseCode {
+	if q.qType.exportAsBools() && !freeText {
+		if userAnswer == noResponseCode || userAnswer == "" {
 			retval = "FALSE"
 		} else {
 			retval = "TRUE"
 		}
-	} else if label == noResponseCode && q.qType != Timing {
+	} else if userAnswer == noResponseCode && q.qType != Timing {
 		retval = noResponseConst
 	}
 
