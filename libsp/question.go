@@ -127,7 +127,7 @@ func (q *Question) ResponseCols(r *Response) []string {
 				allEmpty = false
 			}
 		}
-		//
+
 		for _, s := range suffixes {
 			var col string
 			if allEmpty {
@@ -149,11 +149,13 @@ func (q *Question) ResponseCols(r *Response) []string {
 // so it needs its own logic.
 func (q *Question) groupsAndRanks(r *Response) []string {
 	cols := make([]string, 0)
+	allEmpty := true
 	for _, c := range q.choices {
 		var group, rank string
 		for gi, g := range q.groups {
 			gk := fmt.Sprintf("%s_%d_GROUP_%s", q.ID, gi, c.ID)
 			if v, ok := r.answers[gk]; ok && len(v) > 0 && v != noResponseCode {
+				allEmpty = false
 				group = g
 				rk := fmt.Sprintf("%s_G%d_%s_RANK", q.ID, gi, c.ID)
 				if v, ok := r.answers[rk]; ok && len(v) > 0 {
@@ -167,6 +169,18 @@ func (q *Question) groupsAndRanks(r *Response) []string {
 		if c.HasText {
 			cols = append(cols, r.answers[q.ID+"_"+c.ID+"_TEXT"])
 		}
+	}
+	if !allEmpty {
+		// This response includes non-NA values, so change all "" to "Not grouped"
+		// (this lets us differentiate "not selected" from "NA" during analysis)
+		colsWithNA := []string{}
+		for _, v := range cols {
+			if v == "" {
+				v = "Not grouped"
+			}
+			colsWithNA = append(colsWithNA, v)
+		}
+		cols = colsWithNA
 	}
 	return cols
 }

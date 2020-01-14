@@ -76,7 +76,7 @@ func TestWriteCSV(t *testing.T) {
 			"foo", "bar",
 			"name", "email", "job role",
 			"1", "2", "3",
-			"Group 1", "2", "Group 1", "1", "Group 2", "2", "Group 2", "1", "", "", "",
+			"Group 1", "2", "Group 1", "1", "Group 2", "2", "Group 2", "1", "Not grouped", "Not grouped", "Not grouped",
 			"10", "Promoter",
 			"", "", "e"},
 		{"R_3MPTb9vwnCBmijR", "false", "33", "22", "2019-08-20 12:52:35",
