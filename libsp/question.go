@@ -176,7 +176,7 @@ func (q *Question) groupsAndRanks(r *Response) []string {
 		colsWithNA := []string{}
 		for _, v := range cols {
 			if v == "" {
-				v = "Not grouped"
+				v = notGrouped
 			}
 			colsWithNA = append(colsWithNA, v)
 		}

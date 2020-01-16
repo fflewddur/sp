@@ -38,6 +38,7 @@ const Version = "0.1.2"
 const timeFormat = "2006-01-02 15:04:05"
 const noResponseConst = "No response"
 const noResponseCode = "-99"
+const notGrouped = "Not grouped"
 
 // WriteCSV saves the parsed survey questions and responses in comma-separated value format
 func (s *Survey) WriteCSV(bw *bufio.Writer) error {
@@ -182,6 +183,9 @@ func colTypeWithScales(q *Question, isRankCol bool, choiceScales map[string][]Ch
 
 	rColType := "col_factor()"
 	if len(choices) > 0 {
+		if q.qType == PickGroupRank {
+			choices = addNotGroupedOption(choices)
+		}
 		choices = addNoResponseOption(choices)
 		scaleID := choiceScaleID(choices)
 		if _, ok := choiceScales[scaleID]; !ok {
@@ -197,7 +201,22 @@ func colTypeWithScales(q *Question, isRankCol bool, choiceScales map[string][]Ch
 	return rColType
 }
 
+func addNotGroupedOption(choices []Choice) []Choice {
+	hasNotGrouped := false
+	for _, c := range choices {
+		if c.Label == notGrouped {
+			hasNotGrouped = true
+		}
+	}
+	if !hasNotGrouped {
+		c := Choice{Label: notGrouped}
+		choices = append(choices, c)
+	}
+	return choices
+}
+
 func addNoResponseOption(choices []Choice) []Choice {
+	// TODO revisit the idea of "noResponse", maybe remove this logic
 	hasNoResponse := false
 	for _, c := range choices {
 		if c.Label == noResponseConst {
