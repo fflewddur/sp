@@ -127,6 +127,9 @@ var qsfTestContent = `{
             }, {
                 "Type": "Question",
                 "QuestionID": "QID21"
+            }, {
+                "Type": "Question",
+                "QuestionID": "QID23"
             }]
         }]
     }, {
@@ -1341,6 +1344,53 @@ var qsfTestContent = `{
             "NextChoiceId": 4,
             "NextAnswerId": 1,
             "QuestionID": "QID20"
+        }
+    }, {
+        "SurveyID": "SV_6mudEEycYo5zehT",
+        "Element": "SQ",
+        "PrimaryAttribute": "QID23",
+        "SecondaryAttribute": "Constant sum question text",
+        "TertiaryAttribute": null,
+        "Payload": {
+            "QuestionText": "Constant sum question text",
+            "DefaultChoices": false,
+            "DataExportTag": "Q23",
+            "QuestionType": "CS",
+            "Selector": "VRTL",
+            "SubSelector": "TX",
+            "Configuration": {
+                "QuestionDescriptionOption": "UseText"
+            },
+            "QuestionDescription": "Constant sum question text",
+            "Choices": {
+                "1": {
+                    "Display": "CS choice 1"
+                },
+                "2": {
+                    "Display": "CS choice 2"
+                },
+                "3": {
+                    "Display": "CS choice 3"
+                },
+                "4": {
+                    "Display": "CS other",
+                    "TextEntry": "true"
+                }
+            },
+            "ChoiceOrder": ["1", "2", "3", "4"],
+            "Validation": {
+                "Settings": {
+                    "EnforceRange": "OFF",
+                    "Type": "None"
+                }
+            },
+            "GradingData": [],
+            "Language": [],
+            "NextChoiceId": 5,
+            "NextAnswerId": 1,
+            "Labels": [],
+            "ClarifyingSymbolType": "None",
+            "QuestionID": "QID23"
         }
     }, {
         "SurveyID": "SV_6mudEEycYo5zehT",

@@ -96,17 +96,9 @@ func (q *Question) csvPrefix() string {
 // RColType returns the R type of columns associated with this question
 func (q *Question) RColType() string {
 	switch q.qType {
-	case Embedded:
-		fallthrough
-	case MatrixSingleResponse:
-		fallthrough
-	case MultipleChoiceSingleResponse:
-		fallthrough
-	case NPS:
-		fallthrough
-	case PickGroupRank:
-		fallthrough
-	case RankOrder:
+	case ConstantSum:
+		return "col_integer()"
+	case Embedded, MatrixSingleResponse, MultipleChoiceSingleResponse, NPS, PickGroupRank, RankOrder:
 		return "col_factor()"
 	}
 	return "col_logical()"
@@ -256,6 +248,7 @@ type QType int
 // Types of supported survey questions
 const (
 	Unknown QType = iota
+	ConstantSum
 	Description
 	Embedded
 	Form
@@ -275,6 +268,8 @@ const (
 // newQTypeFromString returns the corresponding QType value for the given string
 func newQTypeFromString(t, s, ss string) QType {
 	switch t {
+	case "CS":
+		return ConstantSum
 	case "DB":
 		return Description
 	case "Matrix":
@@ -312,6 +307,7 @@ func newQTypeFromString(t, s, ss string) QType {
 func (qt QType) String() string {
 	s := []string{
 		"Unknown",
+		"ConstantSum",
 		"Description",
 		"Embedded",
 		"Form",
@@ -342,9 +338,7 @@ func (qt QType) exportAsBools() bool {
 func (qt QType) choicesAreQuestions() bool {
 	retval := false
 	switch qt {
-	case MatrixSingleResponse:
-		fallthrough
-	case MatrixMultiResponse:
+	case ConstantSum, MatrixMultiResponse, MatrixSingleResponse:
 		retval = true
 	}
 	return retval
@@ -360,6 +354,7 @@ func (qt QType) internalSuffixes(q *Question) []string {
 
 func (qt QType) suffixes(q *Question, useExportTags bool) []string {
 	// These are the formats for the keys to lookup responses for each question type
+	// ConstantSum: [question id]_[choice id]
 	// Form: [question id]_[choice id]
 	// MultipleChoiceSingleResponse: [question id]
 	// MultipleChoiceMultiResponse: [question id]_[choice id]
@@ -405,7 +400,7 @@ func (qt QType) suffixes(q *Question, useExportTags bool) []string {
 				suffixes = append(suffixes, "_"+sq.ID+textSuffix)
 			}
 		}
-	case MatrixSingleResponse:
+	case ConstantSum, MatrixSingleResponse:
 		for _, sq := range q.subQuestions {
 			s := suffix(sq, useExportTags)
 			suffixes = append(suffixes, "_"+s)
