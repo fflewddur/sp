@@ -22,6 +22,10 @@ sp takes Qualtrics data and creates both a CSV and R import script.
 
 1. (Optional) You can edit the generated R script as appropriate. By default it will define a type for each CSV column (logical, factor, integer, etc.) and include factor levels. For questions that allow multiple responses, logical columns for each response will be generated.
 
+## Building
+
+To build sp, run `go build ./cmd/sp` from the root of the repository.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
