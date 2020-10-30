@@ -8,7 +8,7 @@ sp is a tool for parsing Qualtrics data into a format suitable for R.
 
 sp takes Qualtrics data and creates both a CSV and R import script.
 
-1. Install sp with the command `go install github.com/fflewddur/sp` (you can [download Go here](https://golang.org/) if you don't already have it).
+1. Install sp with the command `go install github.com/fflewddur/sp/cmd/sp` (you can [download Go here](https://golang.org/) if you don't already have it).
 
 1. Export your Qualtrics survey as a QSF file (in Qualtrics: Survey &rarr; Tools &rarr; Import/Export &rarr; Export survey).
 
@@ -25,6 +25,8 @@ sp takes Qualtrics data and creates both a CSV and R import script.
 ## Building
 
 To build sp, run `go build ./cmd/sp` from the root of the repository.
+
+To run unit tests, use the command `go test -race ./libsp` from the root of the repository.
 
 ## License
 
