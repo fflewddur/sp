@@ -83,9 +83,10 @@ func TestReadQsfQuestions(t *testing.T) {
 		{"QID23", true},
 		{"QID26", true},
 		{"QID27", true},
+		{"QID28", true},
 	}
-	if len(s.Questions) != 24 {
-		t.Errorf("len(Questions) = %d; want 24", len(s.Questions))
+	if len(s.Questions) != 25 {
+		t.Errorf("len(Questions) = %d; want 25", len(s.Questions))
 	}
 	for _, test := range tests {
 		if _, ok := s.Questions[test.id]; test.want != ok {
@@ -341,6 +342,7 @@ func TestQuestionOrder(t *testing.T) {
 		"QID15",
 		"QID20",
 		"QID21",
+		"QID28",
 		"QID23",
 		"QID26",
 		"QID27",

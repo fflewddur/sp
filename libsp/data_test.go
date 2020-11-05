@@ -129,6 +129,9 @@ var qsfTestContent = `{
                 "QuestionID": "QID21"
             }, {
                 "Type": "Question",
+                "QuestionID": "QID28"
+            }, {
+                "Type": "Question",
                 "QuestionID": "QID23"
             }]
         }, {
@@ -326,7 +329,7 @@ var qsfTestContent = `{
         "SurveyID": "SV_6mudEEycYo5zehT",
         "Element": "QC",
         "PrimaryAttribute": "Survey Question Count",
-        "SecondaryAttribute": "24",
+        "SecondaryAttribute": "25",
         "TertiaryAttribute": null,
         "Payload": null
     }, {
@@ -1387,6 +1390,71 @@ var qsfTestContent = `{
             "NextChoiceId": 4,
             "NextAnswerId": 1,
             "QuestionID": "QID20"
+        }
+    }, {
+        "SurveyID": "SV_6mudEEycYo5zehT",
+        "Element": "SQ",
+        "PrimaryAttribute": "QID28",
+        "SecondaryAttribute": "Question text for carried forward choices (matrix).",
+        "TertiaryAttribute": null,
+        "Payload": {
+            "QuestionText": "Question text for carried forward choices (matrix).",
+            "DefaultChoices": false,
+            "DataExportTag": "Q28",
+            "QuestionType": "Matrix",
+            "Selector": "Likert",
+            "SubSelector": "SingleAnswer",
+            "Configuration": {
+                "QuestionDescriptionOption": "UseText",
+                "TextPosition": "inline",
+                "ChoiceColumnWidth": 25,
+                "RepeatHeaders": "none",
+                "WhiteSpace": "OFF",
+                "MobileFirst": true
+            },
+            "QuestionDescription": "Question text for carried forward choices (matrix).",
+            "Choices": [],
+            "DynamicChoices": {
+                "DynamicType": "ChoiceGroup",
+                "Locator": "q:\/\/QID5\/ChoiceGroup\/DisplayedChoices",
+                "Type": "Dynamic",
+                "Description": "Displayed Statements"
+            },
+            "DynamicChoicesData": [],
+            "ChoiceOrder": [],
+            "Validation": {
+                "Settings": {
+                    "ForceResponse": "OFF",
+                    "ForceResponseType": "ON",
+                    "Type": "None"
+                }
+            },
+            "GradingData": [],
+            "Language": [],
+            "NextChoiceId": 4,
+            "NextAnswerId": 4,
+            "Answers": {
+                "1": {
+                    "Display": "Click to write Scale Point 1"
+                },
+                "2": {
+                    "Display": "Click to write Scale Point 2"
+                },
+                "3": {
+                    "Display": "Click to write Scale Point 3"
+                }
+            },
+            "AnswerOrder": [
+                "1",
+                "2",
+                "3"
+            ],
+            "ChoiceDataExportTags": false,
+            "QuestionID": "QID28",
+            "DataVisibility": {
+                "Private": false,
+                "Hidden": false
+            }
         }
     }, {
         "SurveyID": "SV_6mudEEycYo5zehT",

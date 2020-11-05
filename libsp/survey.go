@@ -420,7 +420,6 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 		// 		return fmt.Errorf("could not parse '%s' to int: %s", e.SecondaryAttribute, err)
 		// 	}
 		case "SQ":
-			// TODO support carry forward statements
 			// TODO investigate N/A responses for loop-and-merge questions
 			q, err := newQuestionFromPayload(e.Payload)
 			if err != nil {
@@ -439,6 +438,7 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 
 	s.emptyTrash()
 	s.sortQuestions()
+	s.addDynamicChoices()
 	s.addEmbeddedData(embeddedDataIDs)
 
 	return nil
@@ -458,6 +458,28 @@ func (s *Survey) sortQuestions() {
 	s.QuestionOrder = []string{}
 	for _, b := range s.blockOrder {
 		s.QuestionOrder = append(s.QuestionOrder, s.blocks[b].QuestionIDs...)
+	}
+}
+
+// Run through all of the questions, pulling in dynamic choices from the appropriate questions
+func (s *Survey) addDynamicChoices() {
+	for _, qid := range s.QuestionOrder {
+		q := s.Questions[qid]
+		if q.dynChoices != nil {
+			choiceSource := s.Questions[q.dynChoices.Source]
+			if q.dynChoices.Type == "DisplayedChoices" || q.dynChoices.Type == "SelectedChoices" {
+				if len(q.choices) == 0 {
+					q.choices = make([]Choice, len(choiceSource.choices))
+					copy(q.choices, choiceSource.choices)
+					q.orderedChoices = choiceSource.orderedChoices
+				}
+				if len(q.subQuestions) == 0 {
+					q.subQuestions = make([]Choice, len(choiceSource.subQuestions))
+					copy(q.subQuestions, choiceSource.subQuestions)
+				}
+			}
+			// TODO might need to support other types of dynamic choices
+		}
 	}
 }
 
@@ -632,11 +654,9 @@ func (p *qsfPayload) OrderedChoices(choicesAreQuestions bool) ([]Choice, error) 
 		}
 		i := int(i64)
 
-		// If DynamicChoices is not nil, then Choices should be an empty array
-		if p.DynamicChoices != nil {
-			// TODO implement logic for dynamic choices
-		} else {
-			// Otherwise, Choices should be a map[int]qsfChoice
+		// If DynamicChoices is not nil, then Choices should be an empty array.
+		// Otherwise, Choices should be a map[int]qsfChoice
+		if p.DynamicChoices == nil {
 			choiceMap := make(map[int]qsfChoice)
 			if m, ok := p.Choices.(map[string]interface{}); ok {
 				for k, v := range m {

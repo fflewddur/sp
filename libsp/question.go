@@ -17,6 +17,7 @@ type Question struct {
 	groups         []string
 	orderedChoices bool
 	dataExportTag  string
+	dynChoices     *dynamicChoices
 }
 
 // Choice represents one possible response to a survey question
@@ -25,6 +26,11 @@ type Choice struct {
 	Label   string
 	VarName string // short variable name for use in analysis scripts
 	HasText bool
+}
+
+type dynamicChoices struct {
+	Source string
+	Type   string
 }
 
 // Type returns a QType representing the type of this survey question
@@ -230,7 +236,34 @@ func newQuestionFromPayload(p *qsfPayload) (*Question, error) {
 	// If we've recoded values in Qualtrics, that means order matters
 	q.orderedChoices = p.RecodeValues != nil
 
+	// If this question uses dynamic choices, save that information.
+	// We'll parse it on a second pass, since it might refer to a question
+	// we haven't parsed yet.
+	if p.DynamicChoices != nil {
+		q.dynChoices = new(dynamicChoices)
+		q.dynChoices.Source = getSourceFromLocator(p.DynamicChoices.Locator)
+		q.dynChoices.Type = getTypeFromLocator(p.DynamicChoices.Locator)
+	}
+
 	return q, nil
+}
+
+func getSourceFromLocator(l string) string {
+	re := regexp.MustCompile(`(QID[0-9]+)`)
+	matches := re.FindStringSubmatch(l)
+	if matches != nil {
+		return matches[1]
+	}
+	return ""
+}
+
+func getTypeFromLocator(l string) string {
+	re := regexp.MustCompile(`/QID[0-9]+\/.+\/(.+)`)
+	matches := re.FindStringSubmatch(l)
+	if matches != nil {
+		return matches[1]
+	}
+	return ""
 }
 
 func newQuestionFromEmbeddedData(d *qsfEmbeddedData) (*Question, error) {
