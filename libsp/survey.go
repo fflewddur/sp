@@ -421,7 +421,6 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 		// 	}
 		case "SQ":
 			// TODO support carry forward statements
-			// TODO support randomized block flows
 			// TODO investigate N/A responses for loop-and-merge questions
 			q, err := newQuestionFromPayload(e.Payload)
 			if err != nil {
