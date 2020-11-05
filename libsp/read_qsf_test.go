@@ -81,9 +81,11 @@ func TestReadQsfQuestions(t *testing.T) {
 		{"QID21", true},
 		{"QID22", true},
 		{"QID23", true},
+		{"QID26", true},
+		{"QID27", true},
 	}
-	if len(s.Questions) != 22 {
-		t.Errorf("len(Questions) = %d; want 22", len(s.Questions))
+	if len(s.Questions) != 24 {
+		t.Errorf("len(Questions) = %d; want 24", len(s.Questions))
 	}
 	for _, test := range tests {
 		if _, ok := s.Questions[test.id]; test.want != ok {
@@ -304,5 +306,54 @@ func TestNilReader(t *testing.T) {
 	}
 	if s != nil {
 		t.Error("survey != nil")
+	}
+}
+
+func TestQuestionOrder(t *testing.T) {
+	r := bufio.NewReader(strings.NewReader(qsfTestContent))
+	s, err := ReadQsf(r)
+	if err != nil {
+		t.Errorf("err = %s", err)
+	}
+	if s == nil {
+		t.Error("survey = nil")
+		return
+	}
+
+	want := []string{
+		"QID14",
+		"QID22",
+		"QID1",
+		"QID18",
+		"QID3",
+		"QID4",
+		"QID19",
+		"QID11",
+		"QID5",
+		"QID13",
+		"QID6",
+		"QID16",
+		"QID7",
+		"QID8",
+		"QID9",
+		"QID10",
+		"QID17",
+		"QID15",
+		"QID20",
+		"QID21",
+		"QID23",
+		"QID26",
+		"QID27",
+		"s",
+	}
+
+	if len(want) != len(s.QuestionOrder) {
+		t.Errorf("len(s.QuestionOrder) = %d; wanted %d", len(s.QuestionOrder), len(want))
+	}
+
+	for i := range s.QuestionOrder {
+		if want[i] != s.QuestionOrder[i] {
+			t.Errorf("s.QuestionOrder[%d] = %s; wanted %s", i, s.QuestionOrder[i], want[i])
+		}
 	}
 }

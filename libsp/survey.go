@@ -405,6 +405,12 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 						s.Questions[q.ID] = q
 						embeddedDataIDs = append(embeddedDataIDs, q.ID)
 					}
+				} else if f.Type == "BlockRandomizer" {
+					for _, rf := range f.Flow {
+						if rf.ID != "" {
+							s.blockOrder = append(s.blockOrder, rf.ID)
+						}
+					}
 				}
 			}
 		// case "QC":
@@ -414,6 +420,9 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 		// 		return fmt.Errorf("could not parse '%s' to int: %s", e.SecondaryAttribute, err)
 		// 	}
 		case "SQ":
+			// TODO support carry forward statements
+			// TODO support randomized block flows
+			// TODO investigate N/A responses for loop-and-merge questions
 			q, err := newQuestionFromPayload(e.Payload)
 			if err != nil {
 				return fmt.Errorf("could not create question from JSON: %s", err)
@@ -768,6 +777,7 @@ type qsfSurveyElementFlow struct {
 	ID           string
 	Type         string
 	FlowID       string
+	Flow         []*qsfSurveyElementFlow
 	EmbeddedData []*qsfEmbeddedData
 }
 

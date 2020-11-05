@@ -131,8 +131,32 @@ var qsfTestContent = `{
                 "Type": "Question",
                 "QuestionID": "QID23"
             }]
+        }, {
+            "Type": "Standard",
+            "SubType": "",
+            "Description": "Block 5",
+            "ID": "BL_0CUN47YQLzzwaOx",
+            "BlockElements": [
+                {
+                    "Type": "Question",
+                    "QuestionID": "QID26"
+                }
+            ]
+        },
+        {
+            "Type": "Standard",
+            "SubType": "",
+            "Description": "Block 6",
+            "ID": "BL_eg4Si2Q5rQhv5kN",
+            "BlockElements": [
+                {
+                    "Type": "Question",
+                    "QuestionID": "QID27"
+                }
+            ]
         }]
-    }, {
+    }, 
+    {
         "SurveyID": "SV_6mudEEycYo5zehT",
         "Element": "FL",
         "PrimaryAttribute": "Survey Flow",
@@ -172,9 +196,28 @@ var qsfTestContent = `{
                 "Type": "Standard",
                 "ID": "BL_2tU9bI8SxOk3Rsh",
                 "FlowID": "FL_6"
+            },
+            {
+                "Type": "BlockRandomizer",
+                "FlowID": "FL_10",
+                "SubSet": 1,
+                "Flow": [
+                    {
+                        "Type": "Standard",
+                        "ID": "BL_0CUN47YQLzzwaOx",
+                        "FlowID": "FL_8",
+                        "Autofill": []
+                    },
+                    {
+                        "Type": "Standard",
+                        "ID": "BL_eg4Si2Q5rQhv5kN",
+                        "FlowID": "FL_9",
+                        "Autofill": []
+                    }
+                ]
             }],
             "Properties": {
-                "Count": 7,
+                "Count": 10,
                 "RemovedFieldsets": []
             }
         }
@@ -283,7 +326,7 @@ var qsfTestContent = `{
         "SurveyID": "SV_6mudEEycYo5zehT",
         "Element": "QC",
         "PrimaryAttribute": "Survey Question Count",
-        "SecondaryAttribute": "22",
+        "SecondaryAttribute": "24",
         "TertiaryAttribute": null,
         "Payload": null
     }, {
@@ -1391,6 +1434,95 @@ var qsfTestContent = `{
             "Labels": [],
             "ClarifyingSymbolType": "None",
             "QuestionID": "QID23"
+        }
+    }, {
+        "SurveyID": "SV_6mudEEycYo5zehT",
+        "Element": "SQ",
+        "PrimaryAttribute": "QID26",
+        "SecondaryAttribute": "Block 1 question",
+        "TertiaryAttribute": null,
+        "Payload": {
+            "QuestionText": "Block 1 question",
+            "DataExportTag": "Q26",
+            "QuestionType": "MC",
+            "Selector": "SAVR",
+            "SubSelector": "TX",
+            "Configuration": {
+                "QuestionDescriptionOption": "UseText"
+            },
+            "QuestionDescription": "Block 1 question",
+            "Choices": {
+                "1": {
+                    "Display": "Click to write Choice 1"
+                },
+                "2": {
+                    "Display": "Click to write Choice 2"
+                },
+                "3": {
+                    "Display": "Click to write Choice 3"
+                }
+            },
+            "ChoiceOrder": [
+                "1",
+                "2",
+                "3"
+            ],
+            "Validation": {
+                "Settings": {
+                    "ForceResponse": "OFF",
+                    "ForceResponseType": "ON",
+                    "Type": "None"
+                }
+            },
+            "Language": [],
+            "NextChoiceId": 4,
+            "NextAnswerId": 1,
+            "QuestionID": "QID26"
+        }
+    },
+    {
+        "SurveyID": "SV_6mudEEycYo5zehT",
+        "Element": "SQ",
+        "PrimaryAttribute": "QID27",
+        "SecondaryAttribute": "Block 2 question",
+        "TertiaryAttribute": null,
+        "Payload": {
+            "QuestionText": "Block 2 question",
+            "DataExportTag": "Q27",
+            "QuestionType": "MC",
+            "Selector": "SAVR",
+            "SubSelector": "TX",
+            "Configuration": {
+                "QuestionDescriptionOption": "UseText"
+            },
+            "QuestionDescription": "Block 2 question",
+            "Choices": {
+                "1": {
+                    "Display": "Click to write Choice 1"
+                },
+                "2": {
+                    "Display": "Click to write Choice 2"
+                },
+                "3": {
+                    "Display": "Click to write Choice 3"
+                }
+            },
+            "ChoiceOrder": [
+                "1",
+                "2",
+                "3"
+            ],
+            "Validation": {
+                "Settings": {
+                    "ForceResponse": "OFF",
+                    "ForceResponseType": "ON",
+                    "Type": "None"
+                }
+            },
+            "Language": [],
+            "NextChoiceId": 4,
+            "NextAnswerId": 1,
+            "QuestionID": "QID27"
         }
     }, {
         "SurveyID": "SV_6mudEEycYo5zehT",
