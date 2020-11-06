@@ -200,7 +200,7 @@ func (q *Question) formatResponseForCol(userAnswer string) string {
 		} else {
 			retval = "TRUE"
 		}
-	} else if userAnswer == noResponseCode && q.qType != Timing {
+	} else if userAnswer == noResponseCode && q.qType != Timing && q.qType != ConstantSum {
 		retval = noResponseConst
 	}
 

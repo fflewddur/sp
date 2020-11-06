@@ -18,6 +18,9 @@ import (
 	"github.com/mitchellh/mapstructure"
 )
 
+// TODO add tests for loop+merge
+// TODO add tests for RO w/ text entry
+
 // Survey represents a survey, including its questions, potential responses, and meta-data
 type Survey struct {
 	Title         string
@@ -72,6 +75,7 @@ func (s *Survey) WriteCSV(bw *bufio.Writer) error {
 	return nil
 }
 
+// csvCols returns a slice of string holding the column headers
 func (s *Survey) csvCols() []string {
 	cols := []string{"id", "finished", "progress", "duration", "recorded"}
 	for _, id := range s.QuestionOrder {
@@ -775,6 +779,11 @@ type qsfSurveyElementBlock struct {
 	Type          string
 	ID            string
 	BlockElements []*qsfPayload
+	Options       *qsfPayloadOptions
+}
+
+type qsfPayloadOptions struct {
+	Looping string
 }
 
 type block struct {
