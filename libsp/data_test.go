@@ -115,6 +115,9 @@ var qsfTestContent = `{
             }, {
                 "Type": "Question",
                 "QuestionID": "QID15"
+            }, {
+                "Type": "Question",
+                "QuestionID": "QID29"
             }]
         }, {
             "Type": "Standard",
@@ -1595,6 +1598,52 @@ var qsfTestContent = `{
     }, {
         "SurveyID": "SV_6mudEEycYo5zehT",
         "Element": "SQ",
+        "PrimaryAttribute": "QID29",
+        "SecondaryAttribute": "Rank order with radio buttons",
+        "TertiaryAttribute": null,
+        "Payload": {
+            "QuestionText": "Rank order with radio buttons",
+            "DefaultChoices": false,
+            "DataExportTag": "Q29",
+            "QuestionType": "RO",
+            "Selector": "RB",
+            "SubSelector": "TX",
+            "Configuration": {
+                "QuestionDescriptionOption": "UseText"
+            },
+            "QuestionDescription": "Rank order with radio buttons",
+            "Choices": {
+                "1": {
+                    "Display": "Choice 1"
+                },
+                "2": {
+                    "Display": "Choice 2"
+                },
+                "3": {
+                    "Display": "Choice 3 w\/ text entry",
+                    "TextEntry": "true"
+                }
+            },
+            "ChoiceOrder": [
+                "1",
+                "2",
+                "3"
+            ],
+            "Validation": {
+                "Settings": {
+                    "ForceResponse": "OFF",
+                    "Type": "None"
+                }
+            },
+            "GradingData": [],
+            "Language": [],
+            "NextChoiceId": 4,
+            "NextAnswerId": 1,
+            "QuestionID": "QID29"
+        }
+    }, {
+        "SurveyID": "SV_6mudEEycYo5zehT",
+        "Element": "SQ",
         "PrimaryAttribute": "QID16",
         "SecondaryAttribute": "Timing",
         "TertiaryAttribute": null,
@@ -1746,6 +1795,10 @@ text?</QID8_TEXT>
 		<QID17_5_TEXT>in group 3</QID17_5_TEXT>
 		<QID15_NPS_GROUP>Detractor</QID15_NPS_GROUP>
         <QID15>6</QID15>
+        <QID29_1>1</QID29_1>
+		<QID29_2>2</QID29_2>
+		<QID29_3>3</QID29_3>
+		<QID29_3_TEXT>testing</QID29_3_TEXT>
         <s>g</s>
 		<Q_DataPolicyViolations></Q_DataPolicyViolations>
 	</Response>

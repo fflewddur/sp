@@ -19,7 +19,6 @@ import (
 )
 
 // TODO add tests for loop+merge
-// TODO add tests for RO w/ text entry
 
 // Survey represents a survey, including its questions, potential responses, and meta-data
 type Survey struct {
@@ -144,8 +143,12 @@ data <- read_csv(input_path, col_types = cols(
 func getColType(colID string, q *Question) (rColType string, isRankCol bool) {
 	isRankCol = false
 	if q.qType == RankOrder {
-		isRankCol = true
-		rColType = "col_factor()"
+		if strings.HasSuffix(colID, "_text") {
+			rColType = ""
+		} else {
+			isRankCol = true
+			rColType = "col_factor()"
+		}
 	} else if strings.HasSuffix(colID, "_text") {
 		rColType = ""
 	} else if strings.HasSuffix(colID, "_RANK") {
