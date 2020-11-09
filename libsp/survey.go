@@ -19,6 +19,9 @@ import (
 )
 
 // TODO add tests for loop+merge
+// TODO don't include noResponseCode for constant sum CSV output
+// TODO loop and merge doesn't appear to be working
+// TODO rank order w/ radio buttons doesn't appear to be working
 
 // Survey represents a survey, including its questions, potential responses, and meta-data
 type Survey struct {

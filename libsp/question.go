@@ -103,7 +103,7 @@ func (q *Question) csvPrefix() string {
 func (q *Question) RColType() string {
 	switch q.qType {
 	case ConstantSum:
-		return "col_integer()"
+		return "col_double()"
 	case Embedded, MatrixSingleResponse, MultipleChoiceSingleResponse, NPS, PickGroupRank, RankOrder:
 		return "col_factor()"
 	}
@@ -133,7 +133,8 @@ func (q *Question) ResponseCols(r *Response) []string {
 				col = ""
 			} else {
 				// If the user answered this question, any unchecked options should be FALSE
-				col = q.formatResponseForCol(r.answers[q.ID+s])
+				isTxt := strings.HasSuffix(s, "_TEXT")
+				col = q.formatResponseForCol(r.answers[q.ID+s], isTxt)
 			}
 			cols = append(cols, col)
 		}
@@ -183,7 +184,7 @@ func (q *Question) groupsAndRanks(r *Response) []string {
 	return cols
 }
 
-func (q *Question) formatResponseForCol(userAnswer string) string {
+func (q *Question) formatResponseForCol(userAnswer string, isTxt bool) string {
 	retval := userAnswer
 	freeText := userAnswer != noResponseCode // true unless the user skipped this question
 	for _, c := range q.choices {
@@ -200,6 +201,8 @@ func (q *Question) formatResponseForCol(userAnswer string) string {
 		} else {
 			retval = "TRUE"
 		}
+	} else if isTxt && userAnswer == noResponseCode {
+		retval = ""
 	} else if userAnswer == noResponseCode && q.qType != Timing && q.qType != ConstantSum {
 		retval = noResponseConst
 	}

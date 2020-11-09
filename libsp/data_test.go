@@ -1795,6 +1795,11 @@ text?</QID8_TEXT>
 		<QID17_5_TEXT>in group 3</QID17_5_TEXT>
 		<QID15_NPS_GROUP>Detractor</QID15_NPS_GROUP>
         <QID15>6</QID15>
+        <QID28_x1>Click to write Scale Point 1</QID28_x1>
+		<QID28_x2>Click to write Scale Point 2</QID28_x2>
+		<QID28_x3>Click to write Scale Point 3</QID28_x3>
+		<QID28_x4>Click to write Scale Point 1</QID28_x4>
+		<QID28_x4_TEXT>-99</QID28_x4_TEXT>
         <QID29_1>1</QID29_1>
 		<QID29_2>2</QID29_2>
 		<QID29_3>3</QID29_3>

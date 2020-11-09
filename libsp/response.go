@@ -23,19 +23,26 @@ func NewResponse() *Response {
 	return &r
 }
 
-var reQID = regexp.MustCompile(`(QID\d+.*)(-\d+)?`)
+var reQIDLoop = regexp.MustCompile(`^_\d+_(QID\d+.*)(-\d+)?`)
+var reQIDDyn = regexp.MustCompile(`^(QID\d+_)x(\d+)(_TEXT)?$`)
 var reTimer = regexp.MustCompile(`_(CLICK|SUBMIT|COUNT)$`)
 
 // AddAnswer adds a question answer to the response
 func (r *Response) AddAnswer(id string, answer string) {
 	// Remove the extraneous characters in loop+merge response IDs
 	// TODO this probably doesn't work for all possible uses of loop+merge
-	matches := reQID.FindStringSubmatch(id)
+	matches := reQIDLoop.FindStringSubmatch(id)
 	if matches != nil {
 		timerMatches := reTimer.MatchString(matches[1])
 		if !timerMatches {
 			// Don't merge all of the timer responses
 			id = matches[1]
+		}
+	} else {
+		// Remove the 'x' character from dynamic response choices
+		matches = reQIDDyn.FindStringSubmatch(id)
+		if matches != nil {
+			id = matches[1] + matches[2] + matches[3]
 		}
 	}
 	if r.answers[id] != "" && answer != "" {

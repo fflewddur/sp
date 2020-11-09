@@ -1,5 +1,7 @@
 package libsp
 
+// spell-checker: disable
+
 import (
 	"bufio"
 	"bytes"
@@ -58,7 +60,7 @@ func TestWriteCSV(t *testing.T) {
 			"Click to write Choice 1", "", "Click to write Choice 2",
 			"FALSE", "FALSE", "TRUE", "TRUE", "other response 1", "TRUE", "other response 2", "FALSE",
 			"", "TRUE", "", "",
-			"Click to write Choice 2 (ordered 1st)", "No response",
+			"Click to write Choice 2 (ordered 1st)", "",
 			"scale1", "scale2", "scale3", "scale3", "other matrix row",
 			"TRUE", "TRUE", "FALSE", "FALSE", "TRUE", "TRUE", "FALSE", "TRUE", "FALSE", "FALSE", "TRUE", "FALSE", "FALSE", "FALSE", "TRUE", "other matrix multiple row",
 			"Click to write Scale point 1", "No response", "Click to write Scale point 2",
@@ -70,7 +72,7 @@ func TestWriteCSV(t *testing.T) {
 			"6", "Detractor",
 			"1", "2", "3", "testing",
 			"", "",
-			"", "", "", "", "",
+			"Click to write Scale Point 1", "Click to write Scale Point 2", "Click to write Scale Point 3", "Click to write Scale Point 1", "",
 			"", "", "", "", "",
 			"", "",
 			"g",
@@ -257,10 +259,10 @@ func TestWriteR(t *testing.T) {
 		"Q28_statement2 = col_factor(levels = scale_a51a95e35530472ee800821ae86ba1bf3ff20b00),",
 		"Q28_statement3 = col_factor(levels = scale_a51a95e35530472ee800821ae86ba1bf3ff20b00),",
 		"Q28_other = col_factor(levels = scale_a51a95e35530472ee800821ae86ba1bf3ff20b00),",
-		"Q23_1 = col_integer(),",
-		"Q23_2 = col_integer(),",
-		"Q23_3 = col_integer(),",
-		"Q23_4 = col_integer(),",
+		"Q23_1 = col_double(),",
+		"Q23_2 = col_double(),",
+		"Q23_3 = col_double(),",
+		"Q23_4 = col_double(),",
 		"Q26 = col_factor(levels = scale_0d33bdb7dd7ad7e7644895dab595541b141f5b39),",
 		"Q27 = col_factor(levels = scale_0d33bdb7dd7ad7e7644895dab595541b141f5b39),",
 		"s = col_factor()",
@@ -361,3 +363,5 @@ func TestReadXML(t *testing.T) {
 		}
 	}
 }
+
+// spell-checker: enable
