@@ -12,7 +12,7 @@ sp takes Qualtrics data and creates both a CSV and R import script.
 
 1. Export your Qualtrics survey as a QSF file (in Qualtrics: Survey &rarr; Tools &rarr; Import/Export &rarr; Export survey).
 
-1. Export your Qualtrics responses as an XML file (in Qualtrics: Data & Analysis &rarr; Export & Import &rarr; Export data, select XML).
+1. Export your Qualtrics responses as an XML file (in Qualtrics: Data & Analysis &rarr; Export & Import &rarr; Export data, select XML; ensure 'Use choice text' is selected; optionally, check the two options to recode seen but unanswered questions/fields).
 
 1. Rename both the QSF and XML files to have the same base name (e.g., _survey.qsf_ and _survey.xml_). Both files need to be in the same folder.
 
