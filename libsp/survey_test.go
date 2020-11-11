@@ -50,9 +50,9 @@ func TestWriteCSV(t *testing.T) {
 			"Q10Label_1", "Q10Label_2", "Q10Label_3",
 			"pgr_item.1_GROUP", "pgr_item.1_RANK", "pgr_item.2_GROUP", "pgr_item.2_RANK", "pgr_item.3_GROUP", "pgr_item.3_RANK", "pgr_item.4_GROUP", "pgr_item.4_RANK", "pgr_other_GROUP", "pgr_other_RANK", "pgr_other_text", // 68
 			"Q15Label", "Q15Label_group",
-			"Q29_1", "Q29_2", "Q29_3", "Q29_3_text",
+			"Q29_choice1", "Q29_choice2", "Q29_choice3_w_txt", "Q29_choice3_w_txt_text", "Q29_choice5",
 			"Q20", "Q21",
-			"Q28_statement1", "Q28_statement2", "Q28_statement3", "Q28_other", "Q28_other_text", // 81
+			"Q28_statement1", "Q28_statement2", "Q28_statement3", "Q28_other", "Q28_other_text", // 82
 			"Q23_1", "Q23_2", "Q23_3", "Q23_4", "Q23_4_text",
 			"Q26", "Q27",
 			"loop.base_1", "loop.base_2", "loop.base_3",
@@ -72,9 +72,9 @@ func TestWriteCSV(t *testing.T) {
 			"3", "2", "1",
 			"Group 1", "3", "Group 2", "1", "Group 1", "2", "Group 1", "1", "Group 3", "1", "in group 3", // 68
 			"6", "Detractor",
-			"1", "2", "3", "testing",
+			"1", "2", "3", "testing", "4",
 			"", "",
-			"Click to write Scale Point 1", "Click to write Scale Point 2", "Click to write Scale Point 3", "Click to write Scale Point 1", "",
+			"Click to write Scale Point 1", "Click to write Scale Point 2", "Click to write Scale Point 3", "Click to write Scale Point 1", "", // 82
 			"", "", "", "", "",
 			"", "",
 			"", "", "",
@@ -95,9 +95,9 @@ func TestWriteCSV(t *testing.T) {
 			"1", "2", "3",
 			"Group 1", "2", "Group 1", "1", "Group 2", "2", "Group 2", "1", "Not grouped", "Not grouped", "Not grouped", // 68
 			"10", "Promoter",
-			"", "", "", "",
-			"", "",
 			"", "", "", "", "",
+			"", "",
+			"", "", "", "", "", // 82
 			"", "", "", "", "",
 			"", "",
 			"", "", "",
@@ -112,9 +112,9 @@ func TestWriteCSV(t *testing.T) {
 			"", "", "", "",
 			"", "", "", "", "", "", "", "", "", "", "",
 			"", "", "", "",
-			"", "", "", "",
-			"", "",
 			"", "", "", "", "",
+			"", "",
+			"", "", "", "", "", // 82
 			"", "", "", "", "",
 			"", "",
 			"", "", "",
@@ -135,12 +135,12 @@ func TestWriteCSV(t *testing.T) {
 			"3", "2", "1",
 			"Group 1", "1", "Group 2", "1", "Group 3", "1", "Not grouped", "Not grouped", "Not grouped", "Not grouped", "", // 68
 			"5", "Detractor",
-			"1", "2", "3", "",
+			"1", "2", "3", "", "",
 			"Dyna choice 2", "Dyna choice 2",
-			"Click to write Scale Point 1", "Click to write Scale Point 2", "Click to write Scale Point 3", "Click to write Scale Point 1", "other text", // 81
+			"Click to write Scale Point 1", "Click to write Scale Point 2", "Click to write Scale Point 3", "Click to write Scale Point 1", "other text", // 82
 			"10", "20", "30", "0", "",
 			"", "Click to write Choice 2",
-			"TRUE", "TRUE", "TRUE", // 91
+			"TRUE", "TRUE", "TRUE", // 92
 			"Click to write Choice 1", "TRUE", "TRUE", "FALSE", "choice 3 text",
 			"",
 		},
@@ -213,6 +213,7 @@ func TestWriteR(t *testing.T) {
 		`scale_39cfaa6cbb1b24d4b91d28093c45805a7fcb8e05 <- c("1", "2", "3", "No response")`,
 		`scale_8a3feac0fed5c3348d223a4c4a52d9b74e347e0a <- c("choice2", "choice3", "choice1", "No response")`,
 		`scale_9bc0385ea2c175f3341306637ae392b35bd86573 <- c("scale1", "scale2", "scale3", "scale.na", "No response")`,
+		`scale_a0e99a824c3c578ebc8d6823906c6e48d95cd2ae <- c("1", "2", "3", "4", "No response")`,
 		`scale_a51a95e35530472ee800821ae86ba1bf3ff20b00 <- c("Click to write Scale Point 1", "Click to write Scale Point 2", "Click to write Scale Point 3", "No response")`,
 		`scale_ae8733afbe88aee2192428ceea072703a0de0e4e <- c("Dyna choice 1", "Dyna choice 2", "Dyna choice 3", "No response")`,
 		`scale_dfbadf501868c43fd508372a48f65f9327d3c676 <- c("Group 1", "Group 2", "Group 3", "Not grouped", "No response")`,
@@ -281,9 +282,10 @@ func TestWriteR(t *testing.T) {
 		"pgr_other_RANK = col_factor(levels = scale_37e352849a3d8bb86e939a98337b2c6229d54634, ordered = TRUE),",
 		"Q15Label = col_factor(),",
 		"Q15Label_group = col_factor(),",
-		"Q29_1 = col_factor(levels = scale_39cfaa6cbb1b24d4b91d28093c45805a7fcb8e05, ordered = TRUE),",
-		"Q29_2 = col_factor(levels = scale_39cfaa6cbb1b24d4b91d28093c45805a7fcb8e05, ordered = TRUE),",
-		"Q29_3 = col_factor(levels = scale_39cfaa6cbb1b24d4b91d28093c45805a7fcb8e05, ordered = TRUE),",
+		"Q29_choice1 = col_factor(levels = scale_a0e99a824c3c578ebc8d6823906c6e48d95cd2ae, ordered = TRUE),",
+		"Q29_choice2 = col_factor(levels = scale_a0e99a824c3c578ebc8d6823906c6e48d95cd2ae, ordered = TRUE),",
+		"Q29_choice3_w_txt = col_factor(levels = scale_a0e99a824c3c578ebc8d6823906c6e48d95cd2ae, ordered = TRUE),",
+		"Q29_choice5 = col_factor(levels = scale_a0e99a824c3c578ebc8d6823906c6e48d95cd2ae, ordered = TRUE),",
 		"Q20 = col_factor(levels = scale_ae8733afbe88aee2192428ceea072703a0de0e4e),",
 		"Q21 = col_factor(levels = scale_ae8733afbe88aee2192428ceea072703a0de0e4e),",
 		"Q28_statement1 = col_factor(levels = scale_a51a95e35530472ee800821ae86ba1bf3ff20b00),",
@@ -313,6 +315,7 @@ func TestWriteR(t *testing.T) {
 		"rm(scale_39cfaa6cbb1b24d4b91d28093c45805a7fcb8e05)",
 		"rm(scale_8a3feac0fed5c3348d223a4c4a52d9b74e347e0a)",
 		"rm(scale_9bc0385ea2c175f3341306637ae392b35bd86573)",
+		"rm(scale_a0e99a824c3c578ebc8d6823906c6e48d95cd2ae)",
 		"rm(scale_a51a95e35530472ee800821ae86ba1bf3ff20b00)",
 		"rm(scale_ae8733afbe88aee2192428ceea072703a0de0e4e)",
 		"rm(scale_dfbadf501868c43fd508372a48f65f9327d3c676)",

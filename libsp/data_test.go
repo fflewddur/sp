@@ -1687,12 +1687,16 @@ var qsfTestContent = `{
                 "3": {
                     "Display": "Choice 3 w\/ text entry",
                     "TextEntry": "true"
+                },
+                "5": {
+                    "Display": "Choice 5"
                 }
             },
             "ChoiceOrder": [
                 "1",
                 "2",
-                "3"
+                "3",
+                "5"
             ],
             "Validation": {
                 "Settings": {
@@ -1702,9 +1706,19 @@ var qsfTestContent = `{
             },
             "GradingData": [],
             "Language": [],
-            "NextChoiceId": 4,
+            "NextChoiceId": 6,
             "NextAnswerId": 1,
-            "QuestionID": "QID29"
+            "QuestionID": "QID29",
+            "DataVisibility": {
+                "Private": false,
+                "Hidden": false
+            },
+            "VariableNaming": {
+                "1": "choice1",
+                "2": "choice2",
+                "3": "choice3_w_txt",
+                "5": "choice5"
+            }
         }
     }, {
         "SurveyID": "SV_6mudEEycYo5zehT",
@@ -2087,7 +2101,8 @@ text?</QID8_TEXT>
         <QID29_1>1</QID29_1>
 		<QID29_2>2</QID29_2>
 		<QID29_3>3</QID29_3>
-		<QID29_3_TEXT>testing</QID29_3_TEXT>
+        <QID29_3_TEXT>testing</QID29_3_TEXT>
+        <QID29_4>4</QID29_4>
         <s>g</s>
 		<Q_DataPolicyViolations></Q_DataPolicyViolations>
 	</Response>

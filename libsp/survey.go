@@ -643,7 +643,7 @@ type qsfPayload struct {
 	QuestionID                 string
 	ChoiceMap                  map[int]qsfChoice
 	Choices                    interface{}
-	ChoiceOrder                []json.Number
+	ChoiceOrder                []interface{}
 	DynamicChoices             *qsfDynChoices
 	Answers                    map[int]qsfChoice
 	AnswerOrder                []json.Number
@@ -663,12 +663,14 @@ type qsfDynChoices struct {
 
 func (p *qsfPayload) OrderedChoices(choicesAreQuestions bool) ([]Choice, error) {
 	ordered := []Choice{}
-	for _, s := range p.ChoiceOrder {
-		i64, err := s.Int64()
+
+	for _, iface := range p.ChoiceOrder {
+		// ChoiceOrder can be ints or strings, mixed in the same array. Thanks, Qualtrics.
+		s := fmt.Sprintf("%v", iface)
+		i, err := strconv.Atoi(s)
 		if err != nil {
 			log.Fatalf("could not convert '%s' to int: %s", s, err)
 		}
-		i := int(i64)
 
 		// If DynamicChoices is not nil, then Choices should be an empty array.
 		// Otherwise, Choices should be a map[int]qsfChoice
@@ -741,7 +743,7 @@ func (p *qsfPayload) OrderedChoices(choicesAreQuestions bool) ([]Choice, error) 
 			varName = p.VariableNaming[i]
 		}
 
-		c := Choice{ID: s.String(), Label: p.ChoiceMap[i].Display, VarName: varName, HasText: hasText}
+		c := Choice{ID: s, Label: p.ChoiceMap[i].Display, VarName: varName, HasText: hasText}
 		ordered = append(ordered, c)
 	}
 

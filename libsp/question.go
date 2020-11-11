@@ -415,7 +415,7 @@ func (qt QType) suffixes(q *Question, useExportTags bool) []string {
 	// MaxDiff: [question id]_[choice id]
 	// PickGroupRank groupings: [question id]_[group index]_[choice id] (handled by groupsAndRanks())
 	// PickGroupRank rankings: [question id]_G[group index]_choice id]_RANK (handled by groupsAndRanks())
-	// RankOrder: [question id]_[choice id]
+	// RankOrder: [question id]_[choice id] (apparently not always; can also be [question id]_[choice order index (starts at 1)])
 	// TextEntry: [question id]_TEXT
 	// NPS: [question id] and [question id]_NPS_GROUP
 
@@ -435,9 +435,23 @@ func (qt QType) suffixes(q *Question, useExportTags bool) []string {
 	switch qt {
 	case Embedded:
 		suffixes = append(suffixes, "")
-	case Form, MaxDiff, MultipleChoiceMultiResponse, RankOrder:
+	case Form, MaxDiff, MultipleChoiceMultiResponse:
 		for _, c := range q.choices {
 			s := suffix(c, useExportTags)
+			suffixes = append(suffixes, "_"+s)
+			if c.HasText {
+				suffixes = append(suffixes, "_"+s+textSuffix)
+			}
+		}
+	case RankOrder:
+		// TODO not sure if this works for text entry options
+		for i, c := range q.choices {
+			s := ""
+			if useExportTags {
+				s = suffix(c, useExportTags)
+			} else {
+				s = fmt.Sprintf("%d", i+1)
+			}
 			suffixes = append(suffixes, "_"+s)
 			if c.HasText {
 				suffixes = append(suffixes, "_"+s+textSuffix)
