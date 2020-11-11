@@ -53,6 +53,8 @@ func (q *Question) OrderedChoices() bool {
 	return q.orderedChoices
 }
 
+var reSpaces = regexp.MustCompile(`[\s]+`)
+
 // CSVCols returns a slice of string holding the ordered CSV column names for this question
 func (q *Question) CSVCols() []string {
 	cols := make([]string, 0)
@@ -60,8 +62,7 @@ func (q *Question) CSVCols() []string {
 	if q.qType == PickGroupRank {
 		for _, c := range q.choices {
 			label := strings.ToLower(c.Label)
-			r := regexp.MustCompile(`[\s]+`)
-			label = r.ReplaceAllString(label, ".")
+			label = reSpaces.ReplaceAllString(label, ".")
 			label = strings.ReplaceAll(label, ":", "")
 			suffixes = append(suffixes, fmt.Sprintf("_%s_GROUP", label))
 			suffixes = append(suffixes, fmt.Sprintf("_%s_RANK", label))
@@ -121,7 +122,7 @@ func (q *Question) ResponseCols(r *Response) []string {
 		// First, check to see if the user answered any part of this question
 		for _, s := range suffixes {
 			a := r.answers[q.ID+s]
-			if a != "" && a != noResponseCode {
+			if a != "" && !isNoResponseCode(a) {
 				allEmpty = false
 			}
 		}
@@ -149,11 +150,13 @@ func (q *Question) ResponseCols(r *Response) []string {
 func (q *Question) groupsAndRanks(r *Response) []string {
 	cols := make([]string, 0)
 	allEmpty := true
+
 	for _, c := range q.choices {
 		var group, rank string
 		for gi, g := range q.groups {
 			gk := fmt.Sprintf("%s_%d_GROUP_%s", q.ID, gi, c.ID)
-			if v, ok := r.answers[gk]; ok && len(v) > 0 && v != noResponseCode {
+
+			if v, ok := r.answers[gk]; ok && len(v) > 0 && !isNoResponseCode(v) {
 				allEmpty = false
 				group = g
 				rk := fmt.Sprintf("%s_G%d_%s_RANK", q.ID, gi, c.ID)
@@ -169,6 +172,7 @@ func (q *Question) groupsAndRanks(r *Response) []string {
 			cols = append(cols, r.answers[q.ID+"_"+c.ID+"_TEXT"])
 		}
 	}
+
 	if !allEmpty {
 		// This response includes non-NA values, so change all "" to "Not grouped"
 		// (this lets us differentiate "not selected" from "NA" during analysis)
@@ -181,30 +185,40 @@ func (q *Question) groupsAndRanks(r *Response) []string {
 		}
 		cols = colsWithNA
 	}
+
+	// Now check for any NoResponseCode values (which might exist in responses with text entry)
+	colsWithNR := []string{}
+	for _, v := range cols {
+		if isNoResponseCode(v) {
+			v = ""
+		}
+		colsWithNR = append(colsWithNR, v)
+	}
+	cols = colsWithNR
+
 	return cols
 }
 
 func (q *Question) formatResponseForCol(userAnswer string, isTxt bool) string {
 	retval := userAnswer
-	freeText := userAnswer != noResponseCode // true unless the user skipped this question
-	for _, c := range q.choices {
-		if c.Label == userAnswer || c.VarName == userAnswer {
-			// set to false if the user's answer matches one of the question's choices
-			freeText = false
-			break
-		}
-	}
 
-	if q.qType.exportAsBools() && !freeText {
-		if userAnswer == noResponseCode || userAnswer == "" {
+	if q.qType.exportAsBools() && !isTxt {
+		if userAnswer == "" || isNoResponseCode(userAnswer) {
 			retval = "FALSE"
 		} else {
 			retval = "TRUE"
 		}
-	} else if isTxt && userAnswer == noResponseCode {
-		retval = ""
-	} else if userAnswer == noResponseCode && q.qType != Timing && q.qType != ConstantSum {
-		retval = noResponseConst
+	} else if isNoResponseCode(userAnswer) {
+		if isTxt {
+			retval = ""
+		} else if q.qType == ConstantSum {
+			// 0 is a valid response for these questions, so don't turn it into an NA
+			if userAnswer != "0" {
+				retval = ""
+			}
+		} else if q.qType != Timing {
+			retval = noResponseConst
+		}
 	}
 
 	return retval
@@ -251,18 +265,20 @@ func newQuestionFromPayload(p *qsfPayload) (*Question, error) {
 	return q, nil
 }
 
+var reSource = regexp.MustCompile(`(QID[0-9]+)`)
+
 func getSourceFromLocator(l string) string {
-	re := regexp.MustCompile(`(QID[0-9]+)`)
-	matches := re.FindStringSubmatch(l)
+	matches := reSource.FindStringSubmatch(l)
 	if matches != nil {
 		return matches[1]
 	}
 	return ""
 }
 
+var reType = regexp.MustCompile(`/QID[0-9]+\/.+\/(.+)`)
+
 func getTypeFromLocator(l string) string {
-	re := regexp.MustCompile(`/QID[0-9]+\/.+\/(.+)`)
-	matches := re.FindStringSubmatch(l)
+	matches := reType.FindStringSubmatch(l)
 	if matches != nil {
 		return matches[1]
 	}

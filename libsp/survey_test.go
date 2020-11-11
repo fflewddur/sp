@@ -39,69 +39,75 @@ func TestWriteCSV(t *testing.T) {
 		{"id", "finished", "progress", "duration", "recorded",
 			"Q1Label", "Q18Label", "Q3Label",
 			"Q4Label_1", "Q4Label_2", "Q4Label_3", "Q4Label_5", "Q4Label_5_text", "Q4Label_6", "Q4Label_6_text", "Q4Label_4",
-			"Q19_choice1", "Q19_choice3", "Q19_choice2", "Q19_none",
+			"Q19_choice1", "Q19_choice3", "Q19_choice2", "Q19_none", // 19
 			"Q11Label", "Q11Label_3_text",
 			"Q5Label_statement1", "Q5Label_statement2", "Q5Label_statement3", "Q5Label_other", "Q5Label_other_text",
-			"Q13Label_1_1", "Q13Label_1_2", "Q13Label_1_3", "Q13Label_2_1", "Q13Label_2_2", "Q13Label_2_3", "Q13Label_3_1", "Q13Label_3_2", "Q13Label_3_3", "Q13Label_5_1", "Q13Label_5_2", "Q13Label_5_3", "Q13Label_4_1", "Q13Label_4_2", "Q13Label_4_3", "Q13Label_4_text",
+			"Q13Label_1_1", "Q13Label_1_2", "Q13Label_1_3", "Q13Label_2_1", "Q13Label_2_2", "Q13Label_2_3", "Q13Label_3_1", "Q13Label_3_2", "Q13Label_3_3", "Q13Label_5_1", "Q13Label_5_2", "Q13Label_5_3", "Q13Label_4_1", "Q13Label_4_2", "Q13Label_4_3", "Q13Label_4_text", // 42
 			"Q6Label_1", "Q6Label_2", "Q6Label_3",
 			"Q16_first_click", "Q16_last_click", "Q16_page_submit", "Q16_click_count",
 			"Q7Label_text", "Q8Label_text",
 			"Q9Label_1", "Q9Label_2", "Q9Label_3",
 			"Q10Label_1", "Q10Label_2", "Q10Label_3",
-			"pgr_item.1_GROUP", "pgr_item.1_RANK", "pgr_item.2_GROUP", "pgr_item.2_RANK", "pgr_item.3_GROUP", "pgr_item.3_RANK", "pgr_item.4_GROUP", "pgr_item.4_RANK", "pgr_other_GROUP", "pgr_other_RANK", "pgr_other_text",
+			"pgr_item.1_GROUP", "pgr_item.1_RANK", "pgr_item.2_GROUP", "pgr_item.2_RANK", "pgr_item.3_GROUP", "pgr_item.3_RANK", "pgr_item.4_GROUP", "pgr_item.4_RANK", "pgr_other_GROUP", "pgr_other_RANK", "pgr_other_text", // 68
 			"Q15Label", "Q15Label_group",
 			"Q29_1", "Q29_2", "Q29_3", "Q29_3_text",
 			"Q20", "Q21",
-			"Q28_statement1", "Q28_statement2", "Q28_statement3", "Q28_other", "Q28_other_text",
+			"Q28_statement1", "Q28_statement2", "Q28_statement3", "Q28_other", "Q28_other_text", // 81
 			"Q23_1", "Q23_2", "Q23_3", "Q23_4", "Q23_4_text",
 			"Q26", "Q27",
+			"loop.base_1", "loop.base_2", "loop.base_3",
+			"Q31", "Q32_1", "Q32_2", "Q32_3", "Q33_text",
 			"s"},
 		{"R_1dtWhiBDD96nfyk", "true", "100", "122", "2019-08-20 12:44:31",
 			"Click to write Choice 1", "", "Click to write Choice 2",
 			"FALSE", "FALSE", "TRUE", "TRUE", "other response 1", "TRUE", "other response 2", "FALSE",
-			"", "TRUE", "", "",
+			"FALSE", "TRUE", "FALSE", "FALSE", // 19
 			"Click to write Choice 2 (ordered 1st)", "",
 			"scale1", "scale2", "scale3", "scale3", "other matrix row",
-			"TRUE", "TRUE", "FALSE", "FALSE", "TRUE", "TRUE", "FALSE", "TRUE", "FALSE", "FALSE", "TRUE", "FALSE", "FALSE", "FALSE", "TRUE", "other matrix multiple row",
+			"TRUE", "TRUE", "FALSE", "FALSE", "TRUE", "TRUE", "FALSE", "TRUE", "FALSE", "FALSE", "TRUE", "FALSE", "FALSE", "FALSE", "TRUE", "other matrix multiple row", // 42
 			"Click to write Scale point 1", "No response", "Click to write Scale point 2",
 			"1.313", "32.89", "33.84", "15",
 			"one line of text", "multiple\nlines\nof\ntext?",
 			"field 1", "field 2", "field 3",
 			"3", "2", "1",
-			"Group 1", "3", "Group 2", "1", "Group 1", "2", "Group 1", "1", "Group 3", "1", "in group 3",
+			"Group 1", "3", "Group 2", "1", "Group 1", "2", "Group 1", "1", "Group 3", "1", "in group 3", // 68
 			"6", "Detractor",
 			"1", "2", "3", "testing",
 			"", "",
 			"Click to write Scale Point 1", "Click to write Scale Point 2", "Click to write Scale Point 3", "Click to write Scale Point 1", "",
 			"", "", "", "", "",
 			"", "",
+			"", "", "",
+			"", "", "", "", "",
 			"g",
 		},
 		{"R_z72KJQMnr3lxZGp", "true", "100", "104", "2019-08-20 12:46:35",
 			"Click to write Choice 3", "", "Click to write Choice 2",
-			"FALSE", "FALSE", "FALSE", "FALSE", "FALSE", "FALSE", "FALSE", "TRUE",
-			"", "", "", "TRUE",
+			"FALSE", "FALSE", "FALSE", "FALSE", "", "FALSE", "", "TRUE",
+			"FALSE", "FALSE", "FALSE", "TRUE", // 19
 			"Click to write Choice 3", "other text",
 			"scale3", "scale2", "", "", "",
-			"TRUE", "FALSE", "FALSE", "FALSE", "FALSE", "FALSE", "TRUE", "TRUE", "TRUE", "FALSE", "FALSE", "FALSE", "FALSE", "FALSE", "FALSE", "FALSE",
+			"TRUE", "FALSE", "FALSE", "FALSE", "FALSE", "FALSE", "TRUE", "TRUE", "TRUE", "FALSE", "FALSE", "FALSE", "FALSE", "FALSE", "FALSE", "", // 42
 			"", "Click to write Scale point 2", "Click to write Scale point 1",
 			"3.172", "25.605", "26.387", "9",
 			"foo", "bar",
 			"name", "email", "job role",
 			"1", "2", "3",
-			"Group 1", "2", "Group 1", "1", "Group 2", "2", "Group 2", "1", "Not grouped", "Not grouped", "Not grouped",
+			"Group 1", "2", "Group 1", "1", "Group 2", "2", "Group 2", "1", "Not grouped", "Not grouped", "Not grouped", // 68
 			"10", "Promoter",
 			"", "", "", "",
 			"", "",
 			"", "", "", "", "",
 			"", "", "", "", "",
 			"", "",
+			"", "", "",
+			"", "", "", "", "",
 			"e",
 		},
 		{"R_3MPTb9vwnCBmijR", "false", "33", "22", "2019-08-20 12:52:35",
 			"Click to write Choice 2", "", "Click to write Choice 2",
-			"FALSE", "TRUE", "FALSE", "FALSE", "FALSE", "FALSE", "FALSE", "FALSE",
-			"TRUE", "", "TRUE", "",
+			"FALSE", "TRUE", "FALSE", "FALSE", "", "FALSE", "", "FALSE",
+			"TRUE", "FALSE", "TRUE", "FALSE", // 19
 			"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
 			"", "", "", "",
 			"", "", "", "", "", "", "", "", "", "", "",
@@ -111,6 +117,31 @@ func TestWriteCSV(t *testing.T) {
 			"", "", "", "", "",
 			"", "", "", "", "",
 			"", "",
+			"", "", "",
+			"", "", "", "", "",
+			"",
+		},
+		{"R_2EzY1K5pqRpzi0n", "true", "100", "140", "2020-11-09 13:12:11",
+			"Click to write Choice 1", "choice3", "Click to write Choice 3",
+			"TRUE", "FALSE", "TRUE", "FALSE", "", "TRUE", "other 2 text", "FALSE",
+			"TRUE", "FALSE", "TRUE", "FALSE", // 19
+			"Click to write Choice 3", "other text",
+			"scale1", "scale2", "scale3", "No response", "",
+			"TRUE", "TRUE", "FALSE", "TRUE", "FALSE", "TRUE", "FALSE", "TRUE", "FALSE", "FALSE", "FALSE", "FALSE", "FALSE", "FALSE", "FALSE", "", // 42
+			"Click to write Scale point 1", "Click to write Scale point 2", "No response",
+			"1.717", "15.783", "16.628", "10",
+			"line of text", "", // 51
+			"form 1", "form 2", "form 3",
+			"3", "2", "1",
+			"Group 1", "1", "Group 2", "1", "Group 3", "1", "Not grouped", "Not grouped", "Not grouped", "Not grouped", "", // 68
+			"5", "Detractor",
+			"1", "2", "3", "",
+			"Dyna choice 2", "Dyna choice 2",
+			"Click to write Scale Point 1", "Click to write Scale Point 2", "Click to write Scale Point 3", "Click to write Scale Point 1", "other text", // 81
+			"10", "20", "30", "0", "",
+			"", "Click to write Choice 2",
+			"TRUE", "TRUE", "TRUE", // 91
+			"Click to write Choice 1", "TRUE", "TRUE", "FALSE", "choice 3 text",
 			"",
 		},
 	}
@@ -265,6 +296,13 @@ func TestWriteR(t *testing.T) {
 		"Q23_4 = col_double(),",
 		"Q26 = col_factor(levels = scale_0d33bdb7dd7ad7e7644895dab595541b141f5b39),",
 		"Q27 = col_factor(levels = scale_0d33bdb7dd7ad7e7644895dab595541b141f5b39),",
+		"loop.base_1 = col_logical(),",
+		"loop.base_2 = col_logical(),",
+		"loop.base_3 = col_logical(),",
+		"Q31 = col_factor(levels = scale_0d33bdb7dd7ad7e7644895dab595541b141f5b39),",
+		"Q32_1 = col_logical(),",
+		"Q32_2 = col_logical(),",
+		"Q32_3 = col_logical(),",
 		"s = col_factor()",
 		"))",
 		"",
@@ -332,8 +370,8 @@ func TestReadXML(t *testing.T) {
 		t.Errorf("err = %s", err)
 	}
 
-	if len(s.Responses) != 3 {
-		t.Errorf("len(Responses) = %d; wanted 3", len(s.Responses))
+	if len(s.Responses) != 4 {
+		t.Errorf("len(Responses) = %d; wanted 4", len(s.Responses))
 	}
 
 	var tests = []struct {

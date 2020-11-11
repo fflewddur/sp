@@ -160,6 +160,59 @@ var qsfTestContent = `{
                     "QuestionID": "QID27"
                 }
             ]
+        }, {
+            "Type": "Standard",
+            "SubType": "",
+            "Description": "Block 7",
+            "ID": "BL_3VQVileiyhGTYIl",
+            "BlockElements": [
+                {
+                    "Type": "Question",
+                    "QuestionID": "QID30"
+                }
+            ]
+        },
+        {
+            "Type": "Standard",
+            "SubType": "",
+            "Description": "Block 8",
+            "ID": "BL_0kZlCbnIIrUmCRn",
+            "BlockElements": [
+                {
+                    "Type": "Question",
+                    "QuestionID": "QID31"
+                },
+                {
+                    "Type": "Question",
+                    "QuestionID": "QID32"
+                },
+                {
+                    "Type": "Question",
+                    "QuestionID": "QID33"
+                }
+            ],
+            "Options": {
+                "BlockLocking": "false",
+                "RandomizeQuestions": "false",
+                "Looping": "Question",
+                "LoopingOptions": {
+                    "Locator": "q:\/\/QID30\/ChoiceGroup\/SelectedChoices",
+                    "QID": "QID30",
+                    "ChoiceGroupLocator": "q:\/\/QID30\/ChoiceGroup\/SelectedChoices",
+                    "Static": {
+                        "1": {
+                            "2": ""
+                        },
+                        "2": {
+                            "2": ""
+                        },
+                        "3": {
+                            "2": ""
+                        }
+                    },
+                    "Randomization": "All"
+                }
+            }
         }]
     }, 
     {
@@ -221,9 +274,21 @@ var qsfTestContent = `{
                         "Autofill": []
                     }
                 ]
+            },
+            {
+                "Type": "Standard",
+                "ID": "BL_3VQVileiyhGTYIl",
+                "FlowID": "FL_11",
+                "Autofill": []
+            },
+            {
+                "Type": "Standard",
+                "ID": "BL_0kZlCbnIIrUmCRn",
+                "FlowID": "FL_12",
+                "Autofill": []
             }],
             "Properties": {
-                "Count": 10,
+                "Count": 12,
                 "RemovedFieldsets": []
             }
         }
@@ -332,7 +397,7 @@ var qsfTestContent = `{
         "SurveyID": "SV_6mudEEycYo5zehT",
         "Element": "QC",
         "PrimaryAttribute": "Survey Question Count",
-        "SecondaryAttribute": "25",
+        "SecondaryAttribute": "33",
         "TertiaryAttribute": null,
         "Payload": null
     }, {
@@ -1644,6 +1709,225 @@ var qsfTestContent = `{
     }, {
         "SurveyID": "SV_6mudEEycYo5zehT",
         "Element": "SQ",
+        "PrimaryAttribute": "QID30",
+        "SecondaryAttribute": "loop.base",
+        "TertiaryAttribute": null,
+        "Payload": {
+            "QuestionText": "Question to base loop and merge off of.",
+            "DefaultChoices": false,
+            "DataExportTag": "Q30",
+            "QuestionType": "MC",
+            "Selector": "MAVR",
+            "SubSelector": "TX",
+            "Configuration": {
+                "QuestionDescriptionOption": "SpecifyLabel"
+            },
+            "QuestionDescription": "loop.base",
+            "Choices": {
+                "1": {
+                    "Display": "Loop choice 1"
+                },
+                "2": {
+                    "Display": "Loop choice 2"
+                },
+                "3": {
+                    "Display": "Loop choice 3"
+                }
+            },
+            "ChoiceOrder": [
+                "1",
+                "2",
+                "3"
+            ],
+            "Validation": {
+                "Settings": {
+                    "ForceResponse": "OFF",
+                    "ForceResponseType": "ON",
+                    "Type": "None"
+                }
+            },
+            "GradingData": [],
+            "Language": [],
+            "NextChoiceId": 4,
+            "NextAnswerId": 1,
+            "QuestionID": "QID30"
+        }
+    }, {
+        "SurveyID": "SV_6mudEEycYo5zehT",
+        "Element": "SQ",
+        "PrimaryAttribute": "QID33",
+        "SecondaryAttribute": "Loop choice 3 follow-up",
+        "TertiaryAttribute": null,
+        "Payload": {
+            "QuestionText": "Loop choice 3 follow-up",
+            "DefaultChoices": false,
+            "DataExportTag": "Q33",
+            "QuestionType": "TE",
+            "Selector": "SL",
+            "Configuration": {
+                "QuestionDescriptionOption": "UseText"
+            },
+            "QuestionDescription": "Loop choice 3 follow-up",
+            "Validation": {
+                "Settings": {
+                    "ForceResponse": "OFF",
+                    "ForceResponseType": "ON",
+                    "Type": "None"
+                }
+            },
+            "GradingData": [],
+            "Language": [],
+            "NextChoiceId": 4,
+            "NextAnswerId": 1,
+            "SearchSource": {
+                "AllowFreeResponse": "false"
+            },
+            "QuestionID": "QID33",
+            "DisplayLogic": {
+                "0": {
+                    "0": {
+                        "LogicType": "LoopAndMerge",
+                        "LeftOperand": "BL_0kZlCbnIIrUmCRn,3",
+                        "RightOperand": "lm:\/\/CurrentLoop",
+                        "Operator": "EqualTo",
+                        "Type": "Expression",
+                        "Description": "<span class=\"ConjDesc\">If<\/span> <span class=\"QuestionDesc\"><\/span> <span class=\"LeftOpDesc\">Loop 3: Loop choice 3, <\/span> <span class=\"OpDesc\"><\/span> <span class=\"RightOpDesc\">Current Loop<\/span>"
+                    },
+                    "Type": "If"
+                },
+                "Type": "BooleanExpression",
+                "inPage": false
+            }
+        }
+    }, {
+        "SurveyID": "SV_6mudEEycYo5zehT",
+        "Element": "SQ",
+        "PrimaryAttribute": "QID32",
+        "SecondaryAttribute": "Loop choice 2 follow-up",
+        "TertiaryAttribute": null,
+        "Payload": {
+            "QuestionText": "Loop choice 2 follow-up",
+            "DataExportTag": "Q32",
+            "QuestionType": "MC",
+            "Selector": "MAVR",
+            "SubSelector": "TX",
+            "Configuration": {
+                "QuestionDescriptionOption": "UseText"
+            },
+            "QuestionDescription": "Loop choice 2 follow-up",
+            "Choices": {
+                "1": {
+                    "Display": "Click to write Choice 1"
+                },
+                "2": {
+                    "Display": "Click to write Choice 2"
+                },
+                "3": {
+                    "Display": "Click to write Choice 3"
+                }
+            },
+            "ChoiceOrder": [
+                "1",
+                "2",
+                "3"
+            ],
+            "Validation": {
+                "Settings": {
+                    "ForceResponse": "OFF",
+                    "ForceResponseType": "ON",
+                    "Type": "None"
+                }
+            },
+            "Language": [],
+            "NextChoiceId": 4,
+            "NextAnswerId": 1,
+            "QuestionID": "QID32",
+            "DataVisibility": {
+                "Private": false,
+                "Hidden": false
+            },
+            "DisplayLogic": {
+                "0": {
+                    "0": {
+                        "LogicType": "LoopAndMerge",
+                        "LeftOperand": "BL_0kZlCbnIIrUmCRn,2",
+                        "RightOperand": "lm:\/\/CurrentLoop",
+                        "Operator": "EqualTo",
+                        "Type": "Expression",
+                        "Description": "<span class=\"ConjDesc\">If<\/span> <span class=\"QuestionDesc\"><\/span> <span class=\"LeftOpDesc\">Loop 2: Loop choice 2, <\/span> <span class=\"OpDesc\"><\/span> <span class=\"RightOpDesc\">Current Loop<\/span>"
+                    },
+                    "Type": "If"
+                },
+                "Type": "BooleanExpression",
+                "inPage": false
+            }
+        }
+    }, {
+        "SurveyID": "SV_6mudEEycYo5zehT",
+        "Element": "SQ",
+        "PrimaryAttribute": "QID31",
+        "SecondaryAttribute": "Loop choice 1 follow-up",
+        "TertiaryAttribute": null,
+        "Payload": {
+            "QuestionText": "Loop choice 1 follow-up",
+            "DataExportTag": "Q31",
+            "QuestionType": "MC",
+            "Selector": "SAVR",
+            "SubSelector": "TX",
+            "Configuration": {
+                "QuestionDescriptionOption": "UseText"
+            },
+            "QuestionDescription": "Loop choice 1 follow-up",
+            "Choices": {
+                "1": {
+                    "Display": "Click to write Choice 1"
+                },
+                "2": {
+                    "Display": "Click to write Choice 2"
+                },
+                "3": {
+                    "Display": "Click to write Choice 3"
+                }
+            },
+            "ChoiceOrder": [
+                "1",
+                "2",
+                "3"
+            ],
+            "Validation": {
+                "Settings": {
+                    "ForceResponse": "OFF",
+                    "ForceResponseType": "ON",
+                    "Type": "None"
+                }
+            },
+            "Language": [],
+            "NextChoiceId": 4,
+            "NextAnswerId": 1,
+            "QuestionID": "QID31",
+            "DataVisibility": {
+                "Private": false,
+                "Hidden": false
+            },
+            "DisplayLogic": {
+                "0": {
+                    "0": {
+                        "LogicType": "LoopAndMerge",
+                        "LeftOperand": "BL_0kZlCbnIIrUmCRn,1",
+                        "RightOperand": "lm:\/\/CurrentLoop",
+                        "Operator": "EqualTo",
+                        "Type": "Expression",
+                        "Description": "<span class=\"ConjDesc\">If<\/span> <span class=\"QuestionDesc\"><\/span> <span class=\"LeftOpDesc\">Loop 1: Loop choice 1, <\/span> <span class=\"OpDesc\"><\/span> <span class=\"RightOpDesc\">Current Loop<\/span>"
+                    },
+                    "Type": "If"
+                },
+                "Type": "BooleanExpression",
+                "inPage": false
+            }
+        }
+    }, {
+        "SurveyID": "SV_6mudEEycYo5zehT",
+        "Element": "SQ",
         "PrimaryAttribute": "QID16",
         "SecondaryAttribute": "Timing",
         "TertiaryAttribute": null,
@@ -2018,6 +2302,153 @@ text?</QID8_TEXT>
 		<QID17_5_TEXT></QID17_5_TEXT>
 		<QID15_NPS_GROUP></QID15_NPS_GROUP>
 		<QID15></QID15>
+		<Q_DataPolicyViolations></Q_DataPolicyViolations>
+    </Response>
+    <Response>
+		<startDate>2020-11-09 13:09:50</startDate>
+		<endDate>2020-11-09 13:12:11</endDate>
+		<status>IP Address</status>
+		<ipAddress>*******</ipAddress>
+		<progress>100</progress>
+		<duration>140</duration>
+		<finished>True</finished>
+		<recordedDate>2020-11-09 13:12:11</recordedDate>
+		<_recordId>R_2EzY1K5pqRpzi0n</_recordId>
+		<recipientLastName>*******</recipientLastName>
+		<recipientFirstName>*******</recipientFirstName>
+		<recipientEmail>*******</recipientEmail>
+		<externalDataReference>*******</externalDataReference>
+		<locationLatitude>*******</locationLatitude>
+		<locationLongitude>*******</locationLongitude>
+		<distributionChannel>anonymous</distributionChannel>
+		<userLanguage>EN</userLanguage>
+		<QID22_BROWSER>Chrome</QID22_BROWSER>
+		<QID22_VERSION>86.0.4240.183</QID22_VERSION>
+		<QID22_OS>Macintosh</QID22_OS>
+		<QID22_RESOLUTION>2560x1440</QID22_RESOLUTION>
+		<QID1>Click to write Choice 1</QID1>
+		<QID18>choice3</QID18>
+		<QID3>Click to write Choice 3</QID3>
+		<QID4_1>Click to write Choice 1</QID4_1>
+		<QID4_2>0</QID4_2>
+		<QID4_3>Click to write Choice 3</QID4_3>
+		<QID4_5>0</QID4_5>
+		<QID4_6>Other2</QID4_6>
+		<QID4_4>0</QID4_4>
+		<QID4_5_TEXT>-99</QID4_5_TEXT>
+		<QID4_6_TEXT>other 2 text</QID4_6_TEXT>
+		<QID19_1>choice1</QID19_1>
+		<QID19_3>0</QID19_3>
+		<QID19_2>choice2</QID19_2>
+		<QID19_4>0</QID19_4>
+		<QID11>Click to write Choice 3</QID11>
+		<QID11_3_TEXT>other text</QID11_3_TEXT>
+		<QID5_1>scale1</QID5_1>
+		<QID5_2>scale2</QID5_2>
+		<QID5_3>scale3</QID5_3>
+		<QID5_4>-99</QID5_4>
+		<QID5_4_TEXT>-99</QID5_4_TEXT>
+		<QID13_1_1>Col 1</QID13_1_1>
+		<QID13_1_2>Col 2</QID13_1_2>
+		<QID13_1_3>0</QID13_1_3>
+		<QID13_2_1>Col 1</QID13_2_1>
+		<QID13_2_2>0</QID13_2_2>
+		<QID13_2_3>Col 3</QID13_2_3>
+		<QID13_3_1>0</QID13_3_1>
+		<QID13_3_2>Col 2</QID13_3_2>
+		<QID13_3_3>0</QID13_3_3>
+		<QID13_5_1>-99</QID13_5_1>
+		<QID13_5_2>-99</QID13_5_2>
+		<QID13_5_3>-99</QID13_5_3>
+		<QID13_4_1>-99</QID13_4_1>
+		<QID13_4_2>-99</QID13_4_2>
+		<QID13_4_3>-99</QID13_4_3>
+		<QID13_4_TEXT>-99</QID13_4_TEXT>
+		<QID6_1>Click to write Scale point 1</QID6_1>
+		<QID6_2>Click to write Scale point 2</QID6_2>
+		<QID6_3>-99</QID6_3>
+		<QID16_FIRST_CLICK>1.717</QID16_FIRST_CLICK>
+		<QID16_LAST_CLICK>15.783</QID16_LAST_CLICK>
+		<QID16_PAGE_SUBMIT>16.628</QID16_PAGE_SUBMIT>
+		<QID16_CLICK_COUNT>10</QID16_CLICK_COUNT>
+		<QID7_TEXT>line of text</QID7_TEXT>
+		<QID8_TEXT>-99</QID8_TEXT>
+		<QID9_1>form 1</QID9_1>
+		<QID9_2>form 2</QID9_2>
+		<QID9_3>form 3</QID9_3>
+		<QID10_1>3</QID10_1>
+		<QID10_2>2</QID10_2>
+		<QID10_3>1</QID10_3>
+		<QID17_0_GROUP_1>Item 1</QID17_0_GROUP_1>
+		<QID17_0_GROUP_2>0</QID17_0_GROUP_2>
+		<QID17_0_GROUP_3>0</QID17_0_GROUP_3>
+		<QID17_0_GROUP_4>0</QID17_0_GROUP_4>
+		<QID17_0_GROUP_5>0</QID17_0_GROUP_5>
+		<QID17_1_GROUP_1>0</QID17_1_GROUP_1>
+		<QID17_1_GROUP_2>Item 2</QID17_1_GROUP_2>
+		<QID17_1_GROUP_3>0</QID17_1_GROUP_3>
+		<QID17_1_GROUP_4>0</QID17_1_GROUP_4>
+		<QID17_1_GROUP_5>0</QID17_1_GROUP_5>
+		<QID17_2_GROUP_1>0</QID17_2_GROUP_1>
+		<QID17_2_GROUP_2>0</QID17_2_GROUP_2>
+		<QID17_2_GROUP_3>Item 3</QID17_2_GROUP_3>
+		<QID17_2_GROUP_4>0</QID17_2_GROUP_4>
+		<QID17_2_GROUP_5>0</QID17_2_GROUP_5>
+		<QID17_G0_1_RANK>1</QID17_G0_1_RANK>
+		<QID17_G0_2_RANK>-99</QID17_G0_2_RANK>
+		<QID17_G0_3_RANK>-99</QID17_G0_3_RANK>
+		<QID17_G0_4_RANK>-99</QID17_G0_4_RANK>
+		<QID17_G0_5_RANK>-99</QID17_G0_5_RANK>
+		<QID17_G1_1_RANK>-99</QID17_G1_1_RANK>
+		<QID17_G1_2_RANK>1</QID17_G1_2_RANK>
+		<QID17_G1_3_RANK>-99</QID17_G1_3_RANK>
+		<QID17_G1_4_RANK>-99</QID17_G1_4_RANK>
+		<QID17_G1_5_RANK>-99</QID17_G1_5_RANK>
+		<QID17_G2_1_RANK>-99</QID17_G2_1_RANK>
+		<QID17_G2_2_RANK>-99</QID17_G2_2_RANK>
+		<QID17_G2_3_RANK>1</QID17_G2_3_RANK>
+		<QID17_G2_4_RANK>-99</QID17_G2_4_RANK>
+		<QID17_G2_5_RANK>-99</QID17_G2_5_RANK>
+		<QID17_5_TEXT>-99</QID17_5_TEXT>
+		<QID15_NPS_GROUP>Detractor</QID15_NPS_GROUP>
+		<QID15>5</QID15>
+		<QID29_1>1</QID29_1>
+		<QID29_2>2</QID29_2>
+		<QID29_3>3</QID29_3>
+		<QID29_3_TEXT>-99</QID29_3_TEXT>
+		<QID20>Dyna choice 2</QID20>
+		<QID21>Dyna choice 2</QID21>
+		<QID28_x1>Click to write Scale Point 1</QID28_x1>
+		<QID28_x2>Click to write Scale Point 2</QID28_x2>
+		<QID28_x3>Click to write Scale Point 3</QID28_x3>
+		<QID28_x4>Click to write Scale Point 1</QID28_x4>
+		<QID28_x4_TEXT>other text</QID28_x4_TEXT>
+		<QID23_1>10</QID23_1>
+		<QID23_2>20</QID23_2>
+		<QID23_3>30</QID23_3>
+		<QID23_4>0</QID23_4>
+		<QID23_4_TEXT>-99</QID23_4_TEXT>
+		<QID26></QID26>
+		<QID27>Click to write Choice 2</QID27>
+		<QID30_1>Loop choice 1</QID30_1>
+		<QID30_2>Loop choice 2</QID30_2>
+		<QID30_3>Loop choice 3</QID30_3>
+		<__QID31>Click to write Choice 1</__QID31>
+		<__QID32_1></__QID32_1>
+		<__QID32_2></__QID32_2>
+		<__QID32_3></__QID32_3>
+		<__QID33_TEXT></__QID33_TEXT>
+		<__QID31-1></__QID31-1>
+		<__QID32_1-1>Click to write Choice 1</__QID32_1-1>
+		<__QID32_2-1>Click to write Choice 2</__QID32_2-1>
+		<__QID32_3-1>0</__QID32_3-1>
+		<__QID33_TEXT-1></__QID33_TEXT-1>
+		<__QID31-2></__QID31-2>
+		<__QID32_1-2></__QID32_1-2>
+		<__QID32_2-2></__QID32_2-2>
+		<__QID32_3-2></__QID32_3-2>
+		<__QID33_TEXT-2>choice 3 text</__QID33_TEXT-2>
+		<s></s>
 		<Q_DataPolicyViolations></Q_DataPolicyViolations>
 	</Response>
 </Responses>`

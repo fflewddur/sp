@@ -86,8 +86,8 @@ func TestReadQsfQuestions(t *testing.T) {
 		{"QID28", true},
 		{"QID29", true},
 	}
-	if len(s.Questions) != 26 {
-		t.Errorf("len(Questions) = %d; want 26", len(s.Questions))
+	if len(s.Questions) != 30 {
+		t.Errorf("len(Questions) = %d; want 30", len(s.Questions))
 	}
 	for _, test := range tests {
 		if _, ok := s.Questions[test.id]; test.want != ok {
@@ -349,11 +349,15 @@ func TestQuestionOrder(t *testing.T) {
 		"QID23",
 		"QID26",
 		"QID27",
+		"QID30",
+		"QID31",
+		"QID32",
+		"QID33",
 		"s",
 	}
 
 	if len(want) != len(s.QuestionOrder) {
-		t.Errorf("len(s.QuestionOrder) = %d; wanted %d", len(s.QuestionOrder), len(want))
+		t.Errorf("len(s.QuestionOrder) = %d; wanted %d (found %v)", len(s.QuestionOrder), len(want), s.QuestionOrder)
 	}
 
 	for i := range s.QuestionOrder {

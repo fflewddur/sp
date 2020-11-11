@@ -23,7 +23,7 @@ func NewResponse() *Response {
 	return &r
 }
 
-var reQIDLoop = regexp.MustCompile(`^_\d+_(QID\d+.*)(-\d+)?`)
+var reQIDLoop = regexp.MustCompile(`^_\d*_(QID\d+[^-]*)(-\d+)?$`) //(`^_\d*_(QID\d+.*)(-\d+)?`)
 var reQIDDyn = regexp.MustCompile(`^(QID\d+_)x(\d+)(_TEXT)?$`)
 var reTimer = regexp.MustCompile(`_(CLICK|SUBMIT|COUNT)$`)
 
@@ -33,9 +33,9 @@ func (r *Response) AddAnswer(id string, answer string) {
 	// TODO this probably doesn't work for all possible uses of loop+merge
 	matches := reQIDLoop.FindStringSubmatch(id)
 	if matches != nil {
+		// Don't merge all of the timer responses
 		timerMatches := reTimer.MatchString(matches[1])
 		if !timerMatches {
-			// Don't merge all of the timer responses
 			id = matches[1]
 		}
 	} else {
@@ -45,9 +45,15 @@ func (r *Response) AddAnswer(id string, answer string) {
 			id = matches[1] + matches[2] + matches[3]
 		}
 	}
-	if r.answers[id] != "" && answer != "" {
-		log.Fatalf("error adding '%s' response for question '%s': already have '%s'", answer, id, r.answers[id])
-	}
 
-	r.answers[id] = answer
+	v, alreadySet := r.answers[id]
+	if alreadySet {
+		if answer != "" && v != "" && v != answer {
+			log.Fatalf("error adding '%s' response for question '%s': already have '%s'", answer, id, v)
+		} else if v == "" && v != answer {
+			r.answers[id] = answer
+		}
+	} else {
+		r.answers[id] = answer
+	}
 }

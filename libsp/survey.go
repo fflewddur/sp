@@ -43,6 +43,7 @@ const Version = "0.2.0"
 const timeFormat = "2006-01-02 15:04:05"
 const noResponseConst = "No response"
 const noResponseCode = "-99"
+const noResponseCodeMulti = "0"
 const notGrouped = "Not grouped"
 
 // WriteCSV saves the parsed survey questions and responses in comma-separated value format
@@ -289,6 +290,10 @@ func addCleanup(choiceScales map[string][]Choice) string {
 	return defs
 }
 
+func isNoResponseCode(s string) bool {
+	return s == noResponseCode || s == noResponseCodeMulti
+}
+
 // ReadXML reads a Qualtrics XML file of participant responses
 func (s *Survey) ReadXML(r *bufio.Reader) error {
 	doc := etree.NewDocument()
@@ -524,10 +529,11 @@ type qsfSurveyElement struct {
 	flows              *qsfSurveyElementFlows
 }
 
+var reElementType = regexp.MustCompile(`"Element"\s*:\s*"(.*?)"`)
+
 func (e *qsfSurveyElement) UnmarshalJSON(b []byte) error {
 	// Survey questions have a Payload object, other elements have an array of Payload objects.
 	// Each Payload uses slightly different types, hence all of this logic.
-	reElementType := regexp.MustCompile(`"Element"\s*:\s*"(.*?)"`)
 	m := reElementType.FindSubmatch(b)
 	if m == nil || len(m) <= 1 {
 		return nil
