@@ -420,7 +420,7 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 						s.Questions[q.ID] = q
 						embeddedDataIDs = append(embeddedDataIDs, q.ID)
 					}
-				} else if f.Type == "BlockRandomizer" {
+				} else if f.Type == "BlockRandomizer" || f.Type == "Branch" {
 					for _, rf := range f.Flow {
 						if rf.ID != "" {
 							s.blockOrder = append(s.blockOrder, rf.ID)
