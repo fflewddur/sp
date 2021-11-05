@@ -39,7 +39,7 @@ type Survey struct {
 }
 
 // Version of libsp
-const Version = "0.2.1"
+const Version = "0.2.2"
 const timeFormat = "2006-01-02 15:04:05"
 const noResponseConst = "No response"
 const noResponseCode = "-99"
@@ -155,7 +155,7 @@ func getColType(colID string, q *Question) (rColType string, isRankCol bool) {
 		}
 	} else if strings.HasSuffix(colID, "_text") {
 		rColType = ""
-	} else if strings.HasSuffix(colID, "_RANK") {
+	} else if strings.HasSuffix(colID, "_RANK") || strings.HasSuffix(colID, "_rank") {
 		isRankCol = true
 		rColType = "col_factor()"
 	} else if strings.HasSuffix(colID, "_first_click") ||

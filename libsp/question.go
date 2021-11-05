@@ -62,7 +62,7 @@ func (q *Question) CSVCols() []string {
 	if q.qType == PickGroupRank {
 		for _, c := range q.choices {
 			label := strings.ToLower(c.Label)
-			label = reSpaces.ReplaceAllString(label, ".")
+			label = reSpaces.ReplaceAllString(label, "_")
 			label = strings.ReplaceAll(label, ":", "")
 			suffixes = append(suffixes, fmt.Sprintf("_%s_GROUP", label))
 			suffixes = append(suffixes, fmt.Sprintf("_%s_RANK", label))
@@ -79,10 +79,11 @@ func (q *Question) CSVCols() []string {
 		cols = append(cols, prefix+s)
 	}
 
-	// replace all non-R-compatible chars with '.'
-	r := regexp.MustCompile(`[^a-zA-Z0-9_.]`)
+	// replace all non-R-compatible chars with '_'
+	// (also replace '.' for compatibility with Plx)
+	r := regexp.MustCompile(`[^a-zA-Z0-9_]`)
 	for i, c := range cols {
-		cols[i] = r.ReplaceAllString(c, ".")
+		cols[i] = strings.ToLower(r.ReplaceAllString(c, "_"))
 	}
 
 	return cols

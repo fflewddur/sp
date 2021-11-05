@@ -31,6 +31,8 @@ var reTimer = regexp.MustCompile(`_(CLICK|SUBMIT|COUNT)$`)
 func (r *Response) AddAnswer(id string, answer string) {
 	// Remove the extraneous characters in loop+merge response IDs
 	// TODO this probably doesn't work for all possible uses of loop+merge
+	// FIXME this is broken for the 2018 Go survey
+	origID := id
 	matches := reQIDLoop.FindStringSubmatch(id)
 	if matches != nil {
 		// Don't merge all of the timer responses
@@ -49,7 +51,7 @@ func (r *Response) AddAnswer(id string, answer string) {
 	v, alreadySet := r.answers[id]
 	if alreadySet {
 		if answer != "" && v != "" && v != answer {
-			log.Fatalf("error adding '%s' response for question '%s': already have '%s'", answer, id, v)
+			log.Fatalf("error adding '%s' response for question '%s': already have '%s' (id=%s)", answer, id, v, origID)
 		} else if v == "" && v != answer {
 			r.answers[id] = answer
 		}
