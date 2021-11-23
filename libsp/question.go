@@ -56,13 +56,17 @@ func (q *Question) OrderedChoices() bool {
 var reSpaces = regexp.MustCompile(`[\s]+`)
 
 // CSVCols returns a slice of string holding the ordered CSV column names for this question
-func (q *Question) CSVCols() []string {
+func (q *Question) CSVCols(useCompatNames bool) []string {
 	cols := make([]string, 0)
 	suffixes := []string{}
 	if q.qType == PickGroupRank {
 		for _, c := range q.choices {
 			label := strings.ToLower(c.Label)
-			label = reSpaces.ReplaceAllString(label, "_")
+			if useCompatNames {
+				label = reSpaces.ReplaceAllString(label, ".")
+			} else {
+				label = reSpaces.ReplaceAllString(label, "_")
+			}
 			label = strings.ReplaceAll(label, ":", "")
 			suffixes = append(suffixes, fmt.Sprintf("_%s_GROUP", label))
 			suffixes = append(suffixes, fmt.Sprintf("_%s_RANK", label))
@@ -79,11 +83,19 @@ func (q *Question) CSVCols() []string {
 		cols = append(cols, prefix+s)
 	}
 
-	// replace all non-R-compatible chars with '_'
-	// (also replace '.' for compatibility with Plx)
-	r := regexp.MustCompile(`[^a-zA-Z0-9_]`)
-	for i, c := range cols {
-		cols[i] = strings.ToLower(r.ReplaceAllString(c, "_"))
+	if useCompatNames {
+		// replace all non-R-compatible chars with '.'
+		r := regexp.MustCompile(`[^a-zA-Z0-9_.]`)
+		for i, c := range cols {
+			cols[i] = r.ReplaceAllString(c, ".")
+		}
+	} else {
+		// replace all non-R-compatible chars with '_'
+		// (also replace '.' for compatibility with Plx)
+		r := regexp.MustCompile(`[^a-zA-Z0-9_]`)
+		for i, c := range cols {
+			cols[i] = strings.ToLower(r.ReplaceAllString(c, "_"))
+		}
 	}
 
 	return cols

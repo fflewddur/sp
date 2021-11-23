@@ -12,8 +12,14 @@ import (
 	"github.com/fflewddur/sp/libsp"
 )
 
+type options struct {
+	CompatNames bool
+}
+
 func main() {
 	showVer := flag.Bool("v", false, "display version and exit")
+	compatNames := flag.Bool("c", false, "use variable names compatible with releases < 0.2.2")
+
 	flag.Usage = func() {
 		fmt.Fprintf(flag.CommandLine.Output(), "Usage:\n  sp <qsf file> [flags]\n\nFlags:\n")
 
@@ -25,6 +31,8 @@ func main() {
 		fmt.Printf("sp version %s\n", libsp.Version)
 		return
 	}
+	opt := options{}
+	opt.CompatNames = *compatNames
 
 	args := flag.Args()
 	if len(args) < 1 {
@@ -33,10 +41,10 @@ func main() {
 	}
 
 	qsfPath := flag.Args()[0]
-	parseSurvey(qsfPath)
+	parseSurvey(qsfPath, opt)
 }
 
-func parseSurvey(qsfPath string) {
+func parseSurvey(qsfPath string, opt options) {
 	log.Printf("Reading '%s'", qsfPath)
 	qsf, err := os.Open(qsfPath)
 	if err != nil {
@@ -49,6 +57,7 @@ func parseSurvey(qsfPath string) {
 	if err != nil {
 		log.Fatalf("Error parsing '%s': %s", qsfPath, err)
 	}
+	s.UseCompatNames = opt.CompatNames
 
 	xmlPath := buildXMLPath(qsfPath)
 	log.Printf("Reading '%s'", xmlPath)

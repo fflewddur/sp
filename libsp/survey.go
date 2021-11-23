@@ -25,21 +25,22 @@ import (
 
 // Survey represents a survey, including its questions, potential responses, and meta-data
 type Survey struct {
-	Title         string
-	Description   string
-	Status        string
-	CreatedOn     time.Time
-	LaunchedOn    time.Time
-	ModifiedOn    time.Time
-	QuestionOrder []string
-	Questions     map[string]*Question
-	Responses     []*Response
-	blocks        map[string]*block
-	blockOrder    []string
+	Title          string
+	Description    string
+	Status         string
+	CreatedOn      time.Time
+	LaunchedOn     time.Time
+	ModifiedOn     time.Time
+	QuestionOrder  []string
+	Questions      map[string]*Question
+	Responses      []*Response
+	blocks         map[string]*block
+	blockOrder     []string
+	UseCompatNames bool
 }
 
 // Version of libsp
-const Version = "0.2.2"
+const Version = "0.2.3"
 const timeFormat = "2006-01-02 15:04:05"
 const noResponseConst = "No response"
 const noResponseCode = "-99"
@@ -83,7 +84,7 @@ func (s *Survey) csvCols() []string {
 	cols := []string{"id", "finished", "progress", "duration", "recorded"}
 	for _, id := range s.QuestionOrder {
 		q := s.Questions[id]
-		cols = append(cols, q.CSVCols()...)
+		cols = append(cols, q.CSVCols(s.UseCompatNames)...)
 	}
 	return cols
 }
@@ -112,7 +113,7 @@ data <- read_csv(input_path, col_types = cols(
 	for _, id := range s.QuestionOrder {
 		q := s.Questions[id]
 
-		for _, colID := range q.CSVCols() {
+		for _, colID := range q.CSVCols(s.UseCompatNames) {
 			rColType, isRankCol := getColType(colID, q)
 			if rColType != "" {
 				if !firstLine {
