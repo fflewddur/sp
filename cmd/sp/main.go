@@ -21,7 +21,7 @@ func main() {
 	compatNames := flag.Bool("c", false, "use variable names compatible with releases < 0.2.2")
 
 	flag.Usage = func() {
-		fmt.Fprintf(flag.CommandLine.Output(), "Usage:\n  sp <qsf file> [flags]\n\nFlags:\n")
+		fmt.Fprintf(flag.CommandLine.Output(), "Usage:\n  sp [flags] <qsf file>\n\nFlags:\n")
 
 		flag.PrintDefaults()
 	}
@@ -33,6 +33,10 @@ func main() {
 	}
 	opt := options{}
 	opt.CompatNames = *compatNames
+
+	if opt.CompatNames {
+		log.Println("Using compatible names")
+	}
 
 	args := flag.Args()
 	if len(args) < 1 {
