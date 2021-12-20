@@ -422,9 +422,17 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 						embeddedDataIDs = append(embeddedDataIDs, q.ID)
 					}
 				} else if f.Type == "BlockRandomizer" || f.Type == "Branch" {
+					// FIXME: Uh-oh, I think these can be nested
 					for _, rf := range f.Flow {
 						if rf.ID != "" {
 							s.blockOrder = append(s.blockOrder, rf.ID)
+						} else {
+							// Is there a flow inside of this branch?
+							for _, nested := range rf.Flow {
+								if nested.ID != "" {
+									s.blockOrder = append(s.blockOrder, nested.ID)
+								}
+							}
 						}
 					}
 				}
