@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
+	"html"
 	"io"
 )
 
@@ -23,6 +24,7 @@ func ReadQsf(r *bufio.Reader) (survey *Survey, err error) {
 			e := fmt.Errorf("could not read file: %s", err)
 			return nil, e
 		}
+		line = []byte(html.UnescapeString(string(line)))
 		bytes = append(bytes, line...)
 	}
 
