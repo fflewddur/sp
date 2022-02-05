@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"html"
 	"io"
+	"strings"
 )
 
 // ReadQsf reads a Qualtrics survey definition file (.qsf) from disk
@@ -24,7 +25,11 @@ func ReadQsf(r *bufio.Reader) (survey *Survey, err error) {
 			e := fmt.Errorf("could not read file: %s", err)
 			return nil, e
 		}
-		line = []byte(html.UnescapeString(string(line)))
+		s := html.UnescapeString(string(line))
+		// And fix spaces, too
+		s = strings.ReplaceAll(s, "&nbsp;", " ")
+
+		line = []byte(s)
 		bytes = append(bytes, line...)
 	}
 

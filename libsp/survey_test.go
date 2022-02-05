@@ -122,7 +122,7 @@ func TestWriteCSV(t *testing.T) {
 			"",
 		},
 		{"R_2EzY1K5pqRpzi0n", "true", "100", "140", "2020-11-09 13:12:11",
-			"And let’s try a smart quote for good measure", "choice3", "Click to write Choice 3",
+			"And let's try a smart quote for good measure", "choice3", "Click to write Choice 3",
 			"TRUE", "FALSE", "TRUE", "FALSE", "", "TRUE", "other 2 text", "FALSE",
 			"TRUE", "FALSE", "TRUE", "FALSE", // 19
 			"Click to write Choice 3", "other text",
@@ -207,7 +207,7 @@ func TestWriteR(t *testing.T) {
 		"library(tidyverse)",
 		"",
 		"input_path <- \"test.csv\"",
-		`scale_08ff20f7e2e706f820599f8da8a74b96eb33aa1f <- c("Click to write Choice 1", "Click to write Choice 2", "Click to write Choice 3", "Let's include a choice with an apostrophe", "And let’s try a smart quote for good measure", "No response")`,
+		`scale_08ff20f7e2e706f820599f8da8a74b96eb33aa1f <- c("Click to write Choice 1", "Click to write Choice 2", "Click to write Choice 3", "Let's include a choice with an apostrophe", "And let's try a smart quote for good measure", "No response")`,
 		`scale_0d33bdb7dd7ad7e7644895dab595541b141f5b39 <- c("Click to write Choice 1", "Click to write Choice 2", "Click to write Choice 3", "No response")`,
 		`scale_30f77603f9a26644196c8b5400b99945c2c294a5 <- c("Click to write Choice 2 (ordered 1st)", "Click to write Choice 1 (ordered 2nd)", "Click to write Choice 3", "No response")`,
 		`scale_37e352849a3d8bb86e939a98337b2c6229d54634 <- c("1", "2", "3", "4", "5", "Not grouped", "No response")`,

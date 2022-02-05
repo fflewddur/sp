@@ -133,7 +133,14 @@ data <- read_csv(input_path, col_types = cols(
 	scriptDefs += addScales(choiceScales)
 	scriptCleanup := addCleanup(choiceScales)
 
-	_, err := w.WriteString(scriptPreamble + "\n" + scriptDefs + "\n" + scriptImport + "\n" + scriptCleanup)
+	script := scriptPreamble + "\n" + scriptDefs + "\n" + scriptImport + "\n" + scriptCleanup
+	// Replace smart quotes, R chokes on these
+	script = strings.ReplaceAll(script, "“", "\"")
+	script = strings.ReplaceAll(script, "”", "\"")
+	script = strings.ReplaceAll(script, "‘", "'")
+	script = strings.ReplaceAll(script, "’", "'")
+
+	_, err := w.WriteString(script)
 	if err != nil {
 		return fmt.Errorf("could not write R script: %s", err)
 	}

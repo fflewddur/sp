@@ -3,6 +3,7 @@ package libsp
 import (
 	"log"
 	"regexp"
+	"strings"
 	"time"
 )
 
@@ -29,6 +30,8 @@ var reTimer = regexp.MustCompile(`_(CLICK|SUBMIT|COUNT)$`)
 
 // AddAnswer adds a question answer to the response
 func (r *Response) AddAnswer(id string, answer string) {
+	answer = fixSmartQuotes(answer)
+
 	// Remove the extraneous characters in loop+merge response IDs
 	// TODO this probably doesn't work for all possible uses of loop+merge
 	// FIXME this is broken for the 2018 Go survey
@@ -58,4 +61,13 @@ func (r *Response) AddAnswer(id string, answer string) {
 	} else {
 		r.answers[id] = answer
 	}
+}
+
+func fixSmartQuotes(s string) string {
+	// Replace smart quotes, R chokes on these
+	s = strings.ReplaceAll(s, "“", "\"")
+	s = strings.ReplaceAll(s, "”", "\"")
+	s = strings.ReplaceAll(s, "‘", "'")
+	s = strings.ReplaceAll(s, "’", "'")
+	return s
 }
