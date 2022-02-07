@@ -59,7 +59,7 @@ func (s *Survey) WriteCSV(bw *bufio.Writer) error {
 		return fmt.Errorf("could not write CSV columns: %s", err)
 	}
 	for _, r := range s.Responses {
-		row := []string{r.ID, fmt.Sprintf("%t", r.Finished), fmt.Sprintf("%d", r.Progress), fmt.Sprintf("%d", r.Duration), fmt.Sprintf("%s", r.RecordedOn.Format(timeFormat))}
+		row := []string{r.ID, fmt.Sprintf("%t", r.Finished), fmt.Sprintf("%d", r.Progress), fmt.Sprintf("%d", r.Duration), r.RecordedOn.Format(timeFormat)}
 
 		for _, id := range s.QuestionOrder {
 			q := s.Questions[id]
@@ -515,9 +515,7 @@ func (s *Survey) addDynamicChoices() {
 }
 
 func (s *Survey) addEmbeddedData(ids []string) {
-	for _, id := range ids {
-		s.QuestionOrder = append(s.QuestionOrder, id)
-	}
+	s.QuestionOrder = append(s.QuestionOrder, ids...)
 }
 
 type qsf struct {
