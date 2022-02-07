@@ -757,7 +757,7 @@ func (p *qsfPayload) OrderedChoices(choicesAreQuestions bool) ([]Choice, error) 
 			varName = p.VariableNaming[i]
 		}
 
-		c := Choice{ID: s, Label: p.ChoiceMap[i].Display, VarName: varName, HasText: hasText}
+		c := Choice{ID: s, Label: strings.TrimSpace(p.ChoiceMap[i].Display), VarName: varName, HasText: hasText}
 		ordered = append(ordered, c)
 	}
 
@@ -781,7 +781,7 @@ func (p *qsfPayload) OrderedAnswers() ([]Choice, error) {
 			}
 		}
 
-		c := Choice{ID: s.String(), Label: p.Answers[i].Display, VarName: p.VariableNaming[i], HasText: hasText}
+		c := Choice{ID: s.String(), Label: strings.TrimSpace(p.Answers[i].Display), VarName: p.VariableNaming[i], HasText: hasText}
 		ordered = append(ordered, c)
 	}
 

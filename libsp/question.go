@@ -178,11 +178,11 @@ func (q *Question) groupsAndRanks(r *Response) []string {
 				}
 			}
 		}
-		cols = append(cols, group)
-		cols = append(cols, rank)
+		cols = append(cols, strings.TrimSpace(group))
+		cols = append(cols, strings.TrimSpace(rank))
 
 		if c.HasText {
-			cols = append(cols, r.answers[q.ID+"_"+c.ID+"_TEXT"])
+			cols = append(cols, strings.TrimSpace(r.answers[q.ID+"_"+c.ID+"_TEXT"]))
 		}
 	}
 
@@ -213,7 +213,7 @@ func (q *Question) groupsAndRanks(r *Response) []string {
 }
 
 func (q *Question) formatResponseForCol(userAnswer string, isTxt bool) string {
-	retval := userAnswer
+	retval := strings.TrimSpace(userAnswer)
 
 	if q.qType.exportAsBools() && !isTxt {
 		if userAnswer == "" || isNoResponseCode(userAnswer) {
