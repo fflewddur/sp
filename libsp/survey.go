@@ -40,7 +40,7 @@ type Survey struct {
 }
 
 // Version of libsp
-const Version = "0.2.5"
+const Version = "0.2.6"
 const timeFormat = "2006-01-02 15:04:05"
 const noResponseConst = "No response"
 const noResponseCode = "-99"
@@ -661,7 +661,7 @@ type qsfPayload struct {
 	DynamicChoices             *qsfDynChoices
 	Answers                    map[int]qsfChoice
 	AnswerOrder                []json.Number
-	RecodeValues               map[int]interface{}
+	RecodeValues               map[string]interface{}
 	VariableNaming             map[int]string
 	ChoiceDataExportTags       interface{}
 	HasChoiceDataExportTags    bool
