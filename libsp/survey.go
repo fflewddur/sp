@@ -268,10 +268,7 @@ func addScales(choiceScales map[string][]Choice) string {
 			} else {
 				firstLine = false
 			}
-			s := c.VarName
-			if s == "" {
-				s = c.Label
-			}
+			s := c.Label
 			line += `"` + s + `"`
 		}
 		line += ")\n"

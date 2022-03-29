@@ -212,8 +212,8 @@ func TestWriteR(t *testing.T) {
 		`scale_30f77603f9a26644196c8b5400b99945c2c294a5 <- c("Click to write Choice 2 (ordered 1st)", "Click to write Choice 1 (ordered 2nd)", "Click to write Choice 3", "No response")`,
 		`scale_37e352849a3d8bb86e939a98337b2c6229d54634 <- c("1", "2", "3", "4", "5", "Not grouped", "No response")`,
 		`scale_39cfaa6cbb1b24d4b91d28093c45805a7fcb8e05 <- c("1", "2", "3", "No response")`,
-		`scale_8a3feac0fed5c3348d223a4c4a52d9b74e347e0a <- c("choice2", "choice3", "choice1", "No response")`,
-		`scale_9bc0385ea2c175f3341306637ae392b35bd86573 <- c("scale1", "scale2", "scale3", "scale.na", "No response")`,
+		`scale_8a3feac0fed5c3348d223a4c4a52d9b74e347e0a <- c("Click to write Choice 2 (ordered 1st)", "Click to write Choice 3 (ordered 2nd)", "Click to write Choice 1 (ordered 3rd)", "No response")`,
+		`scale_9bc0385ea2c175f3341306637ae392b35bd86573 <- c("Click to write Scale point 1", "Click to write Scale point 2", "Click to write Scale point 3", "n/a", "No response")`,
 		`scale_a0e99a824c3c578ebc8d6823906c6e48d95cd2ae <- c("1", "2", "3", "4", "No response")`, // 10
 		`scale_a51a95e35530472ee800821ae86ba1bf3ff20b00 <- c("Click to write Scale Point 1", "Click to write Scale Point 2", "Click to write Scale Point 3", "No response")`,
 		`scale_ae8733afbe88aee2192428ceea072703a0de0e4e <- c("Dyna choice 1", "Dyna choice 2", "Dyna choice 3", "No response")`,
