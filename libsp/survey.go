@@ -40,7 +40,7 @@ type Survey struct {
 }
 
 // Version of libsp
-const Version = "0.2.6"
+const Version = "0.2.7"
 const timeFormat = "2006-01-02 15:04:05"
 const noResponseConst = "No response"
 const noResponseCode = "-99"
@@ -317,7 +317,18 @@ func (s *Survey) ReadXML(r *bufio.Reader) error {
 		r.RecordedOn = getTimeElement("recordedDate", resp)
 
 		for _, e := range resp.ChildElements() {
-			r.AddAnswer(e.Tag, e.Text())
+			id := e.Tag
+			answer := e.Text()
+			// convert 'answer' back to long-form text from the recoded value
+			if q, ok := s.Questions[id]; ok && answer != "" {
+				for _, c := range q.choices {
+					if answer == c.VarName && answer != c.Label {
+						answer = c.Label
+						break
+					}
+				}
+			}
+			r.AddAnswer(id, answer)
 		}
 
 		responses = append(responses, r)
