@@ -4,5 +4,5 @@ go 1.12
 
 require (
 	github.com/beevik/etree v1.1.0
-	github.com/mitchellh/mapstructure v1.4.2
+	github.com/mitchellh/mapstructure v1.4.3
 )
