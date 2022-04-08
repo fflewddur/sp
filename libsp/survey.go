@@ -436,7 +436,7 @@ func (s *Survey) UnmarshalJSON(b []byte) error {
 						s.Questions[q.ID] = q
 						embeddedDataIDs = append(embeddedDataIDs, q.ID)
 					}
-				} else if f.Type == "BlockRandomizer" || f.Type == "Branch" {
+				} else if f.Type == "BlockRandomizer" || f.Type == "Branch" || f.Type == "Group" {
 					// FIXME: Uh-oh, I think these can be nested
 					for _, rf := range f.Flow {
 						if rf.ID != "" {
@@ -670,7 +670,7 @@ type qsfPayload struct {
 	Answers                    map[int]qsfChoice
 	AnswerOrder                []json.Number
 	RecodeValues               map[string]interface{}
-	VariableNaming             map[int]string
+	VariableNaming             map[string]string
 	ChoiceDataExportTags       interface{}
 	HasChoiceDataExportTags    bool
 	MappedChoiceDataExportTags map[int]string
@@ -762,7 +762,7 @@ func (p *qsfPayload) OrderedChoices(choicesAreQuestions bool) ([]Choice, error) 
 		if choicesAreQuestions && p.HasChoiceDataExportTags {
 			varName = p.MappedChoiceDataExportTags[i]
 		} else {
-			varName = p.VariableNaming[i]
+			varName = p.VariableNaming[s]
 		}
 
 		c := Choice{ID: s, Label: strings.TrimSpace(p.ChoiceMap[i].Display), VarName: varName, HasText: hasText}
@@ -789,7 +789,7 @@ func (p *qsfPayload) OrderedAnswers() ([]Choice, error) {
 			}
 		}
 
-		c := Choice{ID: s.String(), Label: strings.TrimSpace(p.Answers[i].Display), VarName: p.VariableNaming[i], HasText: hasText}
+		c := Choice{ID: s.String(), Label: strings.TrimSpace(p.Answers[i].Display), VarName: p.VariableNaming[s.String()], HasText: hasText}
 		ordered = append(ordered, c)
 	}
 
