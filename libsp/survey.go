@@ -102,10 +102,10 @@ library(tidyverse)
 
 	scriptImport := `message(sprintf("Reading %s...", input_path))
 data <- read_csv(input_path, col_types = cols(
-	finished = col_logical(),
-	progress = col_integer(),
-	duration = col_integer(),
-	recorded = col_datetime(),
+  finished = col_logical(),
+  progress = col_integer(),
+  duration = col_integer(),
+  recorded = col_datetime(),
 `
 
 	choiceScales := make(map[string][]Choice)
@@ -124,7 +124,7 @@ data <- read_csv(input_path, col_types = cols(
 				if rColType == "col_factor()" {
 					rColType = colTypeWithScales(q, isRankCol, choiceScales)
 				}
-				scriptImport += fmt.Sprintf("\t%s = %s", colID, rColType)
+				scriptImport += fmt.Sprintf("  %s = %s", colID, rColType)
 			}
 		}
 	}
