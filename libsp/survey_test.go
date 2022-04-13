@@ -122,7 +122,7 @@ func TestWriteCSV(t *testing.T) {
 			"",
 		},
 		{"R_2EzY1K5pqRpzi0n", "true", "100", "140", "2020-11-09 13:12:11",
-			"And let's try a smart quote for good measure", "choice3", "Click to write Choice 3",
+			"And let's try a smart quote for good measure", "Click to write Choice 3 (ordered 2nd)", "Click to write Choice 3",
 			"TRUE", "FALSE", "TRUE", "FALSE", "", "TRUE", "other 2 text", "FALSE",
 			"TRUE", "FALSE", "TRUE", "FALSE", // 19
 			"Click to write Choice 3", "other text",
