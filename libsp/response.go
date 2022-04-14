@@ -25,7 +25,6 @@ func NewResponse() *Response {
 }
 
 var reQIDLoop = regexp.MustCompile(`^_\d*_(QID\d+[^-]*)(-\d+)?$`) //(`^_\d*_(QID\d+.*)(-\d+)?`)
-var reQIDDyn = regexp.MustCompile(`^(QID\d+_)x(\d+)(_TEXT)?$`)
 var reTimer = regexp.MustCompile(`_(CLICK|SUBMIT|COUNT)$`)
 
 // AddAnswer adds a question answer to the response
@@ -42,12 +41,6 @@ func (r *Response) AddAnswer(id string, answer string) {
 		timerMatches := reTimer.MatchString(matches[1])
 		if !timerMatches {
 			id = matches[1]
-		}
-	} else {
-		// Remove the 'x' character from dynamic response choices
-		matches = reQIDDyn.FindStringSubmatch(id)
-		if matches != nil {
-			id = matches[1] + matches[2] + matches[3]
 		}
 	}
 

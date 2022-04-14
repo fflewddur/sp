@@ -506,15 +506,58 @@ func (s *Survey) addDynamicChoices() {
 		q := s.Questions[qid]
 		if q.dynChoices != nil {
 			choiceSource := s.Questions[q.dynChoices.Source]
-			if q.dynChoices.Type == "DisplayedChoices" || q.dynChoices.Type == "SelectedChoices" {
-				if len(q.choices) == 0 {
-					q.choices = make([]Choice, len(choiceSource.choices))
-					copy(q.choices, choiceSource.choices)
-					q.orderedChoices = choiceSource.orderedChoices
+			knownChoices := make(map[string]bool)
+			knownSubQuestions := make(map[string]bool)
+			prefix := "x"
+			// FIXME: Not sure if these should us ID or Label?
+			for _, c := range q.choices {
+				knownChoices[c.Label] = true
+			}
+			for _, c := range q.subQuestions {
+				knownSubQuestions[c.Label] = true
+			}
+			for {
+				if q.dynChoices.Type == "DisplayedChoices" || q.dynChoices.Type == "SelectedChoices" {
+					// Append an "x" for each level of nesting
+					if q.qType.choicesAreQuestions() != choiceSource.qType.choicesAreQuestions() {
+						// We need to invert choices and subQuestions
+						for _, c := range choiceSource.choices {
+							if _, ok := knownSubQuestions[c.Label]; !ok {
+								q.subQuestions = append(q.subQuestions, Choice{prefix + c.ID, c.Label, c.VarName, c.HasText})
+								knownSubQuestions[c.Label] = true
+							}
+						}
+						for _, c := range choiceSource.subQuestions {
+							if _, ok := knownChoices[c.Label]; !ok {
+								q.choices = append(q.choices, Choice{prefix + c.ID, c.Label, c.VarName, c.HasText})
+								knownChoices[c.Label] = true
+							}
+						}
+						q.orderedChoices = q.orderedChoices || choiceSource.orderedChoices
+					} else if q.qType.choicesAreQuestions() {
+						// We only need to copy the sub-questions
+						for _, c := range choiceSource.subQuestions {
+							if _, ok := knownSubQuestions[c.Label]; !ok {
+								q.subQuestions = append(q.subQuestions, Choice{prefix + c.ID, c.Label, c.VarName, c.HasText})
+								knownSubQuestions[c.Label] = true
+							}
+						}
+					} else {
+						// We only need to copy the choices
+						for _, c := range choiceSource.choices {
+							if _, ok := knownChoices[c.Label]; !ok {
+								q.choices = append(q.choices, Choice{prefix + c.ID, c.Label, c.VarName, c.HasText})
+								knownChoices[c.Label] = true
+							}
+						}
+						q.orderedChoices = q.orderedChoices || choiceSource.orderedChoices
+					}
 				}
-				if len(q.subQuestions) == 0 {
-					q.subQuestions = make([]Choice, len(choiceSource.subQuestions))
-					copy(q.subQuestions, choiceSource.subQuestions)
+				if choiceSource.dynChoices != nil {
+					choiceSource = s.Questions[choiceSource.dynChoices.Source]
+					prefix = prefix + "x"
+				} else {
+					break
 				}
 			}
 			// TODO might need to support other types of dynamic choices
