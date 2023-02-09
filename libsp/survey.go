@@ -169,7 +169,7 @@ func getColType(colID string, q *Question) (rColType string, isRankCol bool) {
 			rColType = "col_factor()"
 		}
 	} else if strings.HasSuffix(colID, "_text") {
-		rColType = ""
+		rColType = "col_character()"
 	} else if strings.HasSuffix(colID, "_RANK") || strings.HasSuffix(colID, "_rank") {
 		isRankCol = true
 		rColType = "col_factor()"
