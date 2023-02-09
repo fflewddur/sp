@@ -18,7 +18,7 @@ sp takes Qualtrics data and creates both a CSV and R import script.
 
 1. Run sp on your survey data with the command `sp <PATH_TO_QSF_FILE>`. For example, if you saved your QSF and XML files to ~/Downloads with the names _survey.qsf_ and _survey.xml_, you would run the command `sp ~/Downloads/survey.qsf`. sp will read the survey structure from the QSF file and participants' responses from the XML file. It will create two files: a CSV containing participants' responses, and an R script for importing the CSV into R. These files will be created in the same folder as the QSF file and share the same base name (e.g., running `sp ~/Downloads/survey.qsf` will create _survey.csv_ and _survey.r_ in your Downloads folder).
 
-1. Import the data into R by running import script sp generated. Continuing the above example, we'd start R and run the command `source("survey.r")`.
+1. Import the data into R by running import script sp generated. Continuing the above example, we'd start R and run the command `source("survey.r", encoding = "utf8")`. Qualtrics exports data encoded in UTF-8, but R will default to the value of `getOption("encoding")` when sourcing `survey.r` unless you tell it otherwise.
 
 1. (Optional) You can edit the generated R script as appropriate. By default it will define a type for each CSV column (logical, factor, integer, etc.) and include factor levels. For questions that allow multiple responses, logical columns for each response will be generated.
 

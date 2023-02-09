@@ -28,7 +28,6 @@ func ReadQsf(r *bufio.Reader) (survey *Survey, err error) {
 		s := html.UnescapeString(string(line))
 		// And fix spaces, too
 		s = strings.ReplaceAll(s, "&nbsp;", " ")
-		s = strings.ReplaceAll(s, "\\u2013", "-") // Replace en-dash w/ hyphen
 
 		line = []byte(s)
 		bytes = append(bytes, line...)

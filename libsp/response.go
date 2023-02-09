@@ -62,6 +62,5 @@ func fixSmartQuotes(s string) string {
 	s = strings.ReplaceAll(s, "”", "\"")
 	s = strings.ReplaceAll(s, "‘", "'")
 	s = strings.ReplaceAll(s, "’", "'")
-	s = strings.ReplaceAll(s, "–", "-") // Replace en-dash w/ hyphen
 	return s
 }
