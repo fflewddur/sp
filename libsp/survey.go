@@ -40,7 +40,7 @@ type Survey struct {
 }
 
 // Version of libsp
-const Version = "0.3.2"
+const Version = "0.4"
 const timeFormat = "2006-01-02 15:04:05"
 const noResponseConst = "No response"
 const noResponseCode = "-99"
